@@ -78,9 +78,9 @@ Create a temporary brand identity for the product.
 
 Use the placeholder name:
 
-AURORA
+TSISKARI
 
-You may suggest alternatives later, but use AURORA throughout the initial design.
+You may suggest alternatives later, but use TSISKARI throughout the initial design.
 
 The brand should feel:
 

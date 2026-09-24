@@ -9,7 +9,7 @@ import "./env.mjs"
 const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ""
 const resendKey = process.env.RESEND_API_KEY || ""
-const from = process.env.EMAIL_FROM || "AURORA <onboarding@resend.dev>"
+const from = process.env.EMAIL_FROM || "TSISKARI <onboarding@resend.dev>"
 const appUrl = (process.env.APP_URL || "http://localhost:8443").replace(/\/$/, "")
 
 export const emailConfigured = Boolean(url && serviceKey && resendKey)
@@ -27,14 +27,14 @@ export const T = {
     won: ["You won {title}!", "Pay {total}₾ within 24 hours to secure it. Payment details are on your order page."],
     second_chance: ["Second chance: {title} can be yours", "The winner didn’t pay. It’s yours for {total}₾ if you pay within 24 hours."],
     sold: ["Sold: {title}", "Winning bid {price}₾. Please don’t ship until we confirm the buyer’s payment."],
-    payment_reminder: ["Reminder: pay for {title}", "Your payment window is closing. Pay {total}₾ (reference AURORA {reference}) to keep the artwork."],
+    payment_reminder: ["Reminder: pay for {title}", "Your payment window is closing. Pay {total}₾ (reference TSISKARI {reference}) to keep the artwork."],
     order_expired: ["Payment window closed — {title}", "We didn’t receive payment in time, so the artwork may go to the next bidder."],
-    paid_ship_now: ["Paid — please ship {title}", "The buyer’s payment is safely with AURORA. Ship the work and mark it as shipped."],
+    paid_ship_now: ["Paid — please ship {title}", "The buyer’s payment is safely with TSISKARI. Ship the work and mark it as shipped."],
     shipped: ["{title} is on its way", "The artist has shipped your artwork. Confirm when it arrives."],
     payout_sent: ["Payout sent: {payout}₾", "Your payout for {title} is on its way to your bank account."],
     reserve_decision: ["Your decision: {title}", "Bidding ended at {amount}₾, below your reserve. Accept, decline or counter within 12 hours."],
     counter_offer: ["The artist offers you {title} for {counter}₾", "Your bid was below the reserve, but the artist made you an offer. Answer within 12 hours."],
-    order_cancelled: ["Order cancelled — {title}", "This order was cancelled by AURORA. If you paid, a refund is on its way."],
+    order_cancelled: ["Order cancelled — {title}", "This order was cancelled by TSISKARI. If you paid, a refund is on its way."],
     report_update: ["Update on your report — {title}", "{note}"],
     transfer_submitted: ["Transfer to check: #{reference}", "{title} · {total}₾. Confirm it in the back office."],
     report_opened: ["New problem report: #{reference}", "{title}. Review it in the back office."],
@@ -45,14 +45,14 @@ export const T = {
     won: ["მოიგე „{title}“!", "გადაიხადე {total}₾ 24 საათში. გადახდის დეტალები შეკვეთის გვერდზეა."],
     second_chance: ["მეორე შანსი: „{title}“ შეიძლება შენი იყოს", "გამარჯვებულმა არ გადაიხადა. ნამუშევარი შენია {total}₾-ად, თუ 24 საათში გადაიხდი."],
     sold: ["გაიყიდა: „{title}“", "მოგებული ფსონი: {price}₾. არ გააგზავნო, სანამ გადახდას არ დავადასტურებთ."],
-    payment_reminder: ["შეხსენება: გადაიხადე „{title}“", "გადახდის დრო იწურება. გადაიხადე {total}₾ (დანიშნულება: AURORA {reference})."],
+    payment_reminder: ["შეხსენება: გადაიხადე „{title}“", "გადახდის დრო იწურება. გადაიხადე {total}₾ (დანიშნულება: TSISKARI {reference})."],
     order_expired: ["გადახდის დრო ამოიწურა — „{title}“", "გადახდა დროულად არ მივიღეთ, ამიტომ ნამუშევარი შეიძლება შემდეგ მონაწილეს გადაეცეს."],
-    paid_ship_now: ["გადახდილია — გააგზავნე „{title}“", "მყიდველის თანხა AURORA-სთან დაცულია. გააგზავნე ნამუშევარი და მონიშნე გაგზავნილად."],
+    paid_ship_now: ["გადახდილია — გააგზავნე „{title}“", "მყიდველის თანხა TSISKARI-სთან დაცულია. გააგზავნე ნამუშევარი და მონიშნე გაგზავნილად."],
     shipped: ["„{title}“ გზაშია", "მხატვარმა ნამუშევარი გამოგიგზავნა. მიღებისას დაადასტურე."],
     payout_sent: ["ანაზღაურება გაიგზავნა: {payout}₾", "„{title}“-ის ანაზღაურება შენს ანგარიშზე მიდის."],
     reserve_decision: ["შენი გადაწყვეტილება: „{title}“", "ვაჭრობა {amount}₾-ზე დასრულდა, რეზერვზე დაბლა. 12 საათში მიიღე, უარყავი ან შესთავაზე სხვა ფასი."],
     counter_offer: ["მხატვარი „{title}“-ს {counter}₾-ად გთავაზობს", "შენი ფსონი რეზერვზე დაბალი იყო, მაგრამ მხატვარმა შეთავაზება გამოგიგზავნა. უპასუხე 12 საათში."],
-    order_cancelled: ["შეკვეთა გაუქმდა — „{title}“", "შეკვეთა AURORA-მ გააუქმა. თუ გადაიხადე, თანხა დაგიბრუნდება."],
+    order_cancelled: ["შეკვეთა გაუქმდა — „{title}“", "შეკვეთა TSISKARI-მ გააუქმა. თუ გადაიხადე, თანხა დაგიბრუნდება."],
     report_update: ["განახლება შენს მიმართვაზე — „{title}“", "{note}"],
     transfer_submitted: ["შესამოწმებელი გადარიცხვა: #{reference}", "„{title}“ · {total}₾. დაადასტურე ადმინ პანელში."],
     report_opened: ["ახალი პრობლემა: #{reference}", "„{title}“. ნახე ადმინ პანელში."],
@@ -68,11 +68,11 @@ const escapeHtml = (text) =>
 
 export function renderEmail(row) {
   const dict = T[row.locale] ?? T.ka
-  const [subjectT, bodyT] = dict[row.kind] ?? T.en[row.kind] ?? ["AURORA", ""]
+  const [subjectT, bodyT] = dict[row.kind] ?? T.en[row.kind] ?? ["TSISKARI", ""]
   const subject = fill(subjectT, row.data)
   const body = fill(bodyT, row.data)
   const link = row.link ? `${appUrl}${row.link}` : appUrl
-  const cta = row.locale === "en" ? "Open AURORA" : "გახსენი AURORA"
+  const cta = row.locale === "en" ? "Open TSISKARI" : "გახსენი TSISKARI"
   const html = `<!doctype html><html><body style="margin:0;background:#0d0d10;font-family:Georgia,serif;color:#f2efe8">
 <table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px"><tr><td align="center">
 <table width="100%" style="max-width:520px;background:#181820;border-radius:16px;padding:28px">

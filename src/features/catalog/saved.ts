@@ -3,8 +3,8 @@ import { tr } from "../../lib/i18n"
 import { notify } from "../../lib/notify"
 
 // Saved artworks (watchlist) are a per-browser convenience kept in localStorage.
-const KEY = "aurora:saved-artworks"
-const EVENT = "aurora:saved-updated"
+const KEY = "tsiskari:saved-artworks"
+const EVENT = "tsiskari:saved-updated"
 
 export function getSavedIds(): string[] {
   try {

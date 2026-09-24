@@ -52,7 +52,7 @@ export const en = {
   "errors.emailNotConfirmed": "Please confirm your email first — check your inbox",
   "errors.weakPassword": "Password must be at least {amount} characters",
   "errors.rateLimit": "Too many attempts — please wait a minute and try again",
-  "errors.network": "Can’t reach AURORA right now — check your connection",
+  "errors.network": "Can’t reach TSISKARI right now — check your connection",
 } as const
 
 export const ka: Record<keyof typeof en, string> = {
@@ -107,5 +107,5 @@ export const ka: Record<keyof typeof en, string> = {
   "errors.emailNotConfirmed": "ჯერ დაადასტურე ელფოსტა — შეამოწმე შემოსულები",
   "errors.weakPassword": "პაროლი მინიმუმ {amount} სიმბოლო უნდა იყოს",
   "errors.rateLimit": "ძალიან ბევრი მცდელობაა — დაელოდე ერთ წუთს და სცადე ხელახლა",
-  "errors.network": "AURORA-სთან კავშირი ვერ დამყარდა — შეამოწმე ინტერნეტი",
+  "errors.network": "TSISKARI-სთან კავშირი ვერ დამყარდა — შეამოწმე ინტერნეტი",
 }

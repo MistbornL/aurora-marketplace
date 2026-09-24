@@ -106,8 +106,8 @@ export function useNotifications() {
         description: detail.detail,
       })
     }
-    window.addEventListener("aurora:notification", onNotify)
-    return () => window.removeEventListener("aurora:notification", onNotify)
+    window.addEventListener("tsiskari:notification", onNotify)
+    return () => window.removeEventListener("tsiskari:notification", onNotify)
   }, [])
 
   const items = [...remote, ...local].sort((a, b) => b.at - a.at).slice(0, 40)

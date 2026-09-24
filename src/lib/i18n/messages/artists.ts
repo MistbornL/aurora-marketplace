@@ -5,7 +5,7 @@ export const en = {
   "artists.dir.lead": "Explore original voices shaping contemporary art across Georgia and beyond.",
   "artists.dir.search": "Search artists or location…",
   "artists.dir.count": "{count} {count|artist|artists}",
-  "artists.dir.sell": "Sell your work on AURORA",
+  "artists.dir.sell": "Sell your work on TSISKARI",
   "artists.dir.availableWorks": "{count} available {count|work|works}",
   "artists.dir.viewProfile": "View profile",
   "artists.dir.noResults": "No artists match that search.",
@@ -29,9 +29,9 @@ export const en = {
   "artists.profile.noPast": "No past auctions yet.",
   "artists.profile.noBioShort": "No bio yet.",
   "artists.profile.summary":
-    "{name} has listed {works} {works|work|works} on AURORA across {auctions} {auctions|auction|auctions}.",
+    "{name} has listed {works} {works|work|works} on TSISKARI across {auctions} {auctions|auction|auctions}.",
   "artists.profile.summaryLocation":
-    "{name} has listed {works} {works|work|works} on AURORA across {auctions} {auctions|auction|auctions}, working from {location}.",
+    "{name} has listed {works} {works|work|works} on TSISKARI across {auctions} {auctions|auction|auctions}, working from {location}.",
 } as const
 
 export const ka: Record<keyof typeof en, string> = {
@@ -41,7 +41,7 @@ export const ka: Record<keyof typeof en, string> = {
     "გაიცანი ავტორები, რომლებიც თანამედროვე ხელოვნებას ქმნიან საქართველოსა და მის ფარგლებს გარეთ.",
   "artists.dir.search": "მოძებნე მხატვარი ან ქალაქი…",
   "artists.dir.count": "{count} მხატვარი",
-  "artists.dir.sell": "გაყიდე შენი ნამუშევრები AURORA-ზე",
+  "artists.dir.sell": "გაყიდე შენი ნამუშევრები TSISKARI-ზე",
   "artists.dir.availableWorks": "ხელმისაწვდომი ნამუშევარი: {count}",
   "artists.dir.viewProfile": "პროფილის ნახვა",
   "artists.dir.noResults": "ასეთი მხატვარი ვერ მოიძებნა.",
@@ -64,7 +64,7 @@ export const ka: Record<keyof typeof en, string> = {
   "artists.profile.noLive": "ამ მხატვარს ახლა აქტიური აუქციონი არ აქვს. გამოიწერე და შემდეგზე შეგატყობინებთ.",
   "artists.profile.noPast": "წარსული აუქციონები ჯერ არ არის.",
   "artists.profile.noBioShort": "ბიოგრაფია ჯერ არ არის.",
-  "artists.profile.summary": "{name} — AURORA-ზე {works} ნამუშევარი, {auctions} აუქციონი.",
+  "artists.profile.summary": "{name} — TSISKARI-ზე {works} ნამუშევარი, {auctions} აუქციონი.",
   "artists.profile.summaryLocation":
-    "{name} — AURORA-ზე {works} ნამუშევარი, {auctions} აუქციონი. სახელოსნო: {location}.",
+    "{name} — TSISKARI-ზე {works} ნამუშევარი, {auctions} აუქციონი. სახელოსნო: {location}.",
 }

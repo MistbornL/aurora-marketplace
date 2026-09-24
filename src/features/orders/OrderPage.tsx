@@ -240,7 +240,7 @@ function BuyerPanel({
                 <CopyRow label={t("orders.pay.accountHolder")} value={settings.bankAccountHolder} />
                 <CopyRow label={t("orders.pay.iban")} value={settings.bankIban} mono />
                 <CopyRow label={t("orders.pay.amount")} value={order.totalDue.toFixed(2)} mono display={money(order.totalDue)} />
-                <CopyRow label={t("orders.pay.description")} value={`AURORA ${order.reference}`} mono highlight />
+                <CopyRow label={t("orders.pay.description")} value={`TSISKARI ${order.reference}`} mono highlight />
               </dl>
             ) : (
               <p className="text-sm text-text-muted">
@@ -572,7 +572,7 @@ function Breakdown({ order, perspective }: { order: Order; perspective: "buyer" 
     perspective === "seller"
       ? [
           ["orders.line.winningBid", order.hammerPrice],
-          ["orders.line.auroraCommission", -order.sellerCommission],
+          ["orders.line.tsiskariCommission", -order.sellerCommission],
           ["orders.line.youReceive", order.sellerPayout, "total"],
         ]
       : perspective === "buyer"
@@ -587,7 +587,7 @@ function Breakdown({ order, perspective }: { order: Order; perspective: "buyer" 
             ["orders.line.buyerPays", order.totalDue, "total"],
             ["orders.line.sellerCommission", order.sellerCommission],
             ["orders.line.artistPayout", order.sellerPayout],
-            ["orders.line.auroraEarns", order.buyerPremium + order.sellerCommission, "total"],
+            ["orders.line.tsiskariEarns", order.buyerPremium + order.sellerCommission, "total"],
           ]
   return (
     <Card className="border border-border bg-surface p-5 ring-0">

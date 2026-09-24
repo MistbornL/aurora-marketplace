@@ -111,20 +111,20 @@ export function downloadIcs(event: AuctionEvent, url: string) {
   const ics = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//AURORA//Events//EN",
+    "PRODID:-//TSISKARI//Events//EN",
     "BEGIN:VEVENT",
-    `UID:${event.id}@aurora`,
+    `UID:${event.id}@tsiskari`,
     `DTSTAMP:${stamp(new Date())}`,
     `DTSTART:${stamp(start)}`,
     `DTEND:${stamp(end)}`,
-    `SUMMARY:${event.title.replace(/[,;]/g, " ")} — AURORA`,
+    `SUMMARY:${event.title.replace(/[,;]/g, " ")} — TSISKARI`,
     `URL:${url}`,
     "END:VEVENT",
     "END:VCALENDAR",
   ].join("\r\n")
   const link = document.createElement("a")
   link.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }))
-  link.download = "aurora-live-auction.ics"
+  link.download = "tsiskari-live-auction.ics"
   link.click()
   URL.revokeObjectURL(link.href)
 }

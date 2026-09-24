@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { useI18n, type MessageKey } from "../../lib/i18n"
 
 // Labels are message keys; they're translated at render time.
-const COLUMNS: Array<{ title: MessageKey | "AURORA"; links: Array<{ label: MessageKey; to: string }> }> = [
+const COLUMNS: Array<{ title: MessageKey | "TSISKARI"; links: Array<{ label: MessageKey; to: string }> }> = [
   {
     title: "layout.footer.collect",
     links: [
@@ -19,7 +19,7 @@ const COLUMNS: Array<{ title: MessageKey | "AURORA"; links: Array<{ label: Messa
     ],
   },
   {
-    title: "AURORA",
+    title: "TSISKARI",
     links: [
       { label: "layout.footer.about", to: "/about" },
       { label: "layout.footer.faq", to: "/about#faq" },
@@ -48,9 +48,9 @@ export function Footer() {
           </p>
         </div>
         {COLUMNS.map((column) => (
-          <nav key={column.title} aria-label={column.title === "AURORA" ? "AURORA" : t(column.title)}>
+          <nav key={column.title} aria-label={column.title === "TSISKARI" ? "TSISKARI" : t(column.title)}>
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-text-secondary">
-              {column.title === "AURORA" ? "AURORA" : t(column.title)}
+              {column.title === "TSISKARI" ? "TSISKARI" : t(column.title)}
             </p>
             <ul className="mt-3 space-y-2">
               {column.links.map((link) => (

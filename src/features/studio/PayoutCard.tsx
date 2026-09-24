@@ -5,7 +5,7 @@ import { useI18n } from "../../lib/i18n"
 import { errorMessage, notify } from "../../lib/notify"
 import { getPayoutDetails, savePayoutDetails, type PayoutDetails } from "../profile/api"
 
-/** Where AURORA sends the artist's money. Private: only admins see it at payout. */
+/** Where TSISKARI sends the artist's money. Private: only admins see it at payout. */
 export function PayoutCard({ userId }: { userId: string }) {
   const { t } = useI18n()
   const [details, setDetails] = useState<PayoutDetails | null>(null)

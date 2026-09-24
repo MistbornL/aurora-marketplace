@@ -125,12 +125,12 @@ const TITLES: Array<[RegExp, MessageKey]> = [
   [/^\/privacy/, "pilot.title.privacy"],
 ]
 
-/** "Discover · AURORA" — follows the route and the language. */
+/** "Discover · TSISKARI" — follows the route and the language. */
 function usePageTitle(pathname: string) {
   const { t } = useI18n()
   useEffect(() => {
     const match = TITLES.find(([pattern]) => pattern.test(pathname))
-    document.title = match ? `${t(match[1])} · AURORA` : `AURORA — ${t("pilot.title.home")}`
+    document.title = match ? `${t(match[1])} · TSISKARI` : `TSISKARI — ${t("pilot.title.home")}`
   }, [pathname, t])
 }
 

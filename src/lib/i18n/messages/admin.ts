@@ -1,6 +1,6 @@
 // "admin" strings. Keys are prefixed "admin." — see src/lib/i18n/README.md.
 export const en = {
-  "admin.staffOnly": "This area is for AURORA staff only.",
+  "admin.staffOnly": "This area is for TSISKARI staff only.",
   "admin.eyebrow": "Back office",
   "admin.title": "Orders & payments",
 
@@ -10,7 +10,7 @@ export const en = {
   "admin.tab.settings": "Settings",
 
   "admin.stat.transfersToCheck": "Transfers to check",
-  "admin.stat.revenue": "AURORA revenue",
+  "admin.stat.revenue": "TSISKARI revenue",
   "admin.stat.held": "Held for artists",
   "admin.stat.volume": "Sales volume",
 
@@ -51,7 +51,7 @@ export const en = {
 } as const
 
 export const ka: Record<keyof typeof en, string> = {
-  "admin.staffOnly": "ეს გვერდი მხოლოდ AURORA-ს გუნდისთვისაა.",
+  "admin.staffOnly": "ეს გვერდი მხოლოდ TSISKARI-ს გუნდისთვისაა.",
   "admin.eyebrow": "ადმინ პანელი",
   "admin.title": "შეკვეთები და გადახდები",
 
@@ -61,7 +61,7 @@ export const ka: Record<keyof typeof en, string> = {
   "admin.tab.settings": "პარამეტრები",
 
   "admin.stat.transfersToCheck": "შესამოწმებელი გადარიცხვები",
-  "admin.stat.revenue": "AURORA-ს შემოსავალი",
+  "admin.stat.revenue": "TSISKARI-ს შემოსავალი",
   "admin.stat.held": "დაკავებულია მხატვრებისთვის",
   "admin.stat.volume": "გაყიდვების მოცულობა",
 

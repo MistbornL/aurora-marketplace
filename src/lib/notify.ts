@@ -12,7 +12,7 @@ export function notify(
   variant: NotifyVariant = "success",
 ) {
   window.dispatchEvent(
-    new CustomEvent("aurora:notification", {
+    new CustomEvent("tsiskari:notification", {
       detail: { title, detail, variant },
     }),
   )

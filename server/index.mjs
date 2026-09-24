@@ -1,4 +1,4 @@
-// AURORA API — catalogue, bidding and bid history.
+// TSISKARI API — catalogue, bidding and bid history.
 //  - Demo lots ("1".."n") live in memory (lib/demo-store.mjs).
 //  - Real auctions (uuid ids) live in Supabase; bids go through the
 //    `place_bid` RPC with the caller's JWT so RLS + DB rules apply.
@@ -121,7 +121,7 @@ const routes = [
     "POST",
     /^\/api\/payments\/webhook$/,
     async (request) =>
-      handleWebhook(await readRaw(request), request.headers["x-aurora-signature"]),
+      handleWebhook(await readRaw(request), request.headers["x-tsiskari-signature"]),
   ],
 
   // Test mode only: behave like a provider for the buyer's own order.
@@ -288,6 +288,6 @@ startPushWorker()
 
 server.listen(port, () =>
   console.log(
-    `AURORA API on http://localhost:${port} (Supabase ${supabaseEnabled ? "on" : "off — demo lots only"})`,
+    `TSISKARI API on http://localhost:${port} (Supabase ${supabaseEnabled ? "on" : "off — demo lots only"})`,
   ),
 )

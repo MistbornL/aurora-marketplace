@@ -14,7 +14,7 @@ export const placeBid = (id: string, amount: number) =>
   )
 
 /** Other parts of the app (dashboard, nav) listen for this to refetch. */
-export const BIDS_UPDATED_EVENT = "aurora:bids-updated"
+export const BIDS_UPDATED_EVENT = "tsiskari:bids-updated"
 
 type AuctionActionResult = { artwork: Artwork; orderId: string | null }
 

@@ -74,7 +74,7 @@ export default function AdminPage() {
             {order.status === "payment_submitted" && order.paymentReference && (
               <p className="-mt-2 px-4 pb-2 text-xs text-text-muted">
                 {t("admin.buyersNote")} <span className="text-text-secondary">{order.paymentReference}</span> ·{" "}
-                {t("admin.lookFor", { description: `AURORA ${order.reference}` })}
+                {t("admin.lookFor", { description: `TSISKARI ${order.reference}` })}
               </p>
             )}
             <div className="px-4 pb-4">

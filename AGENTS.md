@@ -70,7 +70,7 @@ This project uses **Tailwind CSS v4** through the `@tailwindcss/vite` plugin con
 
 ## Payments
 
-Buyers pay AURORA (winning bid + buyer’s premium) within `payment_window_hours`
+Buyers pay TSISKARI (winning bid + buyer’s premium) within `payment_window_hours`
 (24h). Orders are created by `settle_auctions()` (pg_cron every minute, and
 opportunistically by the API). Payment is confirmed either by an admin (bank
 transfer) or automatically by a provider webhook → `server/lib/payments.mjs`

@@ -14,7 +14,7 @@ const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ""
 const publicKey = process.env.VAPID_PUBLIC_KEY || process.env.VITE_VAPID_PUBLIC_KEY || ""
 const privateKey = process.env.VAPID_PRIVATE_KEY || ""
-const subject = process.env.VAPID_SUBJECT || "mailto:hello@aurora.ge"
+const subject = process.env.VAPID_SUBJECT || "mailto:hello@tsiskariart.ge"
 
 export const pushConfigured = Boolean(url && serviceKey && publicKey && privateKey)
 
@@ -34,7 +34,7 @@ async function sendBatch() {
   const rows = await response.json()
   for (const row of rows) {
     const dict = T[row.locale] ?? T.ka
-    const [titleT, bodyT] = dict[row.kind] ?? T.en[row.kind] ?? ["AURORA", ""]
+    const [titleT, bodyT] = dict[row.kind] ?? T.en[row.kind] ?? ["TSISKARI", ""]
     const payload = JSON.stringify({
       title: fill(titleT, row.data),
       body: fill(bodyT, row.data),

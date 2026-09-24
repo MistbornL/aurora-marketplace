@@ -40,7 +40,7 @@ Namespaces: common, layout, auth, profile, catalog, artists, info, artwork, live
 ## Georgian style guide
 
 Modern, friendly, concise UI Georgian (as on Georgian banking / e-commerce apps). Informal “შენ” (you), not “თქვენ”.
-Don’t translate literally; keep sentences short. Keep brand name **AURORA** and “LIVE” badges in Latin.
+Don’t translate literally; keep sentences short. Keep brand name **TSISKARI** and “LIVE” badges in Latin.
 
 | English | Georgian |
 |---|---|

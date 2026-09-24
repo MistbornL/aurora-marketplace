@@ -22,7 +22,7 @@ export type Lang = "en" | "ka"
 export type { MessageKey }
 type Vars = Record<string, string | number | null | undefined>
 
-const STORAGE_KEY = "aurora.lang"
+const STORAGE_KEY = "tsiskari.lang"
 const DICTS: Record<Lang, Record<MessageKey, string>> = { en: EN, ka: KA }
 export const LOCALES: Record<Lang, string> = { en: "en-GB", ka: "ka-GE" }
 

@@ -103,11 +103,11 @@ export function Nav({
           aria-label={t("layout.nav.home")}
           className="flex shrink-0 items-center font-display text-[22px] font-extrabold tracking-[-0.03em] text-text"
         >
-          AUR
+          TSISK
           <span className="mx-px inline-grid size-[22px] place-items-center rounded-full bg-amber text-[13px] text-bg">
-            O
+            A
           </span>
-          RA
+          RI
         </button>
 
         {/* Links */}
