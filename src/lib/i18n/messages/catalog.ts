@@ -1,0 +1,131 @@
+// "catalog" strings. Keys are prefixed "catalog." — see src/lib/i18n/README.md.
+export const en = {
+  "catalog.loadFailed": "Unable to load catalogue",
+  "catalog.saved.title": "Artwork saved",
+  "catalog.saved.detail": "{title} was added to your watchlist.",
+  "catalog.saved.artwork": "Artwork",
+
+  "catalog.discover.title": "Discover art",
+  "catalog.discover.allAuctions": "All auctions",
+  "catalog.discover.count": "{count} {count|work|works}",
+  "catalog.discover.liveOnly": "Live only",
+  "catalog.discover.sortBy": "Sort by",
+  "catalog.discover.sort.ending": "Ending soon",
+  "catalog.discover.sort.popular": "Most bids",
+  "catalog.discover.sort.low": "Price: low to high",
+  "catalog.discover.sort.high": "Price: high to low",
+  "catalog.discover.categories": "Categories",
+  "catalog.discover.empty": "No works match these filters",
+  "catalog.discover.clearFilters": "Clear filters",
+  "catalog.discover.loadMore": "Load more works",
+  "catalog.discover.searchPlaceholder": "Search by title or artist…",
+  "catalog.discover.priceMin": "Min ₾",
+  "catalog.discover.priceMax": "Max ₾",
+  "catalog.discover.priceRange": "Price",
+
+  "catalog.hero.liveCount": "{count} {count|auction|auctions} open right now",
+  "catalog.hero.titleLine1": "Own original art.",
+  "catalog.hero.titleLine2": "Bid live.",
+  "catalog.hero.lead":
+    "Paintings, drawings and photography by independent Georgian artists — in transparent live auctions.",
+  "catalog.hero.leadFrom":
+    "Paintings, drawings and photography by independent Georgian artists — in transparent live auctions with opening bids from {amount}₾.",
+  "catalog.hero.explore": "Explore live auctions",
+  "catalog.hero.sell": "Sell your art",
+  "catalog.hero.pointFree": "Free to join",
+  "catalog.hero.pointPublic": "Every bid public & timestamped",
+  "catalog.hero.pointPrices": "Artists set their own prices",
+  "catalog.hero.statLive": "Live auctions",
+  "catalog.hero.statArtists": "Artists",
+  "catalog.hero.statBids": "Bids placed",
+
+  "catalog.how.step": "Step {n}",
+  "catalog.how.discoverTitle": "Discover",
+  "catalog.how.discoverText":
+    "Browse original works by category, artist or what’s ending soon. Save favourites to your watchlist.",
+  "catalog.how.bidTitle": "Bid live",
+  "catalog.how.bidText": "Place a bid in seconds. See every bid as it happens and get notified if you’re outbid.",
+  "catalog.how.winTitle": "Win & collect",
+  "catalog.how.winText": "When the timer ends, the highest bid wins — and the artwork is yours.",
+
+  "catalog.cta.eyebrow": "For artists",
+  "catalog.cta.title": "Turn your studio into an auction house.",
+  "catalog.cta.text":
+    "List a work in minutes, set your opening price and bid step, and watch collectors compete for it live. You stay in control of every listing.",
+  "catalog.cta.start": "Start selling",
+  "catalog.cta.watch": "Watch a live auction",
+
+  "catalog.featured.open": "Open {title}",
+  "catalog.featured.badge": "Featured lot",
+  "catalog.featured.by": "by {artist}",
+  "catalog.featured.currentBid": "Current bid",
+  "catalog.featured.endsIn": "Ends in",
+  "catalog.featured.bidNow": "Bid now · from {amount}₾",
+  "catalog.featured.bidsSoFar": "{count} {count|bid|bids} so far",
+} as const
+
+export const ka: Record<keyof typeof en, string> = {
+  "catalog.loadFailed": "კატალოგი ვერ ჩაიტვირთა",
+  "catalog.saved.title": "რჩეულებში დაემატა",
+  "catalog.saved.detail": "„{title}“ უკვე შენს რჩეულებშია.",
+  "catalog.saved.artwork": "ნამუშევარი",
+
+  "catalog.discover.title": "აღმოაჩინე ხელოვნება",
+  "catalog.discover.allAuctions": "ყველა აუქციონი",
+  "catalog.discover.count": "{count} ნამუშევარი",
+  "catalog.discover.liveOnly": "მხოლოდ ლაივი",
+  "catalog.discover.sortBy": "დალაგება",
+  "catalog.discover.sort.ending": "მალე მთავრდება",
+  "catalog.discover.sort.popular": "ყველაზე მეტი ფსონი",
+  "catalog.discover.sort.low": "ფასი: ზრდადობით",
+  "catalog.discover.sort.high": "ფასი: კლებადობით",
+  "catalog.discover.categories": "კატეგორიები",
+  "catalog.discover.empty": "ამ ფილტრებით ნამუშევარი ვერ მოიძებნა",
+  "catalog.discover.clearFilters": "ფილტრების გასუფთავება",
+  "catalog.discover.loadMore": "მეტის ჩვენება",
+  "catalog.discover.searchPlaceholder": "მოძებნე სათაურით ან ავტორით…",
+  "catalog.discover.priceMin": "მინ. ₾",
+  "catalog.discover.priceMax": "მაქს. ₾",
+  "catalog.discover.priceRange": "ფასი",
+
+  "catalog.hero.liveCount": "ახლა {count} აუქციონი მიმდინარეობს",
+  "catalog.hero.titleLine1": "შეიძინე ორიგინალი ხელოვნება",
+  "catalog.hero.titleLine2": "ლაივ აუქციონზე.",
+  "catalog.hero.lead":
+    "დამოუკიდებელი ქართველი მხატვრების ფერწერა, გრაფიკა და ფოტოგრაფია — გამჭვირვალე ლაივ აუქციონებზე.",
+  "catalog.hero.leadFrom":
+    "დამოუკიდებელი ქართველი მხატვრების ფერწერა, გრაფიკა და ფოტოგრაფია — გამჭვირვალე ლაივ აუქციონებზე, საწყისი ფასით {amount}₾-დან.",
+  "catalog.hero.explore": "ნახე ლაივ აუქციონები",
+  "catalog.hero.sell": "გაყიდე შენი ნამუშევარი",
+  "catalog.hero.pointFree": "რეგისტრაცია უფასოა",
+  "catalog.hero.pointPublic": "ყველა ფსონი საჯაროა და დროით აღრიცხული",
+  "catalog.hero.pointPrices": "ფასებს თავად მხატვრები ადგენენ",
+  "catalog.hero.statLive": "ლაივ აუქციონი",
+  "catalog.hero.statArtists": "მხატვარი",
+  "catalog.hero.statBids": "დადებული ფსონი",
+
+  "catalog.how.step": "ნაბიჯი {n}",
+  "catalog.how.discoverTitle": "აღმოაჩინე",
+  "catalog.how.discoverText":
+    "დაათვალიერე ორიგინალი ნამუშევრები კატეგორიის, მხატვრის ან დასრულების დროის მიხედვით. რაც მოგეწონება, რჩეულებში შეინახე.",
+  "catalog.how.bidTitle": "დადე ფსონი ლაივში",
+  "catalog.how.bidText":
+    "ფსონს წამებში დადებ. ყველა ფსონს რეალურ დროში ხედავ და მაშინვე გაიგებ, თუ ვინმე გადაგასწრებს.",
+  "catalog.how.winTitle": "მოიგე და შენია",
+  "catalog.how.winText": "როცა დრო ამოიწურება, იგებს უმაღლესი ფსონი — და ნამუშევარი შენია.",
+
+  "catalog.cta.eyebrow": "მხატვრებისთვის",
+  "catalog.cta.title": "აქციე შენი სახელოსნო აუქციონის დარბაზად.",
+  "catalog.cta.text":
+    "ნამუშევარს რამდენიმე წუთში განათავსებ: დააწესე საწყისი ფასი და ფსონის ბიჯი, მერე კი უყურე, როგორ ეჯიბრებიან კოლექციონერები ლაივში. ყველა ლოტს შენ მართავ.",
+  "catalog.cta.start": "დაიწყე გაყიდვა",
+  "catalog.cta.watch": "უყურე ლაივ აუქციონს",
+
+  "catalog.featured.open": "„{title}“ — გახსნა",
+  "catalog.featured.badge": "რჩეული ლოტი",
+  "catalog.featured.by": "ავტორი: {artist}",
+  "catalog.featured.currentBid": "მიმდინარე ფსონი",
+  "catalog.featured.endsIn": "დასრულებამდე",
+  "catalog.featured.bidNow": "დადე ფსონი · {amount}₾-დან",
+  "catalog.featured.bidsSoFar": "ჯერჯერობით {count} ფსონი",
+}

@@ -1,0 +1,10 @@
+{
+  "description": "Explore and bid on Georgian contemporary art through a sleek platform featuring live auctions, curated galleries, and easy category filtering.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

@@ -1,0 +1,248 @@
+export const ARTWORKS = [
+  {
+    id: 1,
+    title: "The Last Light",
+    artist: "Nino Beridze",
+    artistId: 1,
+    image:
+      "https://images.unsplash.com/photo-1741805190593-130da5ace767?w=900&h=1100&fit=crop&auto=format",
+    thumbs: [
+      "https://images.unsplash.com/photo-1741805190593-130da5ace767?w=200&h=200&fit=crop&auto=format",
+      "https://images.unsplash.com/photo-1693067821550-064a6c8683f8?w=200&h=200&fit=crop&auto=format",
+      "https://images.unsplash.com/photo-1751730740427-4f3cd9e710a7?w=200&h=200&fit=crop&auto=format",
+    ],
+    category: "Painting",
+    medium: "Oil on canvas",
+    dimensions: "80 × 60 cm",
+    year: 2023,
+    currentBid: 420,
+    startingBid: 100,
+    minNextBid: 440,
+    bids: 17,
+    timeLeftSecs: 2 * 3600 + 14 * 60 + 32,
+    isLive: true,
+    highestBidder: "LukaT",
+    description:
+      "This painting is a reflection of the endless journey between memory and future. It captures the silence of the mountains and the small figure who carries a world within.",
+    tags: ["#contemporary", "#abstract", "#georgia"],
+  },
+  {
+    id: 2,
+    title: "Mountain Silence",
+    artist: "Ana Kapanadze",
+    artistId: 2,
+    image:
+      "https://images.unsplash.com/photo-1683143726190-e78db2954407?w=900&h=1100&fit=crop&auto=format",
+    thumbs: [
+      "https://images.unsplash.com/photo-1683143726190-e78db2954407?w=200&h=200&fit=crop&auto=format",
+      "https://images.unsplash.com/photo-1700405934047-c7c29bbef940?w=200&h=200&fit=crop&auto=format",
+    ],
+    category: "Painting",
+    medium: "Oil on canvas",
+    dimensions: "100 × 80 cm",
+    year: 2024,
+    currentBid: 280,
+    startingBid: 150,
+    minNextBid: 300,
+    bids: 96,
+    timeLeftSecs: 4 * 3600 + 32 * 60,
+    isLive: true,
+    highestBidder: "AnaM",
+    description:
+      "Mountain Silence evokes the stillness found at altitude — where wind, stone, and light merge into a single contemplative moment.",
+    tags: ["#landscape", "#mountains", "#georgia"],
+  },
+  {
+    id: 3,
+    title: "Night Watch",
+    artist: "Giorgi Tsertsvadze",
+    artistId: 3,
+    image:
+      "https://images.unsplash.com/photo-1588167056547-c183313da47c?w=900&h=1100&fit=crop&auto=format",
+    thumbs: [
+      "https://images.unsplash.com/photo-1588167056547-c183313da47c?w=200&h=200&fit=crop&auto=format",
+    ],
+    category: "Drawing",
+    medium: "Charcoal on paper",
+    dimensions: "60 × 60 cm",
+    year: 2024,
+    currentBid: 360,
+    startingBid: 80,
+    minNextBid: 380,
+    bids: 74,
+    timeLeftSecs: 5 * 3600 + 12 * 60,
+    isLive: true,
+    highestBidder: "GiorgiB",
+    description:
+      "A raw nocturnal presence. The wolf as sentinel, keeper of dark hours and unspoken territory.",
+    tags: ["#drawing", "#charcoal", "#animal"],
+  },
+  {
+    id: 4,
+    title: "The Bloom",
+    artist: "Ana Kapanadze",
+    artistId: 2,
+    image:
+      "https://images.unsplash.com/photo-1762117499119-0cc9cd4478f0?w=900&h=1100&fit=crop&auto=format",
+    thumbs: [
+      "https://images.unsplash.com/photo-1762117499119-0cc9cd4478f0?w=200&h=200&fit=crop&auto=format",
+    ],
+    category: "Painting",
+    medium: "Acrylic on canvas",
+    dimensions: "90 × 70 cm",
+    year: 2022,
+    currentBid: 510,
+    startingBid: 200,
+    minNextBid: 530,
+    bids: 43,
+    timeLeftSecs: 1 * 3600 + 8 * 60,
+    isLive: false,
+    highestBidder: "MariaK",
+    description:
+      "A celebration of feminine interiority — soft light on a reclining figure, the world both present and distant.",
+    tags: ["#figurative", "#acrylic", "#portrait"],
+  },
+  {
+    id: 5,
+    title: "Ancient Grove",
+    artist: "Luka Maisuradze",
+    artistId: 4,
+    image:
+      "https://images.unsplash.com/photo-1704123298887-1bccecc2d44d?w=900&h=1100&fit=crop&auto=format",
+    thumbs: [
+      "https://images.unsplash.com/photo-1704123298887-1bccecc2d44d?w=200&h=200&fit=crop&auto=format",
+    ],
+    category: "Digital Art",
+    medium: "Digital print",
+    dimensions: "70 × 90 cm",
+    year: 2024,
+    currentBid: 195,
+    startingBid: 50,
+    minNextBid: 210,
+    bids: 31,
+    timeLeftSecs: 8 * 3600 + 55 * 60,
+    isLive: true,
+    highestBidder: "LukaT",
+    description:
+      "Dense woodland rendered in digital oil — a meditation on memory, ecology, and Georgian landscape.",
+    tags: ["#digital", "#nature", "#forest"],
+  },
+  {
+    id: 6,
+    title: "Verdant Passage",
+    artist: "Mariam Kviriashvili",
+    artistId: 5,
+    image:
+      "https://images.unsplash.com/photo-1688589935455-7793f9f52a2d?w=900&h=1100&fit=crop&auto=format",
+    thumbs: [
+      "https://images.unsplash.com/photo-1688589935455-7793f9f52a2d?w=200&h=200&fit=crop&auto=format",
+    ],
+    category: "Painting",
+    medium: "Oil on canvas",
+    dimensions: "120 × 90 cm",
+    year: 2023,
+    currentBid: 740,
+    startingBid: 300,
+    minNextBid: 760,
+    bids: 87,
+    timeLeftSecs: 0,
+    isLive: false,
+    highestBidder: "TamarG",
+    description:
+      "A bridge at dusk — water, stone, and fading light. The passage between two states of being.",
+    tags: ["#landscape", "#bridge", "#oil"],
+  },
+]
+
+export const ARTISTS = [
+  {
+    id: 1,
+    name: "Nino Beridze",
+    verified: true,
+    location: "Tbilisi, Georgia",
+    avatar:
+      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&auto=format",
+    banner:
+      "https://images.unsplash.com/photo-1693067821550-064a6c8683f8?w=1200&h=400&fit=crop&auto=format",
+    followers: 2400,
+    artworks: 38,
+    auctions: 17,
+    sold: 12,
+    bio: "My works are about the space between dreams and reality, where emotions take form.",
+    tags: ["#contemporary", "#abstract", "#georgia"],
+  },
+  {
+    id: 2,
+    name: "Ana Kapanadze",
+    verified: true,
+    location: "Kutaisi, Georgia",
+    avatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&auto=format",
+    banner:
+      "https://images.unsplash.com/photo-1683143726190-e78db2954407?w=1200&h=400&fit=crop&auto=format",
+    followers: 1800,
+    artworks: 24,
+    auctions: 11,
+    sold: 8,
+    bio: "Painting the silence between moments — landscape as emotional autobiography.",
+    tags: ["#landscape", "#figurative", "#acrylic"],
+  },
+  {
+    id: 3,
+    name: "Giorgi Tsertsvadze",
+    verified: true,
+    location: "Batumi, Georgia",
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&auto=format",
+    banner:
+      "https://images.unsplash.com/photo-1588167056547-c183313da47c?w=1200&h=400&fit=crop&auto=format",
+    followers: 960,
+    artworks: 19,
+    auctions: 9,
+    sold: 6,
+    bio: "Charcoal and ink studies of animals and the hours after dark.",
+    tags: ["#drawing", "#charcoal", "#animal"],
+  },
+  {
+    id: 4,
+    name: "Luka Maisuradze",
+    verified: false,
+    location: "Tbilisi, Georgia",
+    avatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&auto=format",
+    banner:
+      "https://images.unsplash.com/photo-1704123298887-1bccecc2d44d?w=1200&h=400&fit=crop&auto=format",
+    followers: 540,
+    artworks: 12,
+    auctions: 5,
+    sold: 3,
+    bio: "Digital painter exploring Georgian forests, memory and ecology.",
+    tags: ["#digital", "#nature", "#forest"],
+  },
+  {
+    id: 5,
+    name: "Mariam Kviriashvili",
+    verified: true,
+    location: "Telavi, Georgia",
+    avatar:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&auto=format",
+    banner:
+      "https://images.unsplash.com/photo-1688589935455-7793f9f52a2d?w=1200&h=400&fit=crop&auto=format",
+    followers: 1320,
+    artworks: 27,
+    auctions: 14,
+    sold: 10,
+    bio: "Large-format oils of bridges, rivers and passages between places.",
+    tags: ["#landscape", "#oil", "#architecture"],
+  },
+]
+
+/** Demo bidders used to seed each lot's bid history. */
+export const DEMO_BIDDERS = [
+  { name: "LukaT", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&auto=format" },
+  { name: "MariaK", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=48&h=48&fit=crop&auto=format" },
+  { name: "GiorgiB", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=48&h=48&fit=crop&auto=format" },
+  { name: "NinoD", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=48&h=48&fit=crop&auto=format" },
+  { name: "TamarG", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=48&h=48&fit=crop&auto=format" },
+  { name: "AnaM", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=48&h=48&fit=crop&auto=format" },
+]
