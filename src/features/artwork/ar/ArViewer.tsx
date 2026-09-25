@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { QrCode } from "../../../components/ui/QrCode"
 import { formatSize, type SizeCm } from "../../../lib/artwork-size"
 import { useI18n } from "../../../lib/i18n"
-import { buildArtworkGlb } from "./framed-model"
+import { buildArtworkGlb, cacheArModel, cachedArModelUrl } from "./framed-model"
 import type { ModelViewerElement } from "./model-viewer"
 
 /** Phones and tablets (iPadOS reports itself as a Mac, so check for touch too). */
@@ -27,11 +27,13 @@ function phoneLink() {
 }
 
 export default function ArViewer({
+  artworkId,
   image,
   title,
   size,
   onClose,
 }: {
+  artworkId: string
   image: string
   title: string
   size: SizeCm
@@ -47,20 +49,33 @@ export default function ArViewer({
   const sizeLabel = formatSize(size.width, size.height, null, lang === "ka" ? "სმ" : "cm")
 
   useEffect(() => {
-    let url: string | null = null
+    let blobUrl: string | null = null
     let cancelled = false
-    buildArtworkGlb(image, size)
-      .then((result) => {
-        if (cancelled) return URL.revokeObjectURL(result.url)
-        url = result.url
-        setModel(result)
+    ;(async () => {
+      // A cached model (a real https URL, needed for Android's Scene Viewer)
+      // means no rebuild at all — most views after the first for a given
+      // artwork + size land here.
+      const cached = await cachedArModelUrl(artworkId, size)
+      if (cancelled) return
+      if (cached) {
+        setModel({ url: cached, poster: image })
+        return
+      }
+      const built = await buildArtworkGlb(image, size)
+      if (cancelled) return URL.revokeObjectURL(built.url)
+      blobUrl = built.url
+      setModel(built)
+      // Cache it for next time (and to upgrade this visit to a real URL, so
+      // Scene Viewer works without the viewer needing to reopen the dialog).
+      cacheArModel(artworkId, size, built.glb).then((url) => {
+        if (!cancelled && url) setModel((current) => (current ? { ...current, url } : current))
       })
-      .catch(() => !cancelled && setFailed(true))
+    })().catch(() => !cancelled && setFailed(true))
     return () => {
       cancelled = true
-      if (url) URL.revokeObjectURL(url)
+      if (blobUrl) URL.revokeObjectURL(blobUrl)
     }
-  }, [image, size])
+  }, [artworkId, image, size])
 
   useEffect(() => {
     const el = viewer.current

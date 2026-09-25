@@ -13,6 +13,7 @@ import {
   paymentsTestMode,
   simulateProviderPayment,
 } from "./lib/payments.mjs"
+import { arModelSizeKey, storeArModel } from "./lib/ar-models.mjs"
 import {
   authenticate,
   freshReadiness,
@@ -63,6 +64,20 @@ const readRaw = (request) =>
       if (body.length > 20_000) reject(httpError(413, "Request body is too large"))
     })
     request.on("end", () => resolve(body))
+  })
+
+/** Raw binary body (a GLB upload), capped well above what a 2048px-texture model runs to. */
+const readRawBinary = (request, maxBytes) =>
+  new Promise((resolve, reject) => {
+    const chunks = []
+    let size = 0
+    request.on("data", (chunk) => {
+      size += chunk.length
+      if (size > maxBytes) reject(httpError(413, "That model file is too large"))
+      else chunks.push(chunk)
+    })
+    request.on("end", () => resolve(Buffer.concat(chunks)))
+    request.on("error", reject)
   })
 
 const readBody = (request) =>
@@ -256,6 +271,28 @@ const routes = [
       return buyerRespondSupabase(id, Boolean(accept), user)
     },
   ],
+
+  // "View on your wall": caches the true-size GLB a viewer's browser built
+  // from the artwork photo, so Android's Scene Viewer has a real https URL
+  // instead of the page's blob: one. No auth — this is just a render cache
+  // for a publicly viewable artwork, keyed by the size the buyer's browser
+  // already computed from the same public artwork data.
+  [
+    "POST",
+    /^\/api\/artworks\/([\w-]+)\/ar-model$/,
+    async (request, [id], url) => {
+      await getArtwork(id, undefined) // 404s for an unknown/unpublished artwork
+      const w = Number(url.searchParams.get("w"))
+      const h = Number(url.searchParams.get("h"))
+      const d = url.searchParams.has("d") ? Number(url.searchParams.get("d")) : 0
+      const inRange = (n, max) => Number.isFinite(n) && n > 0 && n <= max
+      if (!inRange(w, 1000) || !inRange(h, 1000) || (d && !inRange(d, 200)))
+        throw httpError(422, "Invalid artwork size")
+      const bytes = await readRawBinary(request, 8 * 1024 * 1024)
+      const publicUrl = await storeArModel(id, arModelSizeKey(w, h, d), bytes)
+      return { url: publicUrl }
+    },
+  ],
 ]
 
 const server = createServer(async (request, response) => {
@@ -267,7 +304,7 @@ const server = createServer(async (request, response) => {
     const match = url.pathname.match(pattern)
     if (method !== request.method || !match) continue
     try {
-      const body = await handler(request, match.slice(1))
+      const body = await handler(request, match.slice(1), url)
       return send(response, status, body, origin)
     } catch (error) {
       const code = error.status ?? 500

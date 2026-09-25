@@ -55,7 +55,13 @@ export function ViewOnWallButton({ art }: { art: Artwork }) {
 
       {open && (
         <Suspense fallback={null}>
-          <ArViewer image={art.image} title={art.title} size={size} onClose={() => setOpen(false)} />
+          <ArViewer
+            artworkId={art.id}
+            image={art.image}
+            title={art.title}
+            size={size}
+            onClose={() => setOpen(false)}
+          />
         </Suspense>
       )}
     </>

@@ -3,10 +3,13 @@
 // Units are metres. +Z faces out of the wall; the back sits at z = 0.
 import * as THREE from "three"
 import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter.js"
+import { API_URL } from "../../../lib/api-client"
 import type { SizeCm } from "../../../lib/artwork-size"
+import { supabase } from "../../../lib/supabase"
 
 const MAX_TEXTURE = 2048
 const DEFAULT_DEPTH_CM = 3 // a standard stretcher bar
+const AR_MODEL_BUCKET = "ar-models"
 
 async function loadImage(url: string) {
   const img = new Image()
@@ -53,8 +56,9 @@ function buildCanvasMesh(texCanvas: HTMLCanvasElement, size: SizeCm) {
 }
 
 /**
- * Returns a blob URL for the GLB plus a small poster image.
- * The caller owns the URL and should revoke it when done.
+ * Returns a blob URL for the GLB plus a small poster image, and the raw GLB
+ * bytes so the caller can also cache it server-side (see `cacheArModel`).
+ * The caller owns the blob URL and should revoke it when done.
  */
 export async function buildArtworkGlb(imageUrl: string, size: SizeCm) {
   const img = await loadImage(imageUrl)
@@ -66,5 +70,51 @@ export async function buildArtworkGlb(imageUrl: string, size: SizeCm) {
   return {
     url: URL.createObjectURL(new Blob([glb], { type: "model/gltf-binary" })),
     poster: texCanvas.toDataURL("image/jpeg", 0.6),
+    glb,
+  }
+}
+
+/** Same rounding the server uses, so both sides land on the same cache path. */
+function sizeKey(size: SizeCm) {
+  const round = (n: number) => n.toFixed(1)
+  return `${round(size.width)}x${round(size.height)}x${round(size.depth ?? 0)}`
+}
+
+/**
+ * A previously cached real https URL for this artwork + size, if there is
+ * one — a plain blob: URL (what we build in-browser) works for WebXR and iOS
+ * Quick Look, but Android's Scene Viewer can only fetch a real URL.
+ */
+export async function cachedArModelUrl(artworkId: string, size: SizeCm) {
+  if (!supabase) return null
+  const path = `${artworkId}/${sizeKey(size)}.glb`
+  const { data } = supabase.storage.from(AR_MODEL_BUCKET).getPublicUrl(path)
+  try {
+    const response = await fetch(data.publicUrl, { method: "HEAD" })
+    return response.ok ? data.publicUrl : null
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Uploads a freshly built GLB so later viewers — and Android's Scene Viewer
+ * for this same visit — can use a real URL instead of the page's blob: one.
+ * Best-effort: the in-page blob URL already works without this, so failures
+ * (offline, storage hiccup) are swallowed rather than shown to the viewer.
+ */
+export async function cacheArModel(artworkId: string, size: SizeCm, glb: ArrayBuffer) {
+  try {
+    const params = new URLSearchParams({ w: String(size.width), h: String(size.height) })
+    if (size.depth) params.set("d", String(size.depth))
+    const response = await fetch(
+      `${API_URL}/artworks/${encodeURIComponent(artworkId)}/ar-model?${params}`,
+      { method: "POST", headers: { "Content-Type": "model/gltf-binary" }, body: glb },
+    )
+    if (!response.ok) return null
+    const data = (await response.json()) as { url?: string }
+    return data.url ?? null
+  } catch {
+    return null
   }
 }
