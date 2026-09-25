@@ -6,12 +6,12 @@ export function LivePill({ small }: { small?: boolean }) {
     <Badge
       variant="destructive"
       className={`${
-        small ? "px-2 py-1 text-[9px]" : "px-2.5 py-1"
-      } gap-1.5 border-0 bg-red-500 text-white shadow-lg shadow-red-500/25`}
+        small ? "h-6 px-2.5 py-1 text-[11px]" : "h-7 px-3.5 py-1.5 text-sm"
+      } gap-1.5 border-0 bg-red-500 font-bold text-white shadow-lg shadow-red-500/25`}
     >
       <span
         className="rounded-full bg-white animate-pulse"
-        style={{ width: small ? 5 : 6, height: small ? 5 : 6 }}
+        style={{ width: small ? 6 : 7, height: small ? 6 : 7 }}
       />
       LIVE
     </Badge>
@@ -23,8 +23,8 @@ export function EndingSoonPill({ small }: { small?: boolean }) {
   return (
     <Badge
       className={`${
-        small ? "px-1.5 py-0.5 text-[9px]" : ""
-      } gap-1 bg-amber text-bg`}
+        small ? "h-6 px-2.5 py-1 text-[11px]" : "h-7 px-3.5 py-1.5 text-sm"
+      } gap-1 bg-amber font-bold text-bg`}
     >
       <span>🔥</span> {t("layout.badge.endingSoon")}
     </Badge>

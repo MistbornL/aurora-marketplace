@@ -91,7 +91,7 @@ function RoomCard({
   const upcoming = art.status === "upcoming"
   const liveFormat = art.format === "live"
   const { secs } = useCountdown(upcoming ? art.startsInSecs : art.timeLeftSecs)
-  const endingSoon = !upcoming && !liveFormat && secs <= 2 * 3600
+  const endingSoon = !upcoming && !liveFormat && secs <= 5 * 60
   return (
     <article
       className={`group flex flex-col overflow-hidden rounded-3xl border bg-surface transition-colors ${
@@ -109,11 +109,11 @@ function RoomCard({
         <div className="absolute left-3 top-3">
           {upcoming ? (
             <UpcomingPill small label={t("live.card.upcoming")} />
+          ) : liveFormat ? (
+            <LivePill small />
           ) : endingSoon ? (
             <EndingSoonPill small />
-          ) : (
-            <LivePill small />
-          )}
+          ) : null}
         </div>
         {featured && (
           <span className="absolute right-3 top-3 rounded-full bg-amber px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-bg">

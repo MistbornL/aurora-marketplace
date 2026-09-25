@@ -21,6 +21,10 @@ export type Artwork = {
   category: string
   medium: string
   dimensions: string
+  /** Real size in cm when the artist entered it (used for AR at true scale). */
+  widthCm?: number | null
+  heightCm?: number | null
+  depthCm?: number | null
   year: number | null
   currentBid: number
   startingBid: number

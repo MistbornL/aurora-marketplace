@@ -52,6 +52,16 @@ export const createAuctionResolver =
       errors.reservePrice = { type: "min", message: tr("studio.validation.reserveAboveOpening") }
     else if (reserve != null && buyNow != null && buyNow < reserve)
       errors.buyNowPrice = { type: "min", message: tr("studio.validation.buyNowBelowReserve") }
+    const width = values.widthCm === "" ? null : Number(values.widthCm)
+    const height = values.heightCm === "" ? null : Number(values.heightCm)
+    const depth = values.depthCm === "" ? null : Number(values.depthCm)
+    if ((width == null) !== (height == null)) {
+      const field = width == null ? "widthCm" : "heightCm"
+      errors[field] = { type: "required", message: tr("studio.validation.sizeBoth") }
+    }
+    for (const [field, n, max] of [["widthCm", width, 1000], ["heightCm", height, 1000], ["depthCm", depth, 200]] as const)
+      if (n != null && !(n > 0 && n <= max))
+        errors[field] = { type: "range", message: tr("studio.validation.sizeRange", { max }) }
     if (values.description.length > 2000)
       errors.description = {
         type: "maxLength",

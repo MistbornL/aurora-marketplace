@@ -6,6 +6,7 @@ import { useAuth } from "../../features/auth/auth-context"
 import { useCatalog } from "../../features/catalog/catalog-context"
 import { useSavedIds } from "../../features/catalog/saved"
 import { useI18n, type MessageKey } from "../../lib/i18n"
+import { useScrolled } from "../../lib/motion"
 import { errorMessage, notify } from "../../lib/notify"
 import type { View } from "../../types"
 import { Button } from "../ui"
@@ -90,12 +91,18 @@ export function Nav({
   }
 
   const name = profile?.username ?? user?.email?.split("@")[0] ?? ""
+  // On the landing page the bar starts see-through over the hero, then
+  // frosts once the page scrolls (or whenever a panel is open).
+  const scrolled = useScrolled(8)
+  const clear = current === "landing" && !scrolled && !open
 
   return (
     <>
       <nav
         ref={navRef}
-        className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-white/[.06] bg-[#0d0d10]/85 px-4 backdrop-blur-xl sm:px-6 lg:px-10"
+        className={`sticky top-0 z-50 flex h-16 items-center justify-between border-b px-4 transition-[background-color,border-color,backdrop-filter] duration-300 sm:px-6 lg:px-10 ${
+          clear ? "border-transparent bg-transparent" : "border-white/[.06] bg-[#0d0d10]/85 backdrop-blur-xl"
+        }`}
       >
         {/* Logo */}
         <button

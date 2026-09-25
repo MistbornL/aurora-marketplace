@@ -12,6 +12,7 @@ import { useAuth } from "../auth/auth-context"
 import { money, useArtworkOrder } from "../orders/api"
 import { useNavigate } from "react-router-dom"
 import { getArtwork } from "./api"
+import { ViewOnWallButton } from "./ar/ViewOnWallButton"
 import { ArtworkGallery } from "./components/ArtworkGallery"
 import { BidderAvatar, BidHistoryList } from "./components/BidHistoryList"
 import { BidPanel } from "./components/BidPanel"
@@ -97,9 +98,11 @@ function ArtworkDetailView({
       ? "approval"
       : !isLive
         ? "ended"
-        : art.format !== "live" && secs <= 2 * 3600
-          ? "ending"
-          : "live"
+        : art.format === "live"
+          ? "live"
+          : secs <= 5 * 60
+            ? "ending"
+            : "none"
   const order = useArtworkOrder(art.id, user?.id, !isLive)
 
   async function share() {
@@ -171,6 +174,8 @@ function ArtworkDetailView({
                   {artist?.verified && <VerifiedBadge />}
                 </button>
               </div>
+
+              <ViewOnWallButton art={art} />
 
               <div ref={panelRef} className="scroll-mt-24">
                 <BidPanel

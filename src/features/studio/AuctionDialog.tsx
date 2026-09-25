@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react"
+import { artworkSizeCm } from "../../lib/artwork-size"
 import { useForm, type UseFormRegisterReturn } from "react-hook-form"
 import { CalendarDays, Gavel, ImagePlus, Loader2, Lock, Radio, RefreshCw } from "lucide-react"
 import {
@@ -54,6 +55,8 @@ function inDays(days: number) {
 
 export function AuctionDialog({ auction, onClose, onSubmit }: Props) {
   const { t, formatDate } = useI18n()
+  // Older artworks only have a text label ("80 × 60 cm"); prefill the numbers from it.
+  const knownSize = auction ? artworkSizeCm(auction) : null
   const {
     register,
     handleSubmit,
@@ -68,6 +71,9 @@ export function AuctionDialog({ auction, onClose, onSubmit }: Props) {
       category: auction?.category || "Painting",
       medium: auction?.medium ?? "",
       dimensions: auction?.dimensions ?? "",
+      widthCm: knownSize?.width ?? "",
+      heightCm: knownSize?.height ?? "",
+      depthCm: knownSize?.depth ?? "",
       description: auction?.description ?? "",
       openingBid: auction?.openingBid ?? 50,
       bidIncrement: auction?.bidIncrement ?? 10,
@@ -223,14 +229,41 @@ export function AuctionDialog({ auction, onClose, onSubmit }: Props) {
                 </div>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <FieldBlock label={t("studio.dialog.medium")} htmlFor="auction-medium">
-                  <Input id="auction-medium" {...register("medium")} placeholder={t("studio.dialog.mediumPlaceholder")} className="h-10" />
-                </FieldBlock>
-                <FieldBlock label={t("studio.dialog.size")} htmlFor="auction-dimensions">
-                  <Input id="auction-dimensions" {...register("dimensions")} placeholder={t("studio.dialog.sizePlaceholder")} className="h-10" />
-                </FieldBlock>
-              </div>
+              <FieldBlock label={t("studio.dialog.medium")} htmlFor="auction-medium">
+                <Input id="auction-medium" {...register("medium")} placeholder={t("studio.dialog.mediumPlaceholder")} className="h-10" />
+              </FieldBlock>
+
+              <fieldset className="space-y-2">
+                <legend className="text-xs font-medium text-text-secondary">{t("studio.dialog.size")}</legend>
+                <div className="grid grid-cols-3 gap-3">
+                  {([
+                    ["widthCm", "auction-width", t("studio.dialog.width"), "60"],
+                    ["heightCm", "auction-height", t("studio.dialog.height"), "80"],
+                    ["depthCm", "auction-depth", t("studio.dialog.depth"), "3"],
+                  ] as const).map(([name, id, label, example]) => (
+                    <div key={name} className="space-y-1">
+                      <Label htmlFor={id} className="text-[11px] text-text-muted">{label}</Label>
+                      <div className="relative">
+                        <Input
+                          id={id}
+                          type="number"
+                          inputMode="decimal"
+                          min={0}
+                          step={0.1}
+                          placeholder={example}
+                          {...register(name, { setValueAs: priceValue })}
+                          className="h-10 pr-10"
+                        />
+                        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-text-muted">
+                          {t("studio.dialog.cm")}
+                        </span>
+                      </div>
+                      <ErrorText message={errors[name]?.message} />
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[11px] leading-5 text-text-muted">{t("studio.dialog.sizeHint")}</p>
+              </fieldset>
 
               <FieldBlock
                 label={t("studio.dialog.description")}

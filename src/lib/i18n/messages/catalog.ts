@@ -38,6 +38,7 @@ export const en = {
   "catalog.hero.statLive": "Live auctions",
   "catalog.hero.statArtists": "Artists",
   "catalog.hero.statBids": "Bids placed",
+  "catalog.marquee.label": "Artists selling on TSISKARI",
 
   "catalog.how.step": "Step {n}",
   "catalog.how.discoverTitle": "Discover",
@@ -103,6 +104,7 @@ export const ka: Record<keyof typeof en, string> = {
   "catalog.hero.statLive": "ლაივ აუქციონი",
   "catalog.hero.statArtists": "მხატვარი",
   "catalog.hero.statBids": "დადებული ფსონი",
+  "catalog.marquee.label": "TSISKARI-ზე გამყიდველი მხატვრები",
 
   "catalog.how.step": "ნაბიჯი {n}",
   "catalog.how.discoverTitle": "აღმოაჩინე",

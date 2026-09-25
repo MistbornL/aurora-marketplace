@@ -11,7 +11,7 @@ export function ArtworkGallery({
 }: {
   title: string
   images: string[]
-  status: "live" | "ending" | "ended" | "upcoming" | "approval"
+  status: "live" | "ending" | "ended" | "upcoming" | "approval" | "none"
 }) {
   const { t } = useI18n()
   const [active, setActive] = useState(0)

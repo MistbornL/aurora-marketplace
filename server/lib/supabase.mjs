@@ -125,7 +125,7 @@ export function settleSoon(force = false) {
 const AUCTION_SELECT = [
   "id,status,format,opening_bid,current_bid,bid_increment,bid_count,starts_at,ends_at,seller_id,highest_bidder_id",
   "buy_now_price,has_reserve,reserve_met,decision_deadline,counter_offer,seller_decision,sold_via,event_id,lot_number",
-  "artwork:artworks(title,image_url,category,medium,dimensions,year,description)",
+  "artwork:artworks(title,image_url,category,medium,dimensions,width_cm,height_cm,depth_cm,year,description)",
   // display_name = the public name each person chose (username / full name / both).
   "seller:profiles!auctions_seller_id_fkey(username,display_name)",
   "highest:profiles!auctions_highest_bidder_id_fkey(username,display_name)",
@@ -162,6 +162,9 @@ function toArtwork(row) {
     category: row.artwork?.category ?? "",
     medium: row.artwork?.medium ?? "",
     dimensions: row.artwork?.dimensions ?? "",
+    widthCm: row.artwork?.width_cm == null ? null : Number(row.artwork.width_cm),
+    heightCm: row.artwork?.height_cm == null ? null : Number(row.artwork.height_cm),
+    depthCm: row.artwork?.depth_cm == null ? null : Number(row.artwork.depth_cm),
     year: row.artwork?.year ?? null,
     currentBid: current,
     startingBid: Number(row.opening_bid),

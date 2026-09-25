@@ -65,9 +65,9 @@ export default function ArtistsDirectoryPage({
             const artistWorks = artworks.filter(
               (art) => art.artistId === artist.id,
             )
-            const live = artistWorks.find((art) => art.isLive)
+            const live = artistWorks.find((art) => art.isLive && art.format === "live")
             const endingSoon = artistWorks.find(
-              (art) => art.isLive && art.timeLeftSecs <= 2 * 3600,
+              (art) => art.isLive && art.format !== "live" && art.timeLeftSecs <= 5 * 60,
             )
             return (
               <Card

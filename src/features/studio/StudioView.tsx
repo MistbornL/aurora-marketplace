@@ -313,11 +313,11 @@ function AuctionList({
 function StatusPill({ auction }: { auction: ManagedAuction }) {
   const { t } = useI18n()
   if (auction.isLive)
-    return auction.format === "timed" && auction.timeLeftSecs <= 7200 ? (
-      <EndingSoonPill small />
-    ) : (
+    return auction.format === "live" ? (
       <LivePill small />
-    )
+    ) : auction.timeLeftSecs <= 5 * 60 ? (
+      <EndingSoonPill small />
+    ) : null
   if (auction.status === "scheduled")
     return <UpcomingPill small label={auction.format === "live" ? t("studio.pill.liveScheduled") : t("studio.pill.scheduled")} />
   if (auction.status === "awaiting_seller")

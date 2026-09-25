@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TSISKARI · landing v2 concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Noto+Sans+Georgian:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1"></script>
+<style>
+/* ------------------------------------------------------------------
+   Tokens. One accent (amber), one theme (dark), one radius rule:
+   buttons + pills = full pill, cards + images = 16px, inner chips = 10px.
+------------------------------------------------------------------- */
+:root {
+  --bg: #0d0d10;
+  --bg-2: #111115;
+  --surface: #16161b;
+  --surface-2: #1c1c22;
+  --line: rgba(255,255,255,0.07);
+  --line-2: rgba(255,255,255,0.12);
+  --text: #f2efe8;
+  --text-2: #c9c5bc;
+  --muted: #8f8b82;
+  --amber: #e8b84b;
+  --amber-ink: #0d0d10;
+  --amber-soft: rgba(232,184,75,0.14);
+  --live: #ef5a4a;
+  --r-card: 16px;
+  --r-chip: 10px;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --font: 'Geist', 'Noto Sans Georgian', system-ui, sans-serif;
+  --mono: 'Geist Mono', ui-monospace, monospace;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: rgba(232,184,75,.3) transparent; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font-family: var(--font); font-size: 16px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+html[lang="ka"] body { --font: 'Noto Sans Georgian', 'Geist', system-ui, sans-serif; }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+h1, h2, h3, p { margin: 0; }
+h1, h2 { text-wrap: balance; }
+p { text-wrap: pretty; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.wrap { max-width: 1320px; margin: 0 auto; padding: 0 32px; }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; border-radius: 6px; }
+
+.skip { position: absolute; left: 16px; top: -48px; background: var(--amber); color: var(--amber-ink); padding: 8px 14px; border-radius: 999px; font-weight: 600; z-index: 200; transition: top 160ms var(--ease-out); }
+.skip:focus { top: 12px; }
+
+.grain { position: fixed; inset: 0; pointer-events: none; z-index: 150; opacity: .045; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+/* ------------------------------ Buttons ------------------------------ */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 22px;
+  border-radius: 999px; font-weight: 600; font-size: 15px; white-space: nowrap;
+  transition: transform 160ms var(--ease-out), background-color 200ms ease, box-shadow 200ms ease;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--amber); color: var(--amber-ink); box-shadow: 0 10px 30px -12px rgba(232,184,75,.55); }
+.btn-link { color: var(--text); gap: 8px; padding: 0 6px; }
+.btn-link i { transition: transform 200ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover { background: #f0c664; }
+  .btn-link:hover i { transform: translateX(3px); }
+}
+
+/* -------------------------------- Nav -------------------------------- */
+.nav { position: sticky; top: 0; z-index: 100; height: 64px; border-bottom: 1px solid transparent;
+  transition: background-color 250ms ease, border-color 250ms ease; }
+.nav.scrolled { background: rgba(13,13,16,.78); backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%); border-color: var(--line); }
+.nav .wrap { height: 100%; display: flex; align-items: center; gap: 40px; }
+.logo { font-weight: 700; font-size: 19px; letter-spacing: -0.02em; display: flex; align-items: center; }
+.logo b { display: inline-grid; place-items: center; width: 21px; height: 21px; margin: 0 1px; border-radius: 999px; background: var(--amber); color: var(--amber-ink); font-size: 12px; }
+.nav-links { display: flex; gap: 28px; font-size: 14.5px; color: var(--text-2); }
+.nav-links a { position: relative; transition: color 200ms ease; }
+.nav-links a[aria-current] { color: var(--text); }
+.nav-links a[aria-current]::after { content: ''; position: absolute; left: 0; right: 0; bottom: -22px; height: 2px; background: var(--amber); border-radius: 2px; }
+@media (hover: hover) and (pointer: fine) { .nav-links a:hover { color: var(--text); } }
+.nav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.lang { display: flex; border: 1px solid var(--line-2); border-radius: 999px; padding: 3px; }
+.lang button { height: 30px; min-width: 38px; padding: 0 10px; border-radius: 999px; font-size: 13px; color: var(--muted); transition: background-color 200ms ease, color 200ms ease; }
+.lang button[aria-pressed="true"] { background: var(--surface-2); color: var(--text); }
+.nav .btn { height: 38px; padding: 0 16px; font-size: 14px; }
+
+/* ------------------------------- Hero -------------------------------- */
+.hero { position: relative; min-height: calc(100dvh - 64px); display: flex; align-items: center; padding: 40px 0 72px; }
+.hero::before { /* a single warm light source, top right, behind the artwork */
+  content: ''; position: absolute; right: -10%; top: -20%; width: 70vw; height: 90vh; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(232,184,75,.13), transparent 70%); }
+.hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: center; width: 100%; }
+.live-note { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-2); margin-bottom: 28px; }
+.dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: var(--live); }
+.dot::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 1.5px solid var(--live); animation: ping 2s var(--ease-out) infinite; }
+@keyframes ping { from { transform: scale(.6); opacity: .9; } to { transform: scale(1.9); opacity: 0; } }
+.hero h1 { font-size: clamp(40px, 4.4vw, 66px); line-height: 1.02; letter-spacing: -0.045em; font-weight: 600; }
+html[lang="ka"] .hero h1 { font-size: clamp(36px, 4.2vw, 62px); line-height: 1.12; letter-spacing: -0.01em; }
+.hero h1 .accent { color: var(--amber); }
+@media (min-width: 961px) { .hero h1 > span { white-space: nowrap; } html[lang="ka"] .hero h1 > span { white-space: normal; } }
+.hero .lead { margin-top: 24px; max-width: 30ch; font-size: 18.5px; line-height: 1.55; color: var(--text-2); }
+.hero .ctas { margin-top: 36px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+
+/* hero entrance: staggered, ease-out, transform + opacity only */
+.enter { opacity: 0; transform: translateY(14px); animation: enter 800ms var(--ease-out) forwards; animation-delay: calc(var(--i, 0) * 70ms + 120ms); }
+@keyframes enter { to { opacity: 1; transform: none; } }
+
+/* hero art stack */
+.stack { position: relative; height: min(640px, 72dvh); }
+.frame { position: absolute; border-radius: var(--r-card); overflow: hidden; background: var(--surface); box-shadow: 0 40px 80px -30px rgba(0,0,0,.85), 0 0 0 1px var(--line); will-change: transform; }
+.frame img { width: 100%; height: 100%; object-fit: cover; }
+.f-main { inset: 0 8% 0 14%; z-index: 2; }
+.f-back1 { width: 32%; height: 42%; left: 0; bottom: 12%; z-index: 1; opacity: .75; }
+.f-back2 { width: 28%; height: 34%; right: 0; top: -4%; z-index: 3; }
+.f-back2 figcaption { position: absolute; left: 10px; bottom: 10px; right: 10px; font-size: 12px; color: var(--text); background: rgba(10,10,12,.55); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.1); border-radius: var(--r-chip); padding: 7px 10px; display: flex; justify-content: space-between; }
+.f-main::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,8,10,.92) 0%, rgba(8,8,10,.1) 45%, transparent 60%); }
+
+.lot-panel { position: absolute; left: 20px; right: 20px; bottom: 20px; z-index: 2; }
+.badge { display: inline-flex; align-items: center; gap: 7px; height: 28px; padding: 0 12px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .02em; }
+.badge-live { background: var(--live); color: #fff; }
+.badge-live .d { width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: blink 1.4s ease-in-out infinite; }
+@keyframes blink { 50% { opacity: .35; } }
+.badge-soon { background: var(--amber); color: var(--amber-ink); }
+.lot-top { position: absolute; top: 18px; left: 18px; right: 18px; z-index: 2; display: flex; justify-content: space-between; }
+.glass { background: rgba(12,12,15,.5); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.1); box-shadow: inset 0 1px 0 rgba(255,255,255,.08); }
+.lot-title { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+.lot-artist { font-size: 14px; color: var(--text-2); margin-top: 2px; }
+.lot-row { margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: end; padding: 14px 16px; border-radius: var(--r-card); }
+.lbl { font-size: 11.5px; color: var(--muted); margin-bottom: 4px; }
+.big-num { font-size: 26px; font-weight: 500; letter-spacing: -0.02em; }
+.price { color: var(--amber); display: inline-block; transition: filter 220ms ease, opacity 220ms ease, transform 220ms var(--ease-out); }
+.price.swap { filter: blur(4px); opacity: .3; transform: translateY(-6px); }
+.bid-btn { height: 44px; padding: 0 18px; border-radius: 999px; background: var(--amber); color: var(--amber-ink); font-weight: 600; font-size: 14px; transition: transform 160ms var(--ease-out); }
+.bid-btn:active { transform: scale(0.97); }
+
+/* incoming-bid toast inside the lot */
+.feed { position: absolute; top: 62px; left: 18px; z-index: 3; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+.toast { font-size: 13px; padding: 8px 12px; border-radius: 999px; display: flex; gap: 8px; align-items: center;
+  transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out); }
+.toast .num { color: var(--amber); }
+.toast.in-start { opacity: 0; transform: translateY(-8px) scale(.97); }
+.toast.out { opacity: 0; transform: translateX(-8px); transition-duration: 200ms; }
+
+/* ----------------------------- Proof strip ---------------------------- */
+.proof { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.proof .wrap { display: grid; grid-template-columns: repeat(3, 1fr); }
+.proof-item { display: flex; gap: 14px; align-items: flex-start; padding: 26px 28px 26px 0; }
+.proof-item + .proof-item { padding-left: 28px; border-left: 1px solid var(--line); }
+.proof-item i { font-size: 22px; color: var(--amber); margin-top: 2px; }
+.proof-item strong { display: block; font-weight: 600; font-size: 15px; }
+.proof-item span { color: var(--muted); font-size: 14px; }
+
+/* --------------------------- Closing soon rail -------------------------- */
+section.block { padding: 120px 0; }
+.block-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 36px; }
+.block-head h2 { font-size: clamp(30px, 3.4vw, 46px); letter-spacing: -0.035em; font-weight: 600; line-height: 1.08; }
+.block-head p { color: var(--muted); margin-top: 10px; max-width: 46ch; }
+.rail-ctrl { display: flex; gap: 8px; }
+.icon-btn { width: 44px; height: 44px; border-radius: 999px; border: 1px solid var(--line-2); display: grid; place-items: center; font-size: 18px; transition: transform 160ms var(--ease-out), background-color 200ms ease; }
+.icon-btn:active { transform: scale(0.95); }
+@media (hover: hover) and (pointer: fine) { .icon-btn:hover { background: var(--surface-2); } }
+
+.rail { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(290px, 23%); gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; scrollbar-width: none; }
+.rail::-webkit-scrollbar { display: none; }
+.lot { scroll-snap-align: start; position: relative; border-radius: var(--r-card); background: var(--surface); padding: 10px; }
+.lot::before { /* spotlight border that follows the pointer */
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: radial-gradient(260px circle at var(--sx, 50%) var(--sy, -40%), rgba(232,184,75,.55), var(--line) 60%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+.lot-media { position: relative; aspect-ratio: 4/5; border-radius: 10px; overflow: hidden; background: var(--surface-2); }
+.lot-media img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.04); transition: transform 700ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .lot:hover .lot-media img { transform: scale(1.08); } }
+.lot-media .badge { position: absolute; left: 10px; top: 10px; }
+.lot-body { padding: 14px 6px 6px; }
+.lot-body h3 { font-size: 16.5px; font-weight: 600; letter-spacing: -0.01em; }
+.lot-body .by { color: var(--muted); font-size: 13.5px; margin-top: 2px; }
+.lot-meta { display: flex; justify-content: space-between; align-items: baseline; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+.lot-meta .b { color: var(--amber); font-size: 17px; }
+.lot-meta .t { color: var(--text-2); font-size: 13.5px; }
+.lot-meta .t.soon { color: var(--amber); }
+
+/* scroll reveals: clip-path wipe for images, rise for text. Once only. */
+.reveal-img { clip-path: inset(0 0 100% 0); transition: clip-path 1100ms var(--ease-in-out); transition-delay: calc(var(--i, 0) * 60ms); }
+.reveal-img.in { clip-path: inset(0 0 0 0); }
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out); transition-delay: calc(var(--i, 0) * 60ms); }
+.reveal.in { opacity: 1; transform: none; }
+
+/* ------------------------------- Bento -------------------------------- */
+.eyebrow { font-size: 13px; color: var(--amber); font-weight: 500; margin-bottom: 14px; }
+.bento { display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: 230px; gap: 16px; }
+.cell { position: relative; border-radius: var(--r-card); overflow: hidden; background: var(--surface); padding: 28px; display: flex; flex-direction: column; box-shadow: inset 0 0 0 1px var(--line); }
+.cell h3 { font-size: 21px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
+.cell p { color: var(--text-2); font-size: 15px; margin-top: 8px; max-width: 34ch; }
+.c-feed { grid-column: span 7; grid-row: span 2; background: linear-gradient(160deg, #1b1a17, #141417 55%); }
+.c-public { grid-column: span 5; padding: 0; }
+.c-public img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .55; }
+.c-public .inner { position: relative; margin-top: auto; padding: 28px; background: linear-gradient(to top, rgba(10,10,12,.95), transparent); }
+.c-pay { grid-column: span 5; background: var(--amber-soft); box-shadow: inset 0 0 0 1px rgba(232,184,75,.22); }
+.c-pay .meter { margin-top: auto; height: 6px; border-radius: 99px; background: rgba(232,184,75,.18); overflow: hidden; }
+.c-pay .meter span { display: block; height: 100%; width: 100%; background: var(--amber); transform-origin: left; transform: scaleX(.72); }
+.c-pay .meter-lbl { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--text-2); margin-top: 8px; }
+
+.live-feed { margin-top: auto; display: flex; flex-direction: column; gap: 10px; }
+.feed-row { display: grid; grid-template-columns: 36px 1fr auto; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,.03); box-shadow: inset 0 0 0 1px var(--line);
+  transition: opacity 450ms var(--ease-out), transform 450ms var(--ease-out); }
+.feed-row.in-start { opacity: 0; transform: translateY(-10px); }
+.av { width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; font-weight: 600; font-size: 13px; background: var(--surface-2); color: var(--text-2); }
+.feed-row .who { font-size: 14px; }
+.feed-row .who small { display: block; color: var(--muted); font-size: 12.5px; }
+.feed-row .num { color: var(--amber); font-size: 15px; }
+.feed-row:first-child .av { background: var(--amber); color: var(--amber-ink); }
+
+/* ---------------------------- Artist feature ---------------------------- */
+.feature { display: grid; grid-template-columns: 1.1fr 1fr; gap: 80px; align-items: center; }
+.feature-img { border-radius: var(--r-card); overflow: hidden; aspect-ratio: 5/6; background: var(--surface); }
+.feature-img img { width: 100%; height: 100%; object-fit: cover; }
+blockquote { margin: 0; font-size: clamp(24px, 2.4vw, 34px); line-height: 1.3; letter-spacing: -0.025em; font-weight: 500; max-width: 28ch; }
+.cite { margin-top: 28px; display: flex; align-items: center; gap: 14px; }
+.cite img { width: 48px; height: 48px; border-radius: 14px; object-fit: cover; }
+.cite strong { display: block; font-weight: 600; }
+.cite span { color: var(--muted); font-size: 14px; }
+.sample { display: inline-block; margin-top: 22px; font-size: 12px; color: var(--muted); border: 1px dashed var(--line-2); border-radius: 999px; padding: 4px 10px; }
+
+/* ------------------------------ Stats + CTA ----------------------------- */
+.closer { border-top: 1px solid var(--line); }
+.closer-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px; align-items: end; }
+.closer h2 { font-size: clamp(38px, 4.6vw, 68px); letter-spacing: -0.045em; line-height: 1.02; font-weight: 600; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.stat .n { font-size: 44px; letter-spacing: -0.03em; }
+.stat .l { color: var(--muted); font-size: 14px; }
+.closer .ctas { margin-top: 36px; display: flex; gap: 18px; align-items: center; }
+
+footer { border-top: 1px solid var(--line); padding: 36px 0 48px; color: var(--muted); font-size: 14px; }
+footer .wrap { display: flex; gap: 28px; align-items: center; flex-wrap: wrap; }
+footer nav { display: flex; gap: 22px; }
+footer .note { margin-left: auto; font-size: 12.5px; }
+@media (hover: hover) and (pointer: fine) { footer nav a:hover { color: var(--text); } }
+
+/* ------------------------------ Responsive ------------------------------ */
+@media (max-width: 960px) {
+  .wrap { padding: 0 20px; }
+  .nav-links { display: none; }
+  .hero { min-height: auto; padding: 32px 0 56px; }
+  .hero-grid, .feature, .closer-grid { grid-template-columns: 1fr; gap: 44px; }
+  .stack { height: 520px; }
+  .f-back1 { display: none; }
+  .f-main { inset: 0 0 0 0; }
+  .f-back2 { width: 38%; height: 30%; right: -6px; top: -16px; }
+  .proof .wrap { grid-template-columns: 1fr; }
+  .proof-item, .proof-item + .proof-item { padding: 18px 0; border-left: 0; }
+  .proof-item + .proof-item { border-top: 1px solid var(--line); }
+  section.block { padding: 80px 0; }
+  .rail { grid-auto-columns: 78%; }
+  .rail-ctrl { display: none; }
+  .bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
+  .c-feed, .c-public, .c-pay { grid-column: auto; grid-row: auto; min-height: 220px; }
+  .stats { grid-template-columns: repeat(3, 1fr); }
+  .stat .n { font-size: 32px; }
+  footer .note { margin-left: 0; }
+}
+
+/* --------------------------- Reduced motion ---------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .enter, .reveal { transform: none !important; animation-duration: 1ms; transition: opacity 300ms ease; }
+  .reveal-img { clip-path: none; transition: none; }
+  .dot::after, .badge-live .d { animation: none; }
+  .frame { transform: none !important; }
+  .toast, .feed-row { transform: none !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="logo" href="#" aria-label="TSISKARI home">TSISK<b>A</b>RI</a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#closing" data-en="Discover" data-ka="აღმოაჩინე">Discover</a>
+      <a href="#artist" data-en="Artists" data-ka="მხატვრები">Artists</a>
+      <a href="#how" data-en="How it works" data-ka="როგორ მუშაობს">How it works</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="ka" aria-pressed="false">ქა</button>
+      </div>
+      <a class="btn btn-primary" href="#" data-en="Sign in" data-ka="შესვლა">Sign in</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- HERO: max 4 text elements (live note, headline, lead, CTAs). Proof points moved below. -->
+  <section class="hero" id="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="live-note enter" style="--i:0"><span class="dot" aria-hidden="true"></span><span data-en="4 auctions open right now" data-ka="ახლა 4 აუქციონი მიმდინარეობს">4 auctions open right now</span></p>
+        <h1 class="enter" style="--i:1">
+          <span data-en="Own original art." data-ka="შეიძინე ორიგინალი ხელოვნება">Own original art.</span><br>
+          <span class="accent" data-en="Bid live." data-ka="ლაივ აუქციონზე.">Bid live.</span>
+        </h1>
+        <p class="lead enter" style="--i:2" data-en="Paintings, drawings and photography by independent Georgian artists, sold in transparent live auctions." data-ka="დამოუკიდებელი ქართველი მხატვრების ფერწერა, გრაფიკა და ფოტოგრაფია, გამჭვირვალე ლაივ აუქციონებზე.">Paintings, drawings and photography by independent Georgian artists, sold in transparent live auctions.</p>
+        <div class="ctas enter" style="--i:3">
+          <a class="btn btn-primary" href="#closing"><span data-en="Browse auctions" data-ka="ნახე აუქციონები">Browse auctions</span> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+          <a class="btn btn-link" href="#how"><span data-en="Sell your art" data-ka="გაყიდე შენი ნამუშევარი">Sell your art</span> <i class="ph ph-arrow-up-right" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div class="stack enter" style="--i:2" id="stack" aria-label="Featured live lot">
+        <figure class="frame f-back1" data-depth="10" style="margin:0">
+          <img src="https://picsum.photos/seed/tsiskari-drawing-study/500/620" alt="Ink study of hills, by Giorgi Tsertsvadze">
+        </figure>
+        <figure class="frame f-main" data-depth="4" style="margin:0">
+          <img src="https://picsum.photos/seed/tsiskari-last-light/900/1100" alt="The Last Light, oil on canvas, by Nino Beridze" fetchpriority="high">
+          <div class="lot-top">
+            <span class="badge badge-live"><span class="d"></span>LIVE</span>
+          </div>
+          <div class="feed" id="toasts" aria-live="polite"></div>
+          <div class="lot-panel">
+            <p class="lot-title">The Last Light</p>
+            <p class="lot-artist">Nino Beridze · oil on canvas, 60 × 80 cm</p>
+            <div class="lot-row glass">
+              <div><p class="lbl">Current bid</p><p class="big-num num"><span class="price" id="heroPrice">420₾</span></p></div>
+              <div><p class="lbl">Ends in</p><p class="big-num num" data-countdown="7925">02:12:05</p></div>
+              <button class="bid-btn" type="button" id="heroBidBtn">Bid 440₾</button>
+            </div>
+          </div>
+        </figure>
+        <figure class="frame f-back2" data-depth="16" style="margin:0">
+          <img src="https://picsum.photos/seed/tsiskari-mountain-silence/500/560" alt="Mountain Silence, photograph, by Ana Kapanadze">
+          <figcaption><span>Mountain Silence</span><span class="num">280₾</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROOF STRIP: the hero's old trust row, given its own row -->
+  <section class="proof" aria-label="Why TSISKARI">
+    <div class="wrap">
+      <div class="proof-item reveal" style="--i:0"><i class="ph ph-eye" aria-hidden="true"></i><div><strong>Every bid is public</strong><span>Name, amount and time, visible to everyone.</span></div></div>
+      <div class="proof-item reveal" style="--i:1"><i class="ph ph-paint-brush-broad" aria-hidden="true"></i><div><strong>Artists set the reserve</strong><span>Nothing sells below the price they chose.</span></div></div>
+      <div class="proof-item reveal" style="--i:2"><i class="ph ph-hand-coins" aria-hidden="true"></i><div><strong>Free to join</strong><span>No fees to browse, save or bid.</span></div></div>
+    </div>
+  </section>
+
+  <!-- CLOSING SOON: horizontal snap rail (layout family: rail) -->
+  <section class="block" id="closing">
+    <div class="wrap">
+      <div class="block-head">
+        <div>
+          <h2 class="reveal">Closing soon</h2>
+          <p class="reveal" style="--i:1">Timed auctions end on the second. The last minute is where it gets interesting.</p>
+        </div>
+        <div class="rail-ctrl">
+          <button class="icon-btn" type="button" data-rail="-1" aria-label="Scroll left"><i class="ph ph-caret-left"></i></button>
+          <button class="icon-btn" type="button" data-rail="1" aria-label="Scroll right"><i class="ph ph-caret-right"></i></button>
+        </div>
+      </div>
+      <div class="rail" id="rail">
+        <!-- cards rendered from data below -->
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS: bento (layout family: bento). The one eyebrow in this third of the page. -->
+  <section class="block" id="how" style="padding-top:40px">
+    <div class="wrap">
+      <div class="block-head">
+        <div>
+          <p class="eyebrow reveal">How it works</p>
+          <h2 class="reveal" style="--i:1">An auction house that fits in your pocket</h2>
+        </div>
+      </div>
+      <div class="bento">
+        <article class="cell c-feed reveal">
+          <h3>Bid in real time</h3>
+          <p>Every live lot has its own room. Bids land for everyone at the same moment.</p>
+          <div class="live-feed" id="bentoFeed" aria-live="polite"></div>
+        </article>
+        <article class="cell c-public reveal" style="--i:1">
+          <img src="https://picsum.photos/seed/tsiskari-studio-wall/800/500" alt="" loading="lazy">
+          <div class="inner"><h3>Verified artists only</h3><p>Every seller is reviewed before their first lot goes live.</p></div>
+        </article>
+        <article class="cell c-pay reveal" style="--i:2">
+          <h3>24 hours to pay</h3>
+          <p>Win, pay within a day, then the artist ships or you pick up.</p>
+          <div class="meter" aria-hidden="true"><span></span></div>
+          <div class="meter-lbl"><span>Payment window</span><span class="num">17h 14m left</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARTIST FEATURE: split with real image (layout family: split) -->
+  <section class="block" id="artist" style="padding-top:40px">
+    <div class="wrap feature">
+      <div class="feature-img reveal-img">
+        <img src="https://picsum.photos/seed/tsiskari-artist-studio/900/1080" alt="Nino Beridze in her Tbilisi studio" loading="lazy">
+      </div>
+      <div>
+        <blockquote class="reveal">“I set my own reserve, then watched collectors bid in real time. Nobody negotiated me down.”</blockquote>
+        <div class="cite reveal" style="--i:1">
+          <img src="https://picsum.photos/seed/tsiskari-nino-portrait/120/120" alt="" loading="lazy">
+          <div><strong>Nino Beridze</strong><span>Painter, Tbilisi</span></div>
+        </div>
+        <span class="sample reveal" style="--i:2">Sample quote for this concept</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSER: stats + final CTA (same labels as hero, one label per intent) -->
+  <section class="block closer">
+    <div class="wrap closer-grid">
+      <div>
+        <h2 class="reveal">Start with one bid.</h2>
+        <div class="ctas reveal" style="--i:1">
+          <a class="btn btn-primary" href="#closing">Browse auctions <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+          <a class="btn btn-link" href="#how">Sell your art <i class="ph ph-arrow-up-right" aria-hidden="true"></i></a>
+        </div>
+      </div>
+      <div class="stats" id="stats">
+        <div class="stat reveal"><p class="n num" data-count="4">0</p><p class="l">Live auctions</p></div>
+        <div class="stat reveal" style="--i:1"><p class="n num" data-count="5">0</p><p class="l">Artists</p></div>
+        <div class="stat reveal" style="--i:2"><p class="n num" data-count="348">0</p><p class="l">Bids placed</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="logo" href="#">TSISK<b>A</b>RI</a>
+    <nav aria-label="Footer">
+      <a href="#">About</a><a href="#">FAQ</a><a href="#">Terms</a><a href="#">Privacy</a>
+    </nav>
+    <p class="note">Concept v2. Placeholder photos, simulated bids. Not connected to live data.</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const fmt = (s) => {
+    s = Math.max(0, s | 0);
+    const h = String(Math.floor(s / 3600)).padStart(2, '0');
+    const m = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+    const x = String(s % 60).padStart(2, '0');
+    return `${h}:${m}:${x}`;
+  };
+  const short = (s) => s >= 3600 ? `${Math.floor(s/3600)}h ${Math.floor((s%3600)/60)}m left` : `${Math.floor(s/60)}m ${String(s%60).padStart(2,'0')}s left`;
+
+  /* ---------- Closing soon rail (data mirrors the real badge rules:
+     LIVE only for live-format lots, "Ending soon" only under 5 minutes) ---------- */
+  const lots = [
+    { t: 'Night Watch', a: 'Giorgi Tsertsvadze', m: 'Charcoal on paper', b: 360, s: 272, seed: 'night-watch', live: false },
+    { t: 'Ancient Grove', a: 'Luka Maisuradze', m: 'Oil on board', b: 190, s: 1480, seed: 'ancient-grove', live: false },
+    { t: 'Verdant Passage', a: 'Mariam Kviriashvili', m: 'Photograph', b: 240, s: 3120, seed: 'verdant-passage', live: true },
+    { t: 'The Bloom', a: 'Ana Kapanadze', m: 'Watercolour', b: 150, s: 5400, seed: 'the-bloom', live: false },
+    { t: 'Mtatsminda, 6am', a: 'Nino Beridze', m: 'Oil on canvas', b: 520, s: 8800, seed: 'mtatsminda', live: false },
+    { t: 'River Study II', a: 'Luka Maisuradze', m: 'Ink on paper', b: 95, s: 12600, seed: 'river-study', live: false },
+  ];
+  const rail = document.getElementById('rail');
+  rail.innerHTML = lots.map((l, i) => `
+    <article class="lot reveal" style="--i:${i}">
+      <div class="lot-media reveal-img" style="--i:${i}">
+        <img src="https://picsum.photos/seed/tsiskari-${l.seed}/600/750" alt="${l.t}, ${l.m.toLowerCase()}, by ${l.a}" loading="lazy">
+        <span class="badge-slot"></span>
+      </div>
+      <div class="lot-body">
+        <h3>${l.t}</h3>
+        <p class="by">${l.a} · ${l.m}</p>
+        <div class="lot-meta"><span class="b num">${l.b}₾</span><span class="t num" data-short="${l.s}" data-live="${l.live}">${short(l.s)}</span></div>
+      </div>
+    </article>`).join('');
+
+  /* ---------- Countdowns: one ticker for the page ---------- */
+  const t0 = performance.now();
+  const heroCd = document.querySelector('[data-countdown]');
+  const heroEnd = +heroCd.dataset.countdown;
+  const shorts = [...document.querySelectorAll('[data-short]')];
+  function tick() {
+    const el = Math.floor((performance.now() - t0) / 1000);
+    heroCd.textContent = fmt(heroEnd - el);
+    shorts.forEach((n) => {
+      const left = Math.max(0, +n.dataset.short - el);
+      n.textContent = left > 0 ? short(left) : 'Ended';
+      const slot = n.closest('.lot').querySelector('.badge-slot');
+      const live = n.dataset.live === 'true';
+      const soon = !live && left > 0 && left <= 300;
+      n.classList.toggle('soon', soon);
+      const want = live ? 'live' : soon ? 'soon' : '';
+      if (slot.dataset.state !== want) {
+        slot.dataset.state = want;
+        slot.innerHTML = want === 'live' ? '<span class="badge badge-live"><span class="d"></span>LIVE</span>'
+          : want === 'soon' ? '<span class="badge badge-soon"><i class="ph-fill ph-timer"></i>Ending soon</span>' : '';
+      }
+    });
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* ---------- Simulated bids: explains the product, pauses when tab hidden ---------- */
+  const bidders = ['Nika', 'Tamar', 'Levan', 'Salome', 'Dato', 'Keti', 'Irakli', 'Mariam'];
+  let price = 420, bids = 17;
+  const priceEl = document.getElementById('heroPrice');
+  const bidBtn = document.getElementById('heroBidBtn');
+  const toasts = document.getElementById('toasts');
+  const feed = document.getElementById('bentoFeed');
+  const seedFeed = [['Tamar', 400, '2 min ago'], ['Levan', 380, '4 min ago'], ['Keti', 360, '9 min ago']];
+  feed.innerHTML = seedFeed.map(([w, a, when]) => row(w, a, when)).join('');
+  function row(w, a, when) {
+    return `<div class="feed-row"><span class="av">${w[0]}</span><span class="who">${w}<small>${when}</small></span><span class="num">${a}₾</span></div>`;
+  }
+  function placeBid(who) {
+    price += 20; bids++;
+    // price swap: blur bridges the two states instead of a hard cut
+    priceEl.classList.add('swap');
+    setTimeout(() => { priceEl.textContent = price + '₾'; priceEl.classList.remove('swap'); }, 200);
+    bidBtn.textContent = `Bid ${price + 20}₾`;
+
+    const t = document.createElement('div');
+    t.className = 'toast glass in-start';
+    t.innerHTML = `<i class="ph ph-gavel" aria-hidden="true"></i>${who} bid <span class="num">${price}₾</span>`;
+    toasts.prepend(t);
+    requestAnimationFrame(() => requestAnimationFrame(() => t.classList.remove('in-start')));
+    setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 220); }, 3200);
+
+    const r = document.createElement('div');
+    r.innerHTML = row(who, price, 'just now');
+    const node = r.firstElementChild; node.classList.add('in-start');
+    feed.prepend(node);
+    requestAnimationFrame(() => requestAnimationFrame(() => node.classList.remove('in-start')));
+    [...feed.children].forEach((c, i) => { if (i > 0) c.querySelector('small').textContent = i === 1 ? '1 min ago' : `${i * 2} min ago`; });
+    while (feed.children.length > 4) feed.lastElementChild.remove();
+  }
+  let bidTimer;
+  const schedule = () => { bidTimer = setTimeout(() => { if (!document.hidden) placeBid(bidders[(Math.random() * bidders.length) | 0]); schedule(); }, 5200 + Math.random() * 2600); };
+  schedule();
+  bidBtn.addEventListener('click', () => placeBid('You'));
+
+  /* ---------- Hero parallax: pointer drives a target, a lerp loop eases toward it.
+     Decorative, so fine pointers only and never with reduced motion. ---------- */
+  if (finePointer && !reduce) {
+    const hero = document.getElementById('hero');
+    const frames = [...document.querySelectorAll('#stack .frame')];
+    let tx = 0, ty = 0, cx = 0, cy = 0;
+    hero.addEventListener('pointermove', (e) => {
+      const r = hero.getBoundingClientRect();
+      tx = (e.clientX - r.left) / r.width - 0.5;
+      ty = (e.clientY - r.top) / r.height - 0.5;
+    });
+    hero.addEventListener('pointerleave', () => { tx = 0; ty = 0; });
+    (function loop() {
+      cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
+      frames.forEach((f) => {
+        const d = +f.dataset.depth;
+        f.style.transform = `translate3d(${cx * d * -1.4}px, ${cy * d * -1.4}px, 0)`;
+      });
+      requestAnimationFrame(loop);
+    })();
+
+    // spotlight border on lot cards: per-card, only while hovered
+    rail.addEventListener('pointermove', (e) => {
+      const card = e.target.closest('.lot'); if (!card) return;
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--sx', `${e.clientX - r.left}px`);
+      card.style.setProperty('--sy', `${e.clientY - r.top}px`);
+    });
+    rail.addEventListener('pointerleave', () => rail.querySelectorAll('.lot').forEach((c) => c.style.removeProperty('--sy')), true);
+  }
+
+  /* ---------- Rail arrows ---------- */
+  document.querySelectorAll('[data-rail]').forEach((b) => b.addEventListener('click', () => {
+    rail.scrollBy({ left: +b.dataset.rail * (rail.clientWidth * 0.8), behavior: reduce ? 'auto' : 'smooth' });
+  }));
+
+  /* ---------- Scroll reveals (once) + count-up ---------- */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((en) => {
+      if (!en.isIntersecting) return;
+      en.target.classList.add('in');
+      io.unobserve(en.target);
+    });
+  }, { rootMargin: '0px 0px -80px 0px', threshold: 0.12 });
+  document.querySelectorAll('.reveal, .reveal-img').forEach((el) => io.observe(el));
+
+  const statsIO = new IntersectionObserver(([en]) => {
+    if (!en.isIntersecting) return;
+    statsIO.disconnect();
+    document.querySelectorAll('[data-count]').forEach((el) => {
+      const target = +el.dataset.count;
+      if (reduce) { el.textContent = target; return; }
+      const start = performance.now(), dur = 1200;
+      const step = (now) => {
+        const p = Math.min((now - start) / dur, 1);
+        el.textContent = Math.round((1 - Math.pow(1 - p, 4)) * target);
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+  }, { threshold: 0.4 });
+  statsIO.observe(document.getElementById('stats'));
+
+  /* ---------- Nav state ---------- */
+  const nav = document.getElementById('nav');
+  addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 8), { passive: true });
+
+  /* ---------- Language toggle (nav + hero use the site's existing Georgian strings) ---------- */
+  document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => {
+    const lang = b.dataset.lang;
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-lang]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    document.querySelectorAll('[data-en]').forEach((el) => { el.textContent = el.dataset[lang]; });
+  }));
+})();
+</script>
+</body>
+</html>

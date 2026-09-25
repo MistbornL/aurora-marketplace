@@ -61,7 +61,11 @@ export function ArtworkCard({
             <OnApprovalPill small />
           ) : (
             !ended &&
-            (liveFormat || secs > 2 * 3600 ? <LivePill small /> : <EndingSoonPill small />)
+            (liveFormat ? (
+              <LivePill small />
+            ) : secs <= 5 * 60 ? (
+              <EndingSoonPill small />
+            ) : null)
           )}
         </div>
         <div

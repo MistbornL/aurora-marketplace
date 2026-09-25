@@ -10,6 +10,9 @@ export type ManagedAuction = {
   category: string
   medium: string
   dimensions: string
+  widthCm: number | null
+  heightCm: number | null
+  depthCm: number | null
   description: string
   openingBid: number
   currentBid: number
@@ -32,7 +35,12 @@ export type AuctionData = {
   title: string
   category: string
   medium: string
+  /** Label shown on the artwork page; built from the cm fields when they're set. */
   dimensions: string
+  /** Size in cm; "" means not given. Width and height go together. */
+  widthCm: number | ""
+  heightCm: number | ""
+  depthCm: number | ""
   description: string
   openingBid: number
   bidIncrement: number

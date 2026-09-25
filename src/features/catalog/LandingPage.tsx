@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useMemo, useRef, useState, type CSSProperties } from "react"
 import { useNavigate } from "react-router-dom"
 import {
   ArrowRight,
@@ -10,18 +10,18 @@ import {
   Trophy,
 } from "lucide-react"
 import { EndingSoonPill, LivePill } from "../../components/artwork/badges"
+import { CountUp } from "../../components/motion/CountUp"
+import { Reveal } from "../../components/motion/Reveal"
 import { Button } from "../../components/ui"
 import { formatLeft, useCountdown } from "../../lib/clock"
 import { useI18n, type MessageKey } from "../../lib/i18n"
+import { useMagnetic, useSpotlight, useTilt } from "../../lib/motion"
 import type { Artwork } from "../../types"
 import { AuthDialog } from "../auth/AuthDialog"
 import { useAuth } from "../auth/auth-context"
 import { useCatalog } from "./catalog-context"
 import { EventBanner } from "../events/EventBanner"
 import { DiscoverSection } from "./DiscoverSection"
-
-const HERO_IMAGE =
-  "https://images.unsplash.com/photo-1693067821550-064a6c8683f8?w=1600&h=900&fit=crop&auto=format"
 
 export default function LandingPage({
   onArtwork,
@@ -54,7 +54,22 @@ export default function LandingPage({
   }, [artworks, artists])
   // Headline lot: the live auction closing soonest.
   const featured = [...stats.live].sort((a, b) => a.timeLeftSecs - b.timeLeftSecs)
-  const [lead, next] = featured
+  const [lead] = featured
+  // Repeat short artist lists so the strip is always wider than the screen.
+  const marqueeArtists = useMemo(() => {
+    if (!artists.length) return []
+    const out = [...artists]
+    while (out.length < 8) out.push(...artists)
+    return out
+  }, [artists])
+
+  const heroRef = useRef<HTMLElement>(null)
+  const spotRef = useRef<HTMLDivElement>(null)
+  const magnetRef = useRef<HTMLSpanElement>(null)
+  const tiltRef = useRef<HTMLDivElement>(null)
+  useSpotlight(heroRef, spotRef)
+  useMagnetic(magnetRef)
+  useTilt(tiltRef)
 
   function sell() {
     if (user) navigate("/dashboard")
@@ -63,69 +78,72 @@ export default function LandingPage({
 
   return (
     <div className="bg-bg">
+      <div className="grain" aria-hidden />
+
       {/* ── Hero ──────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden">
+      <section ref={heroRef} className="relative -mt-16 overflow-hidden pt-16">
         <div className="absolute inset-0" aria-hidden>
-          <img
-            src={HERO_IMAGE}
-            alt=""
-            fetchPriority="high"
-            className="h-full w-full object-cover object-top opacity-40"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-bg via-bg/90 to-bg/40" />
-          <div className="absolute inset-0 bg-gradient-to-t from-bg via-transparent to-bg/40" />
-          <div className="absolute -left-40 top-10 size-[520px] rounded-full bg-amber/[.08] blur-[120px]" />
+          <div className="aurora"><span /><span /><span /></div>
+          <div ref={spotRef} className="spotlight" />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-bg to-transparent" />
         </div>
 
-        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-10 lg:py-24">
+        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 lg:min-h-[calc(100dvh-4rem)] lg:grid-cols-[1.25fr_0.75fr] lg:px-10 lg:py-20">
           {/* Copy */}
-          <div className="max-w-xl">
+          <div className="max-w-2xl">
             {stats.live.length > 0 && (
               <button
                 onClick={onDiscover}
-                className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[.04] py-1.5 pl-2 pr-3.5 text-xs text-text-secondary backdrop-blur transition-colors hover:border-white/20 hover:text-text"
+                style={{ "--i": 0 } as CSSProperties}
+                className="hero-enter press mb-7 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[.05] py-1.5 pl-3 pr-3.5 text-[13px] text-text-secondary shadow-[inset_0_1px_0_rgba(255,255,255,.06)] backdrop-blur-md transition-colors hover:border-white/20 hover:text-text"
               >
-                <span className="flex items-center gap-1.5 rounded-full bg-red-500/15 px-2 py-0.5 font-semibold text-red-400">
-                  <span className="size-1.5 animate-pulse rounded-full bg-red-500" />
-                  LIVE
-                </span>
+                <span className="ping-dot size-[7px] rounded-full bg-red-500 text-red-500" />
                 {t("catalog.hero.liveCount", { count: stats.live.length })}
                 <ArrowRight className="size-3.5" />
               </button>
             )}
 
-            <h1 className="hero-title font-display text-[clamp(40px,5.4vw,68px)] font-extrabold leading-[0.98] tracking-[-0.035em] text-text">
-              {t("catalog.hero.titleLine1")}
-              <br />
-              <span className="bg-gradient-to-r from-amber to-[#f5d489] bg-clip-text text-transparent">
-                {t("catalog.hero.titleLine2")}
+            <h1 className="hero-title font-display text-[clamp(42px,5vw,74px)] font-semibold leading-[1.02] tracking-[-0.03em] text-text">
+              <span className="line-mask" style={{ "--i": 0 } as CSSProperties}>
+                <span>{t("catalog.hero.titleLine1")}</span>
+              </span>
+              <span className="line-mask" style={{ "--i": 1 } as CSSProperties}>
+                <span className="shimmer-text">{t("catalog.hero.titleLine2")}</span>
               </span>
             </h1>
-            <p className="mt-6 max-w-md text-[17px] leading-8 text-text-secondary">
+            <p
+              style={{ "--i": 3 } as CSSProperties}
+              className="hero-enter mt-6 max-w-md text-[17px] leading-8 text-text-secondary"
+            >
               {stats.lowestOpening
                 ? t("catalog.hero.leadFrom", { amount: stats.lowestOpening })
                 : t("catalog.hero.lead")}
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Button
-                onClick={onDiscover}
-                className="h-12 gap-2 rounded-full px-7 text-[15px] font-semibold shadow-[0_10px_40px_-8px_rgba(232,184,75,0.55)] hover:bg-[#f3ca6b]"
-              >
-                {t("catalog.hero.explore")}
-                <ArrowRight className="size-4" />
-              </Button>
+            <div style={{ "--i": 4 } as CSSProperties} className="hero-enter mt-8 flex flex-wrap items-center gap-3">
+              <span ref={magnetRef} className="inline-block">
+                <Button
+                  onClick={onDiscover}
+                  className="press h-12 gap-2 rounded-full px-7 text-[15px] font-semibold shadow-[0_10px_40px_-8px_rgba(232,184,75,0.55)] hover:bg-[#f3ca6b]"
+                >
+                  {t("catalog.hero.explore")}
+                  <ArrowRight className="size-4" />
+                </Button>
+              </span>
               <Button
                 variant="outline"
                 onClick={sell}
-                className="h-12 gap-2 rounded-full border-white/15 bg-white/[.03] px-6 text-[15px] text-text hover:bg-white/[.08]"
+                className="press h-12 gap-2 rounded-full border-white/15 bg-white/[.03] px-6 text-[15px] text-text backdrop-blur-sm hover:bg-white/[.08]"
               >
                 <Palette className="size-4 text-amber" />
                 {t("catalog.hero.sell")}
               </Button>
             </div>
 
-            <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-text-secondary">
+            <ul
+              style={{ "--i": 5 } as CSSProperties}
+              className="hero-enter mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-text-secondary"
+            >
               {(["catalog.hero.pointFree", "catalog.hero.pointPublic", "catalog.hero.pointPrices"] as const).map(
                 (point) => (
                   <li key={point} className="flex items-center gap-2">
@@ -137,41 +155,68 @@ export default function LandingPage({
                 ),
               )}
             </ul>
-
-            <dl className="mt-10 grid max-w-md grid-cols-3 gap-4 border-t border-white/[.08] pt-6">
-              {([
-                { value: stats.live.length, label: "catalog.hero.statLive" },
-                { value: stats.artists, label: "catalog.hero.statArtists" },
-                { value: stats.bids.toLocaleString(locale), label: "catalog.hero.statBids" },
-              ] satisfies Array<{ value: number | string; label: MessageKey }>).map((item) => (
-                <div key={item.label}>
-                  <dd className="font-display text-2xl font-bold text-text">{item.value}</dd>
-                  <dt className="mt-0.5 text-xs text-text-muted">{t(item.label)}</dt>
-                </div>
-              ))}
-            </dl>
           </div>
 
-          {/* Featured lot */}
+          {/* Featured lot: tilts toward the pointer (mouse only) */}
           {lead && (
-            <div className="relative mx-auto w-full max-w-[420px] lg:mx-0 lg:justify-self-end">
-              {next && (
-                <div
-                  aria-hidden
-                  className="absolute -right-6 top-8 hidden h-[88%] w-[88%] rotate-6 overflow-hidden rounded-[28px] border border-white/[.06] opacity-50 lg:block"
-                >
-                  <img src={next.image} alt="" loading="lazy" className="h-full w-full object-cover" />
-                </div>
-              )}
-              <FeaturedLot art={lead} onOpen={() => onArtwork(lead.id)} onArtist={() => onArtist(lead.artistId)} />
+            <div
+              style={{ "--i": 3 } as CSSProperties}
+              className="hero-enter relative mx-auto w-full max-w-[440px] lg:mx-0 lg:justify-self-end"
+            >
+              <div ref={tiltRef} className="will-change-transform [transform-style:preserve-3d]">
+                <FeaturedLot art={lead} onOpen={() => onArtwork(lead.id)} onArtist={() => onArtist(lead.artistId)} />
+              </div>
             </div>
           )}
         </div>
       </section>
 
-      <div className="px-4 pt-8 sm:px-6 lg:px-10">
+      <div className="px-4 pt-2 sm:px-6 lg:px-10">
         <EventBanner onOpen={onEvent} className="mx-auto max-w-7xl" />
       </div>
+
+      {/* ── Artists strip ─────────────────────────────────────────────── */}
+      {artists.length > 0 && (
+        <section aria-label={t("catalog.marquee.label")} className="marquee mt-10 overflow-hidden border-y border-white/[.06] py-5 [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+          <div className="marquee-track">
+            {[0, 1].map((copy) => (
+              <ul key={copy} aria-hidden={copy === 1 || undefined} className="flex shrink-0 items-center gap-14 pr-14">
+                {marqueeArtists.map((artist, i) => (
+                  <li key={`${artist.id}-${i}`}>
+                    <button
+                      tabIndex={copy === 1 ? -1 : undefined}
+                      onClick={() => onArtist(artist.id)}
+                      className="whitespace-nowrap font-display text-lg italic text-text-muted transition-colors hover:text-text"
+                    >
+                      {artist.name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── Stats (count up once in view) ─────────────────────────────── */}
+      <section className="px-4 py-16 sm:px-6 lg:px-10 lg:py-24">
+        <Reveal className="mx-auto grid max-w-7xl grid-cols-3 gap-px overflow-hidden rounded-3xl border border-white/[.08] bg-white/[.08]">
+          {([
+            { value: stats.live.length, label: "catalog.hero.statLive" },
+            { value: stats.artists, label: "catalog.hero.statArtists" },
+            { value: stats.bids, label: "catalog.hero.statBids" },
+          ] satisfies Array<{ value: number; label: MessageKey }>).map((item) => (
+            <div key={item.label} className="bg-surface px-3 py-8 text-center sm:py-11">
+              <CountUp
+                value={item.value}
+                format={(n) => n.toLocaleString(locale)}
+                className="block font-display text-4xl font-bold text-amber tabular-nums sm:text-5xl"
+              />
+              <p className="mt-2 text-xs text-text-muted sm:text-[13px]">{t(item.label)}</p>
+            </div>
+          ))}
+        </Reveal>
+      </section>
 
       {/* ── How it works ──────────────────────────────────────────────── */}
       <section className="border-y border-white/[.06] bg-white/[.015]">
@@ -193,7 +238,7 @@ export default function LandingPage({
               text: t("catalog.how.winText"),
             },
           ].map((step, index) => (
-            <div key={step.title} className="flex gap-4">
+            <Reveal key={step.title} delay={index * 80} className="flex gap-4">
               <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-amber/10 text-amber [&_svg]:size-5">
                 {step.icon}
               </span>
@@ -204,21 +249,21 @@ export default function LandingPage({
                 <p className="mt-1 font-display text-lg font-semibold text-text">{step.title}</p>
                 <p className="mt-1.5 text-sm leading-6 text-text-secondary">{step.text}</p>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
       {/* ── Catalogue ─────────────────────────────────────────────────── */}
       <section className="px-4 pb-16 pt-14 sm:px-6 lg:px-10">
-        <div className="mx-auto max-w-7xl">
+        <Reveal className="mx-auto max-w-7xl">
           <DiscoverSection onArtwork={onArtwork} onArtist={onArtist} />
-        </div>
+        </Reveal>
       </section>
 
       {/* ── Artist CTA ────────────────────────────────────────────────── */}
       <section className="px-4 pb-24 sm:px-6 lg:px-10">
-        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[32px] border border-amber/20 bg-gradient-to-br from-amber/[.14] via-surface to-surface p-8 sm:p-12">
+        <Reveal className="relative mx-auto max-w-7xl overflow-hidden rounded-[32px] border border-amber/20 bg-gradient-to-br from-amber/[.14] via-surface to-surface p-8 sm:p-12">
           <div className="absolute -right-24 -top-24 size-80 rounded-full bg-amber/10 blur-3xl" aria-hidden />
           <div className="relative grid items-center gap-8 lg:grid-cols-[1fr_auto]">
             <div className="max-w-2xl">
@@ -245,7 +290,7 @@ export default function LandingPage({
               </Button>
             </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {joinAsArtist && (
@@ -270,7 +315,8 @@ function FeaturedLot({
 }) {
   const { t } = useI18n()
   const { secs } = useCountdown(art.timeLeftSecs)
-  const endingSoon = secs <= 2 * 3600
+  const liveFormat = art.format === "live"
+  const endingSoon = !liveFormat && secs <= 5 * 60
   return (
     <article className="relative overflow-hidden rounded-[28px] border border-white/10 bg-surface shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)]">
       <button onClick={onOpen} className="group relative block aspect-[4/5] w-full overflow-hidden" aria-label={t("catalog.featured.open", { title: art.title })}>
@@ -282,7 +328,7 @@ function FeaturedLot({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/10 to-transparent" />
         <div className="absolute left-4 top-4 flex gap-2">
-          {endingSoon ? <EndingSoonPill /> : <LivePill />}
+          {liveFormat ? <LivePill /> : endingSoon ? <EndingSoonPill /> : null}
         </div>
         <span className="absolute right-4 top-4 rounded-full bg-black/55 px-3 py-1 text-[11px] font-medium text-text backdrop-blur">
           {t("catalog.featured.badge")}

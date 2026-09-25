@@ -1,9 +1,10 @@
+import { formatSize } from "../../lib/artwork-size"
 import { tr } from "../../lib/i18n"
 import { requireSupabase } from "../../lib/supabase"
 import type { AuctionData, AuctionStatus, ManagedAuction } from "./types"
 
 const SELECT =
-  "id, status, format, opening_bid, current_bid, bid_increment, bid_count, starts_at, ends_at, buy_now_price, has_reserve, reserve_met, seller_decision, decision_deadline, artwork:artworks(id, title, image_url, category, medium, dimensions, description)"
+  "id, status, format, opening_bid, current_bid, bid_increment, bid_count, starts_at, ends_at, buy_now_price, has_reserve, reserve_met, seller_decision, decision_deadline, artwork:artworks(id, title, image_url, category, medium, dimensions, width_cm, height_cm, depth_cm, description)"
 
 type Row = {
   id: string
@@ -27,6 +28,9 @@ type Row = {
     category: string
     medium: string
     dimensions: string
+    width_cm: number | string | null
+    height_cm: number | string | null
+    depth_cm: number | string | null
     description: string
   } | null
 }
@@ -44,6 +48,9 @@ function toManaged(row: Row): ManagedAuction {
     category: row.artwork?.category ?? "",
     medium: row.artwork?.medium ?? "",
     dimensions: row.artwork?.dimensions ?? "",
+    widthCm: row.artwork?.width_cm == null ? null : Number(row.artwork.width_cm),
+    heightCm: row.artwork?.height_cm == null ? null : Number(row.artwork.height_cm),
+    depthCm: row.artwork?.depth_cm == null ? null : Number(row.artwork.depth_cm),
     description: row.artwork?.description ?? "",
     openingBid: Number(row.opening_bid),
     currentBid: Number(row.current_bid),
@@ -77,13 +84,24 @@ export async function listMyAuctions(userId: string) {
   return (data as unknown as Row[]).map(toManaged)
 }
 
-const artworkFields = (values: AuctionData) => ({
-  title: values.title.trim(),
-  category: values.category,
-  medium: values.medium.trim(),
-  dimensions: values.dimensions.trim(),
-  description: values.description.trim(),
-})
+const cm = (value: number | "") => (value === "" || !(Number(value) > 0) ? null : Math.round(Number(value) * 10) / 10)
+
+const artworkFields = (values: AuctionData) => {
+  const width = cm(values.widthCm)
+  const height = cm(values.heightCm)
+  const depth = width && height ? cm(values.depthCm) : null
+  return {
+    title: values.title.trim(),
+    category: values.category,
+    medium: values.medium.trim(),
+    // The label follows the numbers; old free-text labels are kept otherwise.
+    dimensions: width && height ? formatSize(width, height, depth) : values.dimensions.trim(),
+    width_cm: width && height ? width : null,
+    height_cm: width && height ? height : null,
+    depth_cm: depth,
+    description: values.description.trim(),
+  }
+}
 
 const optionalPrice = (value: number | "") => (value === "" || !(Number(value) > 0) ? null : Number(value))
 
