@@ -80,11 +80,28 @@ export default function ArViewer({
   useEffect(() => {
     const el = viewer.current
     if (!el || !model) return
-    const onLoad = () => setCanAR(Boolean(el.canActivateAR))
+    let cancelled = false
+    let pollTimer: ReturnType<typeof setTimeout> | undefined
+
+    // model-viewer picks the AR mode (WebXR vs Scene Viewer vs none)
+    // asynchronously after `src` changes — it awaits a real
+    // navigator.xr.isSessionSupported() call — so `canActivateAR` isn't
+    // settled the instant `load` fires. Poll briefly instead of trusting
+    // the first read, or real devices get told "not supported" before
+    // model-viewer has actually finished checking.
+    const pollCanActivateAR = (attemptsLeft: number) => {
+      if (cancelled) return
+      if (el.canActivateAR) return setCanAR(true)
+      if (attemptsLeft <= 0) return setCanAR(false)
+      pollTimer = setTimeout(() => pollCanActivateAR(attemptsLeft - 1), 200)
+    }
+    const onLoad = () => pollCanActivateAR(15) // up to ~3s
     const onError = () => setFailed(true)
     el.addEventListener("load", onLoad)
     el.addEventListener("error", onError)
     return () => {
+      cancelled = true
+      if (pollTimer) clearTimeout(pollTimer)
       el.removeEventListener("load", onLoad)
       el.removeEventListener("error", onError)
     }
@@ -107,12 +124,12 @@ export default function ArViewer({
               src={model.url}
               poster={model.poster}
               alt={title}
-              ar=""
+              ar
               ar-modes="webxr scene-viewer quick-look"
               ar-placement="wall"
               ar-scale="fixed"
-              camera-controls=""
-              disable-zoom=""
+              camera-controls
+              disable-zoom
               touch-action="pan-y"
               camera-orbit="-20deg 82deg auto"
               min-camera-orbit="-60deg 60deg auto"
