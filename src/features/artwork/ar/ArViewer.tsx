@@ -4,10 +4,27 @@ import "@google/model-viewer"
 import { useEffect, useRef, useState } from "react"
 import { Loader2, Smartphone } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../../../components/ui"
+import { QrCode } from "../../../components/ui/QrCode"
 import { formatSize, type SizeCm } from "../../../lib/artwork-size"
 import { useI18n } from "../../../lib/i18n"
 import { buildArtworkGlb } from "./framed-model"
 import type { ModelViewerElement } from "./model-viewer"
+
+/** Phones and tablets (iPadOS reports itself as a Mac, so check for touch too). */
+function isHandheld() {
+  if (typeof navigator === "undefined") return false
+  const ua = navigator.userAgent
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)
+}
+
+/** This page, opened on a phone, with the AR viewer already open. */
+function phoneLink() {
+  const url = new URL(window.location.href)
+  url.hash = ""
+  url.search = ""
+  url.searchParams.set("ar", "1")
+  return url.toString()
+}
 
 export default function ArViewer({
   image,
@@ -25,6 +42,8 @@ export default function ArViewer({
   const [model, setModel] = useState<{ url: string; poster: string } | null>(null)
   const [failed, setFailed] = useState(false)
   const [canAR, setCanAR] = useState<boolean | null>(null)
+  const [handheld] = useState(isHandheld)
+  const [qrValue] = useState(phoneLink)
   const sizeLabel = formatSize(size.width, size.height, null, lang === "ka" ? "სმ" : "cm")
 
   useEffect(() => {
@@ -66,7 +85,7 @@ export default function ArViewer({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="relative aspect-[4/5] max-h-[62dvh] w-full overflow-hidden rounded-2xl bg-[radial-gradient(120%_80%_at_50%_0%,#26221a_0%,#141417_55%,#0f0f12_100%)] ring-1 ring-white/[.08]">
+        <div className={`relative aspect-[4/5] w-full ${handheld ? "max-h-[62dvh]" : "max-h-[48dvh]"} overflow-hidden rounded-2xl bg-[radial-gradient(120%_80%_at_50%_0%,#26221a_0%,#141417_55%,#0f0f12_100%)] ring-1 ring-white/[.08]`}>
           {model && !failed && (
             <model-viewer
               ref={viewer}
@@ -115,10 +134,22 @@ export default function ArViewer({
           )}
         </div>
 
-        {canAR === false && (
+        {!handheld && (
+          <div className="flex items-center gap-4 rounded-2xl border border-white/[.08] bg-white/[.03] p-3">
+            <QrCode value={qrValue} size={112} label={t("artwork.ar.qrLabel")} />
+            <div className="min-w-0">
+              <p className="flex items-center gap-2 text-[15px] font-semibold text-text">
+                <Smartphone className="size-4 shrink-0 text-amber" />
+                {t("artwork.ar.qrTitle")}
+              </p>
+              <p className="mt-1 text-[13px] leading-5 text-text-secondary">{t("artwork.ar.qrHint")}</p>
+            </div>
+          </div>
+        )}
+        {handheld && canAR === false && (
           <p className="flex items-start gap-2 text-[13px] leading-5 text-text-secondary">
             <Smartphone className="mt-0.5 size-4 shrink-0 text-amber" />
-            {t("artwork.ar.phoneHint")}
+            {t("artwork.ar.unsupported")}
           </p>
         )}
       </DialogContent>

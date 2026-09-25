@@ -1,4 +1,5 @@
-import { lazy, Suspense, useMemo, useState } from "react"
+import { lazy, Suspense, useEffect, useMemo, useState } from "react"
+import { useSearchParams } from "react-router-dom"
 import { Frame } from "lucide-react"
 import { artworkSizeCm, formatSize } from "../../../lib/artwork-size"
 import { useI18n } from "../../../lib/i18n"
@@ -11,6 +12,24 @@ export function ViewOnWallButton({ art }: { art: Artwork }) {
   const { t, lang } = useI18n()
   const [open, setOpen] = useState(false)
   const size = useMemo(() => artworkSizeCm(art), [art])
+  const [params, setParams] = useSearchParams()
+  const fromQr = params.get("ar") === "1"
+
+  // Arrived by scanning the QR from a computer: open the viewer straight away,
+  // then drop ?ar=1 so closing it (or reloading) doesn't reopen it.
+  useEffect(() => {
+    if (!fromQr || !size || !art.image) return
+    setOpen(true)
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        next.delete("ar")
+        return next
+      },
+      { replace: true },
+    )
+  }, [fromQr, size, art.image, setParams])
+
   if (!size || !art.image) return null
 
   return (
