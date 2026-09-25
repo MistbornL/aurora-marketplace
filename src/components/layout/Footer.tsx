@@ -34,21 +34,25 @@ export function Footer() {
   const { t } = useI18n()
   return (
     <footer className="border-t border-white/[.06] bg-[#0a0a0d]">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.4fr_repeat(3,1fr)] lg:px-10">
-        <div>
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 text-center sm:px-6 md:grid-cols-[1.4fr_repeat(3,1fr)] md:text-left lg:px-10">
+        <div className="flex flex-col items-center md:items-start">
           <p className="font-display text-xl font-extrabold tracking-[-0.03em] text-text">
-            AUR
+            TSISK
             <span className="mx-px inline-grid size-[18px] place-items-center rounded-full bg-amber align-middle text-[11px] text-bg">
-              O
+              A
             </span>
-            RA
+            RI
           </p>
           <p className="mt-3 max-w-xs text-sm leading-6 text-text-muted">
             {t("layout.footer.tagline")}
           </p>
         </div>
         {COLUMNS.map((column) => (
-          <nav key={column.title} aria-label={column.title === "TSISKARI" ? "TSISKARI" : t(column.title)}>
+          <nav
+            key={column.title}
+            className="flex flex-col items-center md:items-start"
+            aria-label={column.title === "TSISKARI" ? "TSISKARI" : t(column.title)}
+          >
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-text-secondary">
               {column.title === "TSISKARI" ? "TSISKARI" : t(column.title)}
             </p>
