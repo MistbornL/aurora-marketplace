@@ -122,7 +122,7 @@ export function ArtworkCard({
           </div>
           {!ended || upcoming ? (
             <Button
-              className="h-9 rounded-lg bg-amber px-4 font-display text-[12px] text-bg shadow-md shadow-amber/10 hover:bg-[#f3ca6b]"
+              className="h-9 rounded-lg bg-amber px-4 font-display text-[12px] text-bg shadow-md shadow-amber/10 hover:bg-amber-dark"
               onClick={(e) => {
                 e.stopPropagation()
                 onClick()

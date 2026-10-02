@@ -1,0 +1,457 @@
+/* Cinematic landing hero: a pinned stage whose footage is scrubbed by scroll.
+   Engineering notes live in ScrollHero.tsx. Everything that moves here moves
+   by transform/opacity only, driven by custom properties the JS writes. */
+
+.sh {
+  --sh-tshadow: 0 1px 2px rgba(8, 5, 4, 0.95), 0 3px 12px rgba(8, 5, 4, 0.78), 0 10px 44px rgba(8, 5, 4, 0.8);
+  position: relative;
+  height: 1000vh;
+  margin-top: -4rem; /* slide under the sticky nav */
+  background: var(--color-bg);
+}
+
+.sh-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--color-bg);
+}
+
+/* Still frames: shown until the video is ready, and the whole journey if it never arrives. */
+.sh-still {
+  position: absolute;
+  inset: 0;
+  background: center / cover no-repeat;
+  opacity: 0;
+  transition: opacity 600ms var(--ease-out);
+}
+.sh-stage[data-still="0"] .sh-still-0,
+.sh-stage[data-still="1"] .sh-still-1,
+.sh-stage[data-still="2"] .sh-still-2,
+.sh-stage[data-still="3"] .sh-still-3 { opacity: 1; }
+
+.sh-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: translateZ(0);
+  will-change: transform;
+  transition: opacity 900ms var(--ease-out);
+  pointer-events: none;
+}
+.sh.video-ready .sh-video { opacity: 1; }
+.sh.video-ready .sh-still { transition: none; }
+
+/* The strike: a warm bloom in the spotlight, and gold dust thrown outward.
+   --f is 0..1 through the burst, --g the glow (both written by the JS). */
+.sh-flash {
+  --f: 0;
+  --g: 0;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.sh-flash::before,
+.sh-flash::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.sh-flash::before {
+  opacity: var(--g);
+  mix-blend-mode: screen;
+  background: radial-gradient(ellipse 34% 46% at 50% 30%, rgba(255, 206, 120, 0.7) 0%, rgba(255, 180, 80, 0.28) 38%, rgba(255, 170, 70, 0) 72%);
+}
+.sh-flash::after {
+  opacity: calc(var(--g) * 1.3);
+  mix-blend-mode: screen;
+  transform-origin: 50% 30%;
+  transform: scale(calc(0.55 + var(--f) * 1.1));
+  background:
+    radial-gradient(circle at 46% 22%, #ffe2a0 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 53% 18%, #ffd27a 0 1px, transparent 2px),
+    radial-gradient(circle at 58% 27%, #fff0c4 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 41% 31%, #ffd27a 0 1px, transparent 2px),
+    radial-gradient(circle at 49% 35%, #ffe2a0 0 2px, transparent 3px),
+    radial-gradient(circle at 62% 34%, #ffd27a 0 1px, transparent 2px),
+    radial-gradient(circle at 37% 24%, #fff0c4 0 1px, transparent 2px),
+    radial-gradient(circle at 55% 40%, #ffd27a 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 44% 41%, #ffe2a0 0 1px, transparent 2px),
+    radial-gradient(circle at 66% 22%, #ffe2a0 0 1px, transparent 2px),
+    radial-gradient(circle at 34% 36%, #ffd27a 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 51% 26%, #fff6dc 0 1px, transparent 2px),
+    radial-gradient(circle at 60% 15%, #ffd27a 0 1px, transparent 2px),
+    radial-gradient(circle at 39% 16%, #ffe2a0 0 1px, transparent 2px);
+}
+
+/* Legibility layers: an always-on vignette, a top fade for the nav and a
+   bottom fade into the page so the stage hands off without a seam. */
+.sh-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 120% 90% at 50% 45%, rgba(14, 9, 8, 0) 40%, rgba(14, 9, 8, 0.58) 100%),
+    linear-gradient(to bottom, rgba(26, 10, 12, 0.55) 0%, rgba(26, 10, 12, 0) 18%),
+    linear-gradient(to top, var(--color-bg) 0%, rgba(26, 10, 12, 0) 16%);
+}
+
+/* ── Caption bands ─────────────────────────────────────────────── */
+.sh-band {
+  --k: 0;
+  position: absolute;
+  z-index: 2;
+  opacity: 0;
+  color: var(--color-text);
+  text-shadow: var(--sh-tshadow);
+  pointer-events: none;
+}
+.sh-band.is-on { pointer-events: auto; }
+.sh-band .sh-btn,
+.sh-band .sh-pill { text-shadow: none; }
+
+/* Each band dims the footage behind its own words, and only while it's on. */
+.sh-band::before {
+  content: "";
+  position: absolute;
+  inset: -30% -20%;
+  z-index: -1;
+  pointer-events: none;
+  opacity: calc(0.25 + 0.75 * var(--k));
+  background: radial-gradient(ellipse 60% 55% at 50% 50%, rgba(10, 6, 5, var(--sh-scrim, 0.62)) 0%, rgba(10, 6, 5, calc(var(--sh-scrim, 0.62) * 0.66)) 46%, rgba(10, 6, 5, 0) 76%);
+}
+
+.sh-w { display: inline-block; white-space: pre; }
+
+/* Band 1, the curtain: two halves of one line part outward with the velvet. */
+.sh-b1 {
+  --o: 0;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  text-align: center;
+}
+.sh-b1 { --sh-scrim: 0.82; }
+.sh-b1::before { inset: -40% 18%; opacity: clamp(0, 1 - var(--o) * 1.7, 1); }
+.sh-b1 .sh-eyebrow { opacity: calc(1 - var(--o) * 2.2); }
+.sh-b1 .sh-line {
+  display: flex;
+  justify-content: center;
+  gap: 0.28em;
+  font-family: var(--font-display);
+  font-size: clamp(44px, 7vw, 112px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+.sh-half-l { transform: translateX(calc(var(--o) * -52vw)); }
+.sh-half-r { transform: translateX(calc(var(--o) * 52vw)); }
+.sh-b1 .sh-line { opacity: clamp(0, 1 - var(--o) * 1.7, 1); }
+.sh-half-r em { font-style: italic; color: var(--color-amber); }
+
+.sh-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(242, 239, 232, 0.72);
+}
+
+/* Band 2, the aisle: words rise in reading order as we walk in. */
+.sh-b2 {
+  --sh-scrim: 0.88;
+  left: clamp(24px, 6vw, 96px);
+  top: 50%;
+  max-width: 660px;
+  transform: translateY(-50%);
+}
+.sh-b2 .sh-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-amber);
+  opacity: clamp(0, var(--k) * 3, 1);
+}
+.sh-b2 h2 {
+  margin-top: 14px;
+  font-family: var(--font-display);
+  font-size: clamp(34px, 4vw, 60px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+}
+.sh-b2 .sh-w {
+  --kc: clamp(0, (var(--k) - var(--th, 0)) * 3, 1);
+  opacity: var(--kc);
+  transform: translateY(calc((1 - var(--kc)) * 22px));
+}
+.sh-b2 p {
+  margin-top: 16px;
+  max-width: 40ch;
+  font-size: 17px;
+  line-height: 1.6;
+  color: rgba(242, 239, 232, 0.82);
+  opacity: clamp(0, (var(--k) - 0.55) * 3, 1);
+}
+
+/* Band 3, "going once, going twice": a quiet line that settles before the strike. */
+.sh-b3 {
+  --sh-scrim: 0.6;
+  left: clamp(24px, 6vw, 96px);
+  top: 26%;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.4vw, 34px);
+  font-style: italic;
+  color: rgba(242, 239, 232, 0.9);
+}
+.sh-b3 .sh-w {
+  --kc: clamp(0, (var(--k) - var(--th, 0)) * 2.6, 1);
+  opacity: var(--kc);
+  transform: translateY(calc((1 - var(--kc)) * -16px));
+}
+
+/* Band 4, "Sold.": punches in with the gavel and overshoots. */
+.sh-b4 {
+  --sh-scrim: 0.66;
+  left: clamp(24px, 6vw, 96px);
+  top: calc(26% + clamp(40px, 4vw, 60px));
+  font-family: var(--font-display);
+  font-size: clamp(64px, 9vw, 150px);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  color: var(--color-amber);
+}
+.sh-b4 .sh-w {
+  --kc: clamp(0, var(--k) * 4, 1);
+  --ks: clamp(0, (var(--k) - 0.22) * 2.6, 1);
+  opacity: var(--kc);
+  transform-origin: 30% 70%;
+  transform: scale(calc(0.55 + 0.69 * var(--kc) - 0.24 * var(--ks)));
+}
+
+/* Band 5, dawn: the page settles. Headline words rise, then the lede, then the actions. */
+.sh-b5 {
+  --sh-scrim: 0.84;
+  left: clamp(24px, 6vw, 96px);
+  top: 20%;
+  max-width: 640px;
+}
+.sh-b5::before { inset: -30% -36% -24% -30%; }
+.sh-b5 .sh-eyebrow {
+  color: rgba(255, 236, 214, 0.88);
+  opacity: clamp(0, var(--k) * 2.5, 1);
+}
+.sh-b5 h1 {
+  margin-top: 14px;
+  font-family: var(--font-display);
+  font-size: clamp(44px, 5.4vw, 84px);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+.sh-b5 h1 .sh-w {
+  --kc: clamp(0, (var(--k) - var(--th, 0)) * 3.2, 1);
+  opacity: var(--kc);
+  transform: translateY(calc((1 - var(--kc)) * 0.45em));
+}
+.sh-b5 .sh-amber { color: #ffd38a; font-style: italic; }
+.sh-b5 .sh-lede {
+  margin-top: 18px;
+  max-width: 44ch;
+  font-size: 17px;
+  line-height: 1.65;
+  color: rgba(255, 244, 232, 0.86);
+  opacity: clamp(0, (var(--k) - 0.55) * 4, 1);
+  transform: translateY(calc((1 - clamp(0, (var(--k) - 0.55) * 4, 1)) * 10px));
+}
+.sh-b5 .sh-actions {
+  margin-top: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  opacity: clamp(0, (var(--k) - 0.72) * 5, 1);
+  transform: translateY(calc((1 - clamp(0, (var(--k) - 0.72) * 5, 1)) * 12px));
+}
+
+.sh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 26px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background-color 200ms var(--ease-out), border-color 200ms var(--ease-out), transform 160ms var(--ease-out);
+}
+.sh-btn:active { transform: translateY(1px) scale(0.99); }
+.sh-btn-primary {
+  background: var(--color-amber);
+  color: var(--color-bg);
+  box-shadow: 0 10px 40px -10px rgba(216, 166, 87, 0.7);
+}
+.sh-btn-primary:hover { background: var(--color-amber-dark); }
+.sh-btn-ghost {
+  border: 1px solid rgba(255, 244, 232, 0.28);
+  background: rgba(20, 12, 10, 0.32);
+  color: var(--color-text);
+  backdrop-filter: blur(8px);
+}
+.sh-btn-ghost:hover { background: rgba(20, 12, 10, 0.5); border-color: rgba(255, 244, 232, 0.45); }
+.sh-btn:focus-visible { outline: 2px solid var(--color-amber); outline-offset: 3px; }
+
+.sh-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 244, 232, 0.16);
+  background: rgba(14, 9, 8, 0.45);
+  backdrop-filter: blur(10px);
+  font-size: 13px;
+  color: rgba(255, 244, 232, 0.86);
+}
+
+/* ── The lot chip: the real top lot, its bid climbing as we walk the aisle ── */
+.sh-lot {
+  --k: 0;
+  position: absolute;
+  z-index: 3;
+  right: clamp(16px, 4vw, 56px);
+  bottom: clamp(20px, 6vh, 64px);
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 12px;
+  align-items: center;
+  width: min(320px, calc(100vw - 32px));
+  padding: 10px 14px 10px 10px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 244, 232, 0.14);
+  background: rgba(14, 9, 8, 0.58);
+  backdrop-filter: blur(14px);
+  text-align: left;
+  opacity: 0;
+  transform: translateY(calc((1 - var(--k)) * 14px));
+  pointer-events: none;
+  transition: border-color 300ms var(--ease-out), box-shadow 300ms var(--ease-out);
+}
+.sh-lot.is-on { pointer-events: auto; }
+.sh-lot:hover { border-color: rgba(216, 166, 87, 0.45); }
+.sh-lot.is-struck { border-color: rgba(216, 166, 87, 0.6); box-shadow: 0 0 0 4px rgba(216, 166, 87, 0.12), 0 18px 50px -18px rgba(216, 166, 87, 0.55); }
+.sh-lot img { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; }
+.sh-lot-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(242, 239, 232, 0.55); }
+.sh-lot-title { margin-top: 2px; font-size: 14px; font-weight: 600; color: var(--color-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sh-lot-bid { margin-top: 4px; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 11px; color: rgba(242, 239, 232, 0.55); }
+.sh-lot-bid strong { font-family: var(--font-display); font-size: 20px; font-variant-numeric: tabular-nums; color: var(--color-amber); }
+.sh-lot:focus-visible { outline: 2px solid var(--color-amber); outline-offset: 3px; }
+
+/* ── Loading ring, then an honest scroll cue ──────────────────── */
+.sh-cue {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: clamp(24px, 6vh, 56px);
+  transform: translateX(-50%);
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(242, 239, 232, 0.7);
+  text-shadow: 0 1px 6px rgba(8, 5, 4, 0.9);
+  transition: opacity 400ms var(--ease-out);
+  pointer-events: none;
+}
+.sh-cue.is-hidden { opacity: 0; }
+.sh-ring { width: 40px; height: 40px; color: var(--color-amber); transform: rotate(-90deg); }
+.sh-ring circle { transition: stroke-dashoffset 160ms linear; }
+.sh-chevron { width: 22px; height: 34px; border: 1.5px solid rgba(242, 239, 232, 0.55); border-radius: 12px; position: relative; }
+.sh-chevron::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 7px;
+  width: 3px;
+  height: 7px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: var(--color-amber);
+  animation: sh-wheel 1.8s var(--ease-in-out) infinite;
+}
+@keyframes sh-wheel { 0% { transform: translateY(0); opacity: 1 } 70% { transform: translateY(10px); opacity: 0 } 100% { transform: translateY(0); opacity: 0 } }
+
+.sh:not(.ring-done) .sh-chevron,
+.sh.ring-done .sh-ring { display: none; }
+
+.sh-static { display: none; }
+
+/* ── Static hero: phones, portrait tablets, coarse-pointer portrait, landscape
+   phones and reduced motion get a composed still instead of the scrub. These
+   five queries must match GATES in ScrollHero.tsx character for character. ── */
+@media (max-width: 720px), (orientation: portrait) and (max-width: 1024px), (orientation: portrait) and (pointer: coarse), (orientation: landscape) and (pointer: coarse) and (max-height: 560px), (prefers-reduced-motion: reduce) {
+  .sh { height: auto; }
+  .sh-stage { position: relative; height: auto; min-height: 100svh; display: flex; flex-direction: column; justify-content: flex-end; }
+  .sh-video, .sh-still, .sh-cue, .sh-flash, .sh-b1, .sh-b2, .sh-b3, .sh-b4 { display: none; }
+  .sh-static {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: center 70% / cover no-repeat;
+  }
+  .sh-scrim {
+    background:
+      linear-gradient(to bottom, rgba(26, 10, 12, 0.6) 0%, rgba(26, 10, 12, 0) 22%),
+      linear-gradient(to top, var(--color-bg) 4%, rgba(26, 10, 12, 0.72) 42%, rgba(26, 10, 12, 0) 72%);
+  }
+  .sh-b5 {
+    --k: 1;
+    position: relative;
+    left: auto;
+    top: auto;
+    opacity: 1;
+    pointer-events: auto;
+    max-width: none;
+    padding: 120px clamp(20px, 6vw, 96px) 28px;
+  }
+  .sh-b5::before { display: none; }
+  .sh-lot {
+    --k: 1;
+    position: relative;
+    right: auto;
+    bottom: auto;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    margin: 0 clamp(20px, 6vw, 96px) 36px;
+  }
+}
+@media (pointer: coarse) {
+  .sh-btn { min-height: 48px; }
+}
+@media (max-height: 560px) {
+  .sh-cue, .sh-lot { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sh-chevron::after { animation: none; }
+  .sh-btn, .sh-lot, .sh-cue { transition: none; }
+}

@@ -1,11 +1,9 @@
-import { useMemo, useRef, useState, type CSSProperties } from "react"
+import { useMemo, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import {
-  ArrowRight,
   BadgeCheck,
   Check,
   Gavel,
-  Palette,
   Search,
   Trophy,
 } from "lucide-react"
@@ -15,13 +13,14 @@ import { Reveal } from "../../components/motion/Reveal"
 import { Button } from "../../components/ui"
 import { formatLeft, useCountdown } from "../../lib/clock"
 import { useI18n, type MessageKey } from "../../lib/i18n"
-import { useMagnetic, useSpotlight, useTilt } from "../../lib/motion"
+import { useTilt } from "../../lib/motion"
 import type { Artwork } from "../../types"
 import { AuthDialog } from "../auth/AuthDialog"
 import { useAuth } from "../auth/auth-context"
 import { useCatalog } from "./catalog-context"
 import { EventBanner } from "../events/EventBanner"
 import { DiscoverSection } from "./DiscoverSection"
+import { ScrollHero } from "./hero/ScrollHero"
 
 export default function LandingPage({
   onArtwork,
@@ -63,12 +62,13 @@ export default function LandingPage({
     return out
   }, [artists])
 
-  const heroRef = useRef<HTMLElement>(null)
-  const spotRef = useRef<HTMLDivElement>(null)
-  const magnetRef = useRef<HTMLSpanElement>(null)
+  // The lot chip in the film: the live lot with the highest bid right now.
+  const topLot = useMemo(() => {
+    const pool = stats.live.length ? stats.live : artworks
+    return pool.filter((art) => art.image).sort((a, b) => b.currentBid - a.currentBid)[0] ?? null
+  }, [stats.live, artworks])
+
   const tiltRef = useRef<HTMLDivElement>(null)
-  useSpotlight(heroRef, spotRef)
-  useMagnetic(magnetRef)
   useTilt(tiltRef)
 
   function sell() {
@@ -80,96 +80,48 @@ export default function LandingPage({
     <div className="bg-bg">
       <div className="grain" aria-hidden />
 
-      {/* ── Hero ──────────────────────────────────────────────────────── */}
-      <section ref={heroRef} className="relative -mt-16 overflow-hidden pt-16">
-        <div className="absolute inset-0" aria-hidden>
-          <div className="aurora"><span /><span /><span /></div>
-          <div ref={spotRef} className="spotlight" />
-          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-bg to-transparent" />
-        </div>
+      {/* ── Hero: the cinematic scroll film ───────────────────────────── */}
+      <ScrollHero
+        liveCount={stats.live.length}
+        lead={stats.lowestOpening ? t("catalog.hero.leadFrom", { amount: stats.lowestOpening }) : t("catalog.hero.lead")}
+        topLot={topLot}
+        onDiscover={onDiscover}
+        onSell={sell}
+        onLot={onArtwork}
+      />
 
-        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 lg:min-h-[calc(100dvh-4rem)] lg:grid-cols-[1.25fr_0.75fr] lg:px-10 lg:py-20">
-          {/* Copy */}
-          <div className="max-w-2xl">
-            {stats.live.length > 0 && (
-              <button
-                onClick={onDiscover}
-                style={{ "--i": 0 } as CSSProperties}
-                className="hero-enter press mb-7 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[.05] py-1.5 pl-3 pr-3.5 text-[13px] text-text-secondary shadow-[inset_0_1px_0_rgba(255,255,255,.06)] backdrop-blur-md transition-colors hover:border-white/20 hover:text-text"
-              >
+      {/* ── On the block now: the live lot closing soonest ────────────── */}
+      {lead && (
+        <section className="relative px-4 pt-6 sm:px-6 lg:px-10">
+          <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1fr_440px] lg:gap-16">
+            <Reveal className="max-w-xl">
+              <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-amber">
                 <span className="ping-dot size-[7px] rounded-full bg-red-500 text-red-500" />
-                {t("catalog.hero.liveCount", { count: stats.live.length })}
-                <ArrowRight className="size-3.5" />
-              </button>
-            )}
-
-            <h1 className="hero-title font-display text-[clamp(42px,5vw,74px)] font-semibold leading-[1.02] tracking-[-0.03em] text-text">
-              <span className="line-mask" style={{ "--i": 0 } as CSSProperties}>
-                <span>{t("catalog.hero.titleLine1")}</span>
-              </span>
-              <span className="line-mask" style={{ "--i": 1 } as CSSProperties}>
-                <span className="shimmer-text">{t("catalog.hero.titleLine2")}</span>
-              </span>
-            </h1>
-            <p
-              style={{ "--i": 3 } as CSSProperties}
-              className="hero-enter mt-6 max-w-md text-[17px] leading-8 text-text-secondary"
-            >
-              {stats.lowestOpening
-                ? t("catalog.hero.leadFrom", { amount: stats.lowestOpening })
-                : t("catalog.hero.lead")}
-            </p>
-
-            <div style={{ "--i": 4 } as CSSProperties} className="hero-enter mt-8 flex flex-wrap items-center gap-3">
-              <span ref={magnetRef} className="inline-block">
-                <Button
-                  onClick={onDiscover}
-                  className="press h-12 gap-2 rounded-full px-7 text-[15px] font-semibold shadow-[0_10px_40px_-8px_rgba(232,184,75,0.55)] hover:bg-[#f3ca6b]"
-                >
-                  {t("catalog.hero.explore")}
-                  <ArrowRight className="size-4" />
-                </Button>
-              </span>
-              <Button
-                variant="outline"
-                onClick={sell}
-                className="press h-12 gap-2 rounded-full border-white/15 bg-white/[.03] px-6 text-[15px] text-text backdrop-blur-sm hover:bg-white/[.08]"
-              >
-                <Palette className="size-4 text-amber" />
-                {t("catalog.hero.sell")}
-              </Button>
-            </div>
-
-            <ul
-              style={{ "--i": 5 } as CSSProperties}
-              className="hero-enter mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-text-secondary"
-            >
-              {(["catalog.hero.pointFree", "catalog.hero.pointPublic", "catalog.hero.pointPrices"] as const).map(
-                (point) => (
-                  <li key={point} className="flex items-center gap-2">
-                    <span className="grid size-4 place-items-center rounded-full bg-amber/15">
+                {t("catalog.stage.nextKicker")}
+              </p>
+              <h2 className="mt-3 font-display text-[clamp(32px,3.6vw,52px)] font-semibold leading-[1.05] tracking-[-0.03em] text-text">
+                {t("catalog.stage.nextTitle")}
+              </h2>
+              <p className="mt-4 text-[17px] leading-8 text-text-secondary">{t("catalog.stage.nextText")}</p>
+              <ul className="mt-7 grid gap-3 text-sm text-text-secondary">
+                {(["catalog.hero.pointFree", "catalog.hero.pointPublic", "catalog.hero.pointPrices"] as const).map((point) => (
+                  <li key={point} className="flex items-center gap-2.5">
+                    <span className="grid size-5 place-items-center rounded-full bg-amber/15">
                       <Check className="size-3 text-amber" />
                     </span>
                     {t(point)}
                   </li>
-                ),
-              )}
-            </ul>
-          </div>
-
-          {/* Featured lot: tilts toward the pointer (mouse only) */}
-          {lead && (
-            <div
-              style={{ "--i": 3 } as CSSProperties}
-              className="hero-enter relative mx-auto w-full max-w-[440px] lg:mx-0 lg:justify-self-end"
-            >
+                ))}
+              </ul>
+            </Reveal>
+            <Reveal delay={80} className="mx-auto w-full max-w-[440px] lg:mx-0 lg:justify-self-end">
               <div ref={tiltRef} className="will-change-transform [transform-style:preserve-3d]">
                 <FeaturedLot art={lead} onOpen={() => onArtwork(lead.id)} onArtist={() => onArtist(lead.artistId)} />
               </div>
-            </div>
-          )}
-        </div>
-      </section>
+            </Reveal>
+          </div>
+        </section>
+      )}
 
       <div className="px-4 pt-2 sm:px-6 lg:px-10">
         <EventBanner onOpen={onEvent} className="mx-auto max-w-7xl" />
@@ -278,7 +230,7 @@ export default function LandingPage({
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Button onClick={sell} className="h-12 rounded-full px-7 text-[15px] font-semibold hover:bg-[#f3ca6b]">
+              <Button onClick={sell} className="h-12 rounded-full px-7 text-[15px] font-semibold hover:bg-amber-dark">
                 {t("catalog.cta.start")}
               </Button>
               <Button
@@ -351,7 +303,7 @@ function FeaturedLot({
             </p>
           </div>
         </div>
-        <Button onClick={onOpen} className="mt-3 h-11 w-full gap-2 rounded-xl text-[15px] font-semibold hover:bg-[#f3ca6b]">
+        <Button onClick={onOpen} className="mt-3 h-11 w-full gap-2 rounded-xl text-[15px] font-semibold hover:bg-amber-dark">
           <Gavel className="size-4" /> {t("catalog.featured.bidNow", { amount: art.minNextBid })}
         </Button>
         <p className="mt-2 text-center text-[11px] text-text-muted">

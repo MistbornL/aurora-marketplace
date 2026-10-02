@@ -98,7 +98,7 @@ export function BidPanel({
   return (
     <section
       aria-label={t("artwork.placeABid")}
-      className="rounded-3xl border border-white/[.08] bg-gradient-to-b from-surface to-[#141419] p-5 shadow-[0_30px_80px_rgba(0,0,0,0.35)] sm:p-6"
+      className="rounded-3xl border border-white/[.08] bg-gradient-to-b from-surface to-[#160f0c] p-5 shadow-[0_30px_80px_rgba(0,0,0,0.35)] sm:p-6"
     >
       {/* Price + time */}
       <div className="flex items-start justify-between gap-4">
@@ -299,7 +299,7 @@ export function BidPanel({
                   {t("common.cancel")}
                 </Button>
                 <Button
-                  className="h-10 bg-amber font-semibold text-bg hover:bg-[#f3ca6b]"
+                  className="h-10 bg-amber font-semibold text-bg hover:bg-amber-dark"
                   disabled={submitting}
                   onClick={() => {
                     onBid(amount)
@@ -314,7 +314,7 @@ export function BidPanel({
             <Button
               disabled={invalid || submitting}
               onClick={() => setConfirming(true)}
-              className="h-12 w-full gap-2 rounded-2xl bg-amber text-[15px] font-semibold text-bg shadow-lg shadow-amber/15 hover:bg-[#f3ca6b]"
+              className="h-12 w-full gap-2 rounded-2xl bg-amber text-[15px] font-semibold text-bg shadow-lg shadow-amber/15 hover:bg-amber-dark"
             >
               <Gavel className="size-4" />
               {winsNow
@@ -330,7 +330,7 @@ export function BidPanel({
       {state === "signed-out" && (
         <Button
           onClick={onSignIn}
-          className="mt-5 h-12 w-full rounded-2xl bg-amber text-[15px] font-semibold text-bg hover:bg-[#f3ca6b]"
+          className="mt-5 h-12 w-full rounded-2xl bg-amber text-[15px] font-semibold text-bg hover:bg-amber-dark"
         >
           {state === "signed-out" && startsIn > 0 ? t("artwork.panel.signInReady") : t("artwork.signInToBid")}
         </Button>

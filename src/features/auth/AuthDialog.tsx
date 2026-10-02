@@ -133,11 +133,11 @@ export function AuthDialog({
             </button>
           )}
           <span className="font-display text-sm font-extrabold tracking-[-0.03em] text-text">
-            AUR
+            TSISK
             <span className="mx-px inline-grid size-4 place-items-center rounded-full bg-amber align-middle text-[9px] text-bg">
-              O
+              A
             </span>
-            RA
+            RI
           </span>
           <DialogTitle className="mt-3 font-display text-2xl font-bold text-text">
             {titles[mode].title}
@@ -306,7 +306,7 @@ export function AuthDialog({
                     type="checkbox"
                     checked={acceptedTerms}
                     onChange={(event) => setAcceptedTerms(event.target.checked)}
-                    className="mt-0.5 size-4 accent-[#e8b84b]"
+                    className="mt-0.5 size-4 accent-[#d8a657]"
                   />
                   {t("auth.acceptTerms")}
                 </label>

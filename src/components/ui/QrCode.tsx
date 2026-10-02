@@ -28,7 +28,7 @@ export function QrCode({ value, size = 132, label }: { value: string; size?: num
       className="block shrink-0 rounded-xl bg-white"
       style={{ width: size, height: size }}
     >
-      <path d={path} fill="#0d0d10" />
+      <path d={path} fill="#1a0a0c" />
     </svg>
   )
 }

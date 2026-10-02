@@ -115,7 +115,7 @@ export function DiscoverSection({
                 setLiveOnly(event.target.checked)
                 setVisible(PAGE_SIZE)
               }}
-              className="size-3.5 accent-[#e8b84b]"
+              className="size-3.5 accent-[#d8a657]"
             />
             {t("catalog.discover.liveOnly")}
           </label>

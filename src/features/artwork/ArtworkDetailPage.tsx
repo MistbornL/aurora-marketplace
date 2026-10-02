@@ -309,7 +309,7 @@ function ArtworkDetailView({
 
       {/* Mobile: sticky bid bar */}
       {(state === "open" || state === "outbid" || state === "signed-out") && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/[.08] bg-[#0d0d10]/95 px-4 py-3 backdrop-blur-xl lg:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/[.08] bg-bg/95 px-4 py-3 backdrop-blur-xl lg:hidden">
           <div className="mx-auto flex max-w-xl items-center gap-3">
             <div className="min-w-0 flex-1">
               <p className="font-display text-lg font-bold text-amber">{art.currentBid}₾</p>
@@ -323,7 +323,7 @@ function ArtworkDetailView({
                   ? bidding.openSignIn()
                   : panelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
               }
-              className="h-11 rounded-full bg-amber px-6 font-semibold text-bg hover:bg-[#f3ca6b]"
+              className="h-11 rounded-full bg-amber px-6 font-semibold text-bg hover:bg-amber-dark"
             >
               {state === "signed-out" ? t("artwork.signInToBid") : t("artwork.placeABid")}
             </Button>

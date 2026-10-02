@@ -7,6 +7,7 @@ import { useCatalog } from "../../features/catalog/catalog-context"
 import { useSavedIds } from "../../features/catalog/saved"
 import { useI18n, type MessageKey } from "../../lib/i18n"
 import { useScrolled } from "../../lib/motion"
+import { useOverHero } from "../../lib/hero-state"
 import { errorMessage, notify } from "../../lib/notify"
 import type { View } from "../../types"
 import { Button } from "../ui"
@@ -94,21 +95,22 @@ export function Nav({
   // On the landing page the bar starts see-through over the hero, then
   // frosts once the page scrolls (or whenever a panel is open).
   const scrolled = useScrolled(8)
-  const clear = current === "landing" && !scrolled && !open
+  const overHero = useOverHero()
+  const clear = current === "landing" && (!scrolled || overHero) && !open
 
   return (
     <>
       <nav
         ref={navRef}
-        className={`sticky top-0 z-50 flex h-16 items-center justify-between border-b px-4 transition-[background-color,border-color,backdrop-filter] duration-300 sm:px-6 lg:px-10 ${
-          clear ? "border-transparent bg-transparent" : "border-white/[.06] bg-[#0d0d10]/85 backdrop-blur-xl"
+        className={`sticky top-0 z-50 grid h-16 grid-cols-[auto_1fr_auto] items-center gap-3 border-b px-4 transition-[background-color,border-color,backdrop-filter] duration-300 sm:px-6 lg:px-10 ${
+          clear ? "border-transparent bg-transparent" : "border-white/[.06] bg-bg/85 backdrop-blur-xl"
         }`}
       >
         {/* Logo */}
         <button
           onClick={() => go("landing")}
           aria-label={t("layout.nav.home")}
-          className="flex shrink-0 items-center font-display text-[22px] font-extrabold tracking-[-0.03em] text-text"
+          className="flex shrink-0 items-center justify-self-start font-display text-[22px] font-extrabold tracking-[-0.03em] text-text"
         >
           TSISK
           <span className="mx-px inline-grid size-[22px] place-items-center rounded-full bg-amber text-[13px] text-bg">
@@ -117,32 +119,40 @@ export function Nav({
           RI
         </button>
 
-        {/* Links */}
-        <div className="hidden items-center gap-1 md:flex">
-          {NAV_LINKS.map(({ label, view }) => {
-            const active = current === view
-            return (
-              <button
-                key={label}
-                onClick={() => go(view)}
-                aria-current={active ? "page" : undefined}
-                className={`relative rounded-full px-4 py-2 text-[13px] transition-colors ${
-                  active
-                    ? "bg-white/[.07] text-text"
-                    : "text-text-secondary hover:bg-white/[.04] hover:text-text"
-                }`}
-              >
-                {t(label)}
-                {view === "live" && (
-                  <span className="absolute right-2 top-2 size-1.5 animate-pulse rounded-full bg-red-500" />
-                )}
-              </button>
-            )
-          })}
+        {/* Links — centered in the middle column regardless of what the
+            logo and right-side controls weigh, so they stay put as either
+            side grows or shrinks. */}
+        <div className="hidden justify-self-center md:flex">
+          <div className="flex items-center gap-1 rounded-full border border-white/[.07] bg-white/[.035] p-1">
+            {NAV_LINKS.map(({ label, view }) => {
+              const active = current === view
+              return (
+                <button
+                  key={label}
+                  onClick={() => go(view)}
+                  aria-current={active ? "page" : undefined}
+                  className={`relative rounded-full px-5 py-2 text-[13px] font-medium transition-all ${
+                    active
+                      ? "bg-amber text-bg shadow-[0_2px_12px_-2px_rgba(216,166,87,.55)]"
+                      : "text-text-secondary hover:bg-white/[.07] hover:text-text"
+                  }`}
+                >
+                  {t(label)}
+                  {view === "live" && (
+                    <span
+                      className={`absolute right-2 top-2 size-1.5 animate-pulse rounded-full ${
+                        active ? "bg-bg" : "bg-red-500"
+                      }`}
+                    />
+                  )}
+                </button>
+              )
+            })}
+          </div>
         </div>
 
         {/* Right side */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-self-end">
           <LanguageSwitch className="hidden sm:flex" />
           <div className="md:hidden">
             <IconButton
@@ -184,7 +194,7 @@ export function Nav({
               <Bell />
             </IconButton>
             {notifications.unread > 0 && (
-              <span className="pointer-events-none absolute -right-0.5 -top-0.5 grid min-w-4 place-items-center rounded-full bg-amber px-1 text-[9px] font-bold leading-4 text-bg ring-2 ring-[#0d0d10]">
+              <span className="pointer-events-none absolute -right-0.5 -top-0.5 grid min-w-4 place-items-center rounded-full bg-amber px-1 text-[9px] font-bold leading-4 text-bg ring-2 ring-bg">
                 {notifications.unread}
               </span>
             )}
@@ -259,7 +269,7 @@ export function Nav({
                 close()
                 setDialog("auth")
               }}
-              className="ml-1 h-9 rounded-full bg-amber px-4 font-semibold text-bg hover:bg-[#f3ca6b]"
+              className="press ml-1 h-9 rounded-full bg-amber px-5 font-semibold text-bg shadow-[0_2px_14px_-4px_rgba(216,166,87,.6)] transition-all hover:bg-amber-dark hover:shadow-[0_4px_18px_-4px_rgba(216,166,87,.7)]"
             >
               {t("common.signIn")}
             </Button>
@@ -267,7 +277,7 @@ export function Nav({
         </div>
         {/* Mobile menu */}
         {open === "menu" && (
-          <div className="absolute inset-x-0 top-full z-[60] border-b border-white/[.08] bg-[#0d0d10] px-4 pb-5 pt-2 shadow-2xl animate-in fade-in-0 slide-in-from-top-2 md:hidden">
+          <div className="absolute inset-x-0 top-full z-[60] border-b border-white/[.08] bg-bg px-4 pb-5 pt-2 shadow-2xl animate-in fade-in-0 slide-in-from-top-2 md:hidden">
             <nav aria-label={t("layout.nav.main")} className="flex flex-col">
               {[...NAV_LINKS, { label: "layout.nav.aboutFaq" as MessageKey, view: "about" as const }].map(({ label, view }) => (
                 <button
@@ -307,7 +317,7 @@ export function Nav({
                     close()
                     setDialog("signup")
                   }}
-                  className="h-11 rounded-full font-semibold"
+                  className="h-11 rounded-full bg-amber font-semibold text-bg hover:bg-amber-dark"
                 >
                   {t("common.joinFree")}
                 </Button>

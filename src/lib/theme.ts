@@ -1,14 +1,14 @@
 // Design tokens for inline styles. Tailwind equivalents live in styles/globals.css.
 export const C = {
-  bg: "#0d0d10",
-  surface: "#181820",
-  surface2: "#1f1f2a",
-  border: "rgba(255,255,255,0.08)",
-  amber: "#e8b84b",
-  amberDim: "rgba(232,184,75,0.12)",
-  text: "#f2efe8",
-  textSec: "rgba(242,239,232,0.5)",
-  textMut: "rgba(242,239,232,0.28)",
+  bg: "#1a0a0c",
+  surface: "#2a1013",
+  surface2: "#381820",
+  border: "rgba(255,228,200,0.09)",
+  amber: "#d8a657",
+  amberDim: "rgba(216,166,87,0.12)",
+  text: "#f4ece1",
+  textSec: "rgba(244,236,225,0.6)",
+  textMut: "rgba(244,236,225,0.4)",
   live: "#ef4444",
 }
 

@@ -12,7 +12,7 @@ export function LanguageSwitch({ className = "" }: { className?: string }) {
     <div
       role="radiogroup"
       aria-label={t("common.language")}
-      className={`flex h-9 items-center rounded-full bg-white/[.05] p-0.5 text-[12px] font-semibold ${className}`}
+      className={`flex h-8 items-center gap-0.5 rounded-full bg-white/[.05] p-0.5 text-[11px] font-semibold ${className}`}
     >
       {OPTIONS.map((option) => (
         <button
@@ -22,8 +22,10 @@ export function LanguageSwitch({ className = "" }: { className?: string }) {
           aria-label={option.name}
           title={option.name}
           onClick={() => setLang(option.lang)}
-          className={`h-8 min-w-9 rounded-full px-2 transition-colors ${
-            lang === option.lang ? "bg-amber text-bg" : "text-text-secondary hover:text-text"
+          className={`h-7 min-w-7 rounded-full px-1.5 transition-colors ${
+            lang === option.lang
+              ? "bg-amber text-bg hover:bg-amber-dark"
+              : "text-text-secondary hover:text-text"
           }`}
         >
           {option.label}
