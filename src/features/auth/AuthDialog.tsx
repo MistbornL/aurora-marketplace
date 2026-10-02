@@ -306,7 +306,7 @@ export function AuthDialog({
                     type="checkbox"
                     checked={acceptedTerms}
                     onChange={(event) => setAcceptedTerms(event.target.checked)}
-                    className="mt-0.5 size-4 accent-[#d8a657]"
+                    className="mt-0.5 size-4 accent-[#f6a87b]"
                   />
                   {t("auth.acceptTerms")}
                 </label>

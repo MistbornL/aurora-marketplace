@@ -19,40 +19,40 @@
 @custom-variant dark (&:is(.dark *));
 
 /* shadcn/ui semantic tokens, in the warm palette of the landing film:
-   candlelit room shadows, walnut, brass, with amber as the one accent. */
+   dusk-plum neutrals with the sunrise peach as the one accent. */
 :root {
-  --background: #1a0a0c;
+  --background: #1b171d;
   --foreground: #f4ece1;
-  --card: #2a1013;
+  --card: #271f2b;
   --card-foreground: #f4ece1;
-  --popover: #2a1013;
+  --popover: #271f2b;
   --popover-foreground: #f4ece1;
-  --primary: #d8a657; /* candlelight */
-  --primary-foreground: #1a0a0c;
-  --secondary: #3a1a1f;
+  --primary: #f6a87b; /* sunrise peach */
+  --primary-foreground: #1b171d;
+  --secondary: #3a3040;
   --secondary-foreground: #f4ece1;
-  --muted: #3a1a1f;
-  --muted-foreground: #b5a596;
-  --accent: #3a1a1f;
+  --muted: #3a3040;
+  --muted-foreground: #b4a3ad;
+  --accent: #3a3040;
   --accent-foreground: #f4ece1;
   --destructive: oklch(0.704 0.191 22.216);
   --border: rgba(255, 228, 200, 0.1);
   --input: rgba(255, 228, 200, 0.15);
-  --ring: #d8a657;
+  --ring: #f6a87b;
   --radius: 0.625rem;
-  --chart-1: #d8a657;
+  --chart-1: #f6a87b;
   --chart-2: #e39a84;
   --chart-3: #c97b45;
   --chart-4: #a06b79;
   --chart-5: #5a4334;
-  --sidebar: #2a1013;
+  --sidebar: #271f2b;
   --sidebar-foreground: #f4ece1;
-  --sidebar-primary: #d8a657;
-  --sidebar-primary-foreground: #1a0a0c;
-  --sidebar-accent: #3a1a1f;
+  --sidebar-primary: #f6a87b;
+  --sidebar-primary-foreground: #1b171d;
+  --sidebar-accent: #3a3040;
   --sidebar-accent-foreground: #f4ece1;
   --sidebar-border: rgba(255, 228, 200, 0.1);
-  --sidebar-ring: #d8a657;
+  --sidebar-ring: #f6a87b;
 }
 
 @theme inline {
@@ -99,17 +99,18 @@
 }
 
 @theme {
-  /* Sampled from the landing film: the room's shadows and walnut (neutrals),
-     candle gold (the accent, used sparingly), velvet and dawn (rare notes). */
-  --color-bg: #1a0a0c;
-  --color-surface: #2a1013;
-  --color-surface-2: #381820;
+  /* Sampled from the film's dawn frame: the dark forest (bg), the lifted
+     mauve of the mountain shade (surfaces), the sun's peach as the one accent
+     (the token is still named "amber"), rose/lilac from the clouds as rare notes. */
+  --color-bg: #1b171d;
+  --color-surface: #271f2b;
+  --color-surface-2: #342a38;
   --color-border: rgba(255, 228, 200, 0.09);
-  --color-amber: #d8a657;
-  --color-amber-dim: rgba(216, 166, 87, 0.15);
-  --color-amber-dark: #b88a3e;
+  --color-amber: #f6a87b;
+  --color-amber-dim: rgba(246, 168, 123, 0.15);
+  --color-amber-dark: #e08f60;
   --color-oxblood: #7a2219;
-  --color-rose: #e39a84;
+  --color-rose: #ce8979;
   --color-dusk: #2a2130;
   --color-text: #f4ece1;
   --color-text-secondary: rgba(244, 236, 225, 0.6);
@@ -130,9 +131,9 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(60% 50% at 85% 0%, rgba(227, 154, 132, 0.075), transparent 70%),
-    radial-gradient(55% 45% at 5% 100%, rgba(201, 123, 69, 0.07), transparent 70%),
-    radial-gradient(40% 35% at 50% 55%, rgba(122, 34, 25, 0.05), transparent 75%);
+    radial-gradient(70% 55% at 80% 0%, rgba(246, 168, 123, 0.10), transparent 70%),
+    radial-gradient(60% 50% at 10% 0%, rgba(137, 96, 107, 0.16), transparent 72%),
+    radial-gradient(55% 45% at 5% 100%, rgba(137, 96, 107, 0.10), transparent 70%);
   animation: env-drift 90s ease-in-out -30s infinite alternate;
 }
 @keyframes env-drift {
@@ -157,7 +158,7 @@ button, input, a {
 }
 
 button:focus-visible, input:focus-visible {
-  outline: 2px solid rgba(216, 166, 87, 0.7);
+  outline: 2px solid rgba(246, 168, 123, 0.7);
   outline-offset: 2px;
 }
 
@@ -168,7 +169,7 @@ html::-webkit-scrollbar { display: none; }
    dialogs, etc.) — the page-level scrollbar above is hidden by design. */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(216, 166, 87, 0.35) transparent;
+  scrollbar-color: rgba(246, 168, 123, 0.35) transparent;
 }
 *::-webkit-scrollbar {
   width: 8px;
@@ -178,13 +179,13 @@ html::-webkit-scrollbar { display: none; }
   background: transparent;
 }
 *::-webkit-scrollbar-thumb {
-  background-color: rgba(216, 166, 87, 0.35);
+  background-color: rgba(246, 168, 123, 0.35);
   border-radius: 999px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
 *::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(216, 166, 87, 0.55);
+  background-color: rgba(246, 168, 123, 0.55);
 }
 
 body {
@@ -231,7 +232,7 @@ body {
 
 /* Slow shimmer across the amber line of the headline. */
 .shimmer-text {
-  background: linear-gradient(100deg, #d8a657 0%, #efd08e 45%, #d8a657 90%);
+  background: linear-gradient(100deg, #f6a87b 0%, #fcd9b4 45%, #f6a87b 90%);
   background-size: 220% 100%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -243,7 +244,7 @@ body {
 /* Aurora: three soft light sources drifting behind the hero ("tsiskari" is dawn). */
 .aurora { position: absolute; inset: -15%; filter: blur(90px); opacity: 0.6; pointer-events: none; }
 .aurora > span { position: absolute; border-radius: 9999px; animation: aurora-drift 26s ease-in-out infinite; will-change: transform; }
-.aurora > span:nth-child(1) { width: 44vw; height: 44vw; left: 2%; top: 4%; background: radial-gradient(circle, rgba(216, 166, 87,.5), transparent 68%); }
+.aurora > span:nth-child(1) { width: 44vw; height: 44vw; left: 2%; top: 4%; background: radial-gradient(circle, rgba(246, 168, 123,.5), transparent 68%); }
 .aurora > span:nth-child(2) { width: 34vw; height: 34vw; right: 2%; top: 28%; background: radial-gradient(circle, rgba(216,110,90,.32), transparent 68%); animation-duration: 32s; animation-delay: -8s; }
 .aurora > span:nth-child(3) { width: 30vw; height: 30vw; left: 32%; bottom: -8%; background: radial-gradient(circle, rgba(120,150,220,.2), transparent 68%); animation-duration: 29s; animation-delay: -14s; }
 @keyframes aurora-drift {
@@ -253,7 +254,7 @@ body {
 }
 .spotlight {
   position: absolute; left: 0; top: 0; width: 640px; height: 640px; pointer-events: none;
-  background: radial-gradient(circle, rgba(216, 166, 87,.09), transparent 62%);
+  background: radial-gradient(circle, rgba(246, 168, 123,.09), transparent 62%);
   transform: translate(-50%, -50%) translate3d(60vw, 30vh, 0);
 }
 
@@ -305,37 +306,37 @@ body {
 }
 
 .dark {
-  --background: #1a0a0c;
+  --background: #1b171d;
   --foreground: #f4ece1;
-  --card: #2a1013;
+  --card: #271f2b;
   --card-foreground: #f4ece1;
-  --popover: #2a1013;
+  --popover: #271f2b;
   --popover-foreground: #f4ece1;
-  --primary: #d8a657; /* candlelight */
-  --primary-foreground: #1a0a0c;
-  --secondary: #3a1a1f;
+  --primary: #f6a87b; /* sunrise peach */
+  --primary-foreground: #1b171d;
+  --secondary: #3a3040;
   --secondary-foreground: #f4ece1;
-  --muted: #3a1a1f;
-  --muted-foreground: #b5a596;
-  --accent: #3a1a1f;
+  --muted: #3a3040;
+  --muted-foreground: #b4a3ad;
+  --accent: #3a3040;
   --accent-foreground: #f4ece1;
   --destructive: oklch(0.704 0.191 22.216);
   --border: rgba(255, 228, 200, 0.1);
   --input: rgba(255, 228, 200, 0.15);
-  --ring: #d8a657;
-  --chart-1: #d8a657;
+  --ring: #f6a87b;
+  --chart-1: #f6a87b;
   --chart-2: #e39a84;
   --chart-3: #c97b45;
   --chart-4: #a06b79;
   --chart-5: #5a4334;
-  --sidebar: #2a1013;
+  --sidebar: #271f2b;
   --sidebar-foreground: #f4ece1;
-  --sidebar-primary: #d8a657;
-  --sidebar-primary-foreground: #1a0a0c;
-  --sidebar-accent: #3a1a1f;
+  --sidebar-primary: #f6a87b;
+  --sidebar-primary-foreground: #1b171d;
+  --sidebar-accent: #3a3040;
   --sidebar-accent-foreground: #f4ece1;
   --sidebar-border: rgba(255, 228, 200, 0.1);
-  --sidebar-ring: #d8a657;
+  --sidebar-ring: #f6a87b;
 }
 
 @layer base {

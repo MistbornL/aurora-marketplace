@@ -117,7 +117,7 @@ export default function ArViewer({
           </DialogDescription>
         </DialogHeader>
 
-        <div className={`relative aspect-[4/5] w-full ${handheld ? "max-h-[62dvh]" : "max-h-[48dvh]"} overflow-hidden rounded-2xl bg-[radial-gradient(120%_80%_at_50%_0%,#3a1a1f_0%,#241012_55%,#1a0a0c_100%)] ring-1 ring-white/[.08]`}>
+        <div className={`relative aspect-[4/5] w-full ${handheld ? "max-h-[62dvh]" : "max-h-[48dvh]"} overflow-hidden rounded-2xl bg-[radial-gradient(120%_80%_at_50%_0%,#3a3040_0%,#1f1a24_55%,#1b171d_100%)] ring-1 ring-white/[.08]`}>
           {model && !failed && (
             <model-viewer
               ref={viewer}
@@ -144,7 +144,7 @@ export default function ArViewer({
               <button
                 slot="ar-button"
                 type="button"
-                className="press absolute bottom-4 left-1/2 flex h-12 -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-amber px-6 text-[15px] font-semibold text-bg shadow-[0_12px_34px_-10px_rgba(216,166,87,.7)]"
+                className="press absolute bottom-4 left-1/2 flex h-12 -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-amber px-6 text-[15px] font-semibold text-bg shadow-[0_12px_34px_-10px_rgba(246,168,123,.7)]"
               >
                 <Smartphone className="size-4" />
                 {t("artwork.ar.place")}

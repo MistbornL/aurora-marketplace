@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, type ReactNode } from "react"
+import { lazy, Suspense, useEffect, useLayoutEffect, type ReactNode } from "react"
 import {
   BrowserRouter,
   Navigate,
@@ -39,9 +39,24 @@ const DashboardPage = lazy(() => import("../features/dashboard/DashboardPage"))
 const OrderPage = lazy(() => import("../features/orders/OrderPage"))
 const AdminPage = lazy(() => import("../features/admin/AdminPage"))
 
+// Every page change starts at the top, on desktop and mobile. Pages that
+// navigate to an in-page anchor (#section) handle their own scrolling.
+function ScrollToTop() {
+  const { pathname, hash } = useLocation()
+  useLayoutEffect(() => {
+    if (hash) return
+    window.scrollTo(0, 0)
+    // Lazy pages mount a moment later and can restore a taller document.
+    const id = requestAnimationFrame(() => window.scrollTo(0, 0))
+    return () => cancelAnimationFrame(id)
+  }, [pathname, hash])
+  return null
+}
+
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <AppRoutes />
       <ResetPasswordDialog />
     </BrowserRouter>

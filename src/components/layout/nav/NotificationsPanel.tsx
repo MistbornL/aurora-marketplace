@@ -86,7 +86,7 @@ export function NotificationsPanel({
             >
               <span
                 className={`mt-1.5 size-2 shrink-0 rounded-full ${
-                  item.unread ? "bg-amber shadow-[0_0_8px_rgba(216,166,87,0.6)]" : "bg-white/10"
+                  item.unread ? "bg-amber shadow-[0_0_8px_rgba(246,168,123,0.6)]" : "bg-white/10"
                 }`}
               />
               <span className="min-w-0 flex-1">

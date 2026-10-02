@@ -133,7 +133,7 @@ export function Nav({
                   aria-current={active ? "page" : undefined}
                   className={`relative rounded-full px-5 py-2 text-[13px] font-medium transition-all ${
                     active
-                      ? "bg-amber text-bg shadow-[0_2px_12px_-2px_rgba(216,166,87,.55)]"
+                      ? "bg-amber text-bg shadow-[0_2px_12px_-2px_rgba(246,168,123,.55)]"
                       : "text-text-secondary hover:bg-white/[.07] hover:text-text"
                   }`}
                 >
@@ -269,7 +269,7 @@ export function Nav({
                 close()
                 setDialog("auth")
               }}
-              className="press ml-1 h-9 rounded-full bg-amber px-5 font-semibold text-bg shadow-[0_2px_14px_-4px_rgba(216,166,87,.6)] transition-all hover:bg-amber-dark hover:shadow-[0_4px_18px_-4px_rgba(216,166,87,.7)]"
+              className="press ml-1 h-9 rounded-full bg-amber px-5 font-semibold text-bg shadow-[0_2px_14px_-4px_rgba(246,168,123,.6)] transition-all hover:bg-amber-dark hover:shadow-[0_4px_18px_-4px_rgba(246,168,123,.7)]"
             >
               {t("common.signIn")}
             </Button>
