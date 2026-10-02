@@ -17,6 +17,9 @@ export default defineConfig(({ mode }) => {
     build: {
       sourcemap: emitSourcemaps ? "inline" : false,
       minify: !emitSourcemaps,
+      // The only large chunk is the lazy-loaded AR viewer (3D engine), which
+      // loads only when someone opens "view on wall"; the main bundle is small.
+      chunkSizeWarningLimit: 1100,
     },
     plugins: [
       react(),

@@ -349,6 +349,9 @@ export function ScrollHero({
         }
       }
       window.clearTimeout(watchdog)
+      // A real film is megabytes; a tiny body is an error page or a Git LFS
+      // pointer that was deployed instead of the video. Fall back to the stills.
+      if (got < 500_000) throw new Error("hero video is not a video")
       setRing(1)
       blobUrl = URL.createObjectURL(new Blob(chunks, { type: "video/mp4" }))
       video.src = blobUrl
