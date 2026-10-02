@@ -6,6 +6,15 @@ import { categoryLabel, useI18n, type MessageKey } from "../../lib/i18n"
 import { useCatalog } from "./catalog-context"
 
 const CATEGORIES = ["All", "Painting", "Drawing", "Photography", "Digital Art", "Sculpture", "Handmade"]
+// Atmospheric tiles (generated in the landing film's look, ~30-90 KB each).
+const CATEGORY_IMAGES: Record<string, string | undefined> = {
+  Painting: "/img/cat-painting.webp",
+  Drawing: "/img/cat-drawing.webp",
+  Photography: "/img/cat-photography.webp",
+  "Digital Art": "/img/cat-digital.webp",
+  Sculpture: "/img/cat-sculpture.webp",
+  Handmade: "/img/cat-handmade.webp",
+}
 // Sort labels are message keys; they're translated at render time.
 const SORTS = {
   ending: "catalog.discover.sort.ending",
@@ -178,25 +187,52 @@ export function DiscoverSection({
         </div>
       )}
 
-      <div role="tablist" aria-label={t("catalog.discover.categories")} className="-mx-1 mb-8 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none]">
+      <div
+        role="tablist"
+        aria-label={t("catalog.discover.categories")}
+        className="-mx-4 mb-10 flex snap-x gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:px-0 lg:grid lg:grid-cols-7 lg:overflow-visible"
+      >
         {CATEGORIES.map((item) => {
           const active = item === category
+          const img = CATEGORY_IMAGES[item]
+          const count = item === "All" ? artworks.length : artworks.filter((art) => art.category === item).length
           return (
             <button
               key={item}
               role="tab"
               aria-selected={active}
               onClick={() => {
-                setCategory(item)
+                setCategory(active && item !== "All" ? "All" : item)
                 setVisible(PAGE_SIZE)
               }}
-              className={`shrink-0 rounded-full px-4 py-1.5 text-[13px] transition-colors ${
+              className={`cat-tile group relative aspect-[4/5] w-32 shrink-0 snap-start overflow-hidden rounded-2xl border text-left transition-[border-color,transform,box-shadow] duration-300 sm:w-36 lg:w-auto ${
                 active
-                  ? "bg-amber font-medium text-bg"
-                  : "border border-white/[.08] bg-white/[.04] text-text-secondary hover:bg-white/[.08] hover:text-text"
+                  ? "border-amber shadow-[0_10px_30px_-12px_rgba(246,168,123,.55)]"
+                  : "border-white/[.08] hover:-translate-y-0.5 hover:border-white/25"
               }`}
             >
-              {categoryLabel(t, item)}
+              {img ? (
+                <img
+                  src={img}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className={`absolute inset-0 h-full w-full object-cover transition-[transform,opacity] duration-500 group-hover:scale-105 ${
+                    active ? "opacity-100" : "opacity-75 group-hover:opacity-95"
+                  }`}
+                />
+              ) : (
+                <span aria-hidden className="absolute inset-0 bg-[radial-gradient(120%_90%_at_80%_0%,rgba(246,168,123,.28),transparent_60%),linear-gradient(160deg,var(--color-surface-2),var(--color-surface))]" />
+              )}
+              <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-bg/95 via-bg/30 to-transparent" />
+              <span className="absolute inset-x-3 bottom-3">
+                <span className={`block font-display text-[15px] font-semibold leading-tight ${active ? "text-amber" : "text-text"}`}>
+                  {categoryLabel(t, item)}
+                </span>
+                <span className="mt-0.5 block font-mono text-[10px] uppercase tracking-[.14em] text-text-secondary">
+                  {count}
+                </span>
+              </span>
             </button>
           )
         })}

@@ -404,6 +404,10 @@
 .sh.ring-done .sh-ring { display: none; }
 
 .sh-static { display: none; }
+/* Tall screens get a taller dawn (outpainted from the film's final frame). */
+@media (orientation: portrait) {
+  .sh .sh-static { background-image: var(--still-tall); background-position: center 30%; }
+}
 
 /* ── Static hero: phones, portrait tablets, coarse-pointer portrait, landscape
    phones and reduced motion get a composed still instead of the scrub. These
@@ -417,6 +421,7 @@
     position: absolute;
     inset: 0;
     background: center 70% / cover no-repeat;
+    background-image: var(--still-wide);
   }
   .sh-scrim {
     background:
@@ -455,3 +460,35 @@
   .sh-chevron::after { animation: none; }
   .sh-btn, .sh-lot, .sh-cue { transition: none; }
 }
+
+/* Opt-in sound toggle (sound is synthesised in hero-sound.ts, nothing downloads). */
+.sh-sound {
+  position: absolute;
+  z-index: 4;
+  right: clamp(16px, 3vw, 40px);
+  bottom: clamp(24px, 6vh, 56px);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(27, 23, 29, 0.45);
+  backdrop-filter: blur(10px);
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.sh-sound:hover { color: var(--color-text); border-color: rgba(255, 255, 255, 0.28); }
+.sh-sound[aria-pressed="true"] { color: var(--color-amber); border-color: rgba(246, 168, 123, 0.45); }
+.sh-sound:focus-visible { outline: 2px solid var(--color-amber); outline-offset: 3px; }
+@media (max-width: 720px), (orientation: portrait) and (max-width: 1024px), (orientation: portrait) and (pointer: coarse), (orientation: landscape) and (pointer: coarse) and (max-height: 560px), (prefers-reduced-motion: reduce) {
+  .sh-sound { display: none; }
+}
+/* Frozen frame shown for a moment while the HD film swaps in. */
+.sh-swap { opacity: 1 !important; transition: none; z-index: 0; }

@@ -10,16 +10,27 @@
 //   and opacity, delta-gated so converged bands cost nothing.
 // - Phones, portrait tablets, landscape phones and reduced motion get a
 //   composed still instead (same five queries in CSS and JS, decided live).
-import { useEffect, useRef, type CSSProperties } from "react"
-import { ArrowRight, Palette } from "lucide-react"
+import { useEffect, useRef, useState, type CSSProperties } from "react"
+import { ArrowRight, Palette, Volume2, VolumeX } from "lucide-react"
+import { isSoundOn, playChime, playGavel, setRoomLevel, setSound } from "./hero-sound"
 import { useI18n } from "../../../lib/i18n"
 import { setOverHero } from "../../../lib/hero-state"
 import type { Artwork } from "../../../types"
 import "./scroll-hero.css"
 
 const ASSETS = "/hero"
-const VIDEO_URL = `${ASSETS}/hero-scrub.mp4`
-const VIDEO_BYTES = 18673666 // real size of hero-scrub.mp4: the ring's fallback when Content-Length is missing
+// The film in three weights. A light copy plays almost at once on the first
+// visit; the HD copy follows in the background and swaps in at the same frame.
+// File names carry a version so they can be cached forever (vercel.json).
+// bytes = real sizes, used for the ring when Content-Length is missing.
+const FILMS = {
+  light: { url: `${ASSETS}/film-v3-960.mp4`, bytes: 4556579 },
+  hd: { url: `${ASSETS}/film-v3-1600.mp4`, bytes: 18673666 },
+  av1: { url: `${ASSETS}/film-v3-1920-av1.mp4`, bytes: 12019273 },
+}
+type Film = (typeof FILMS)[keyof typeof FILMS]
+const AV1_TYPE = 'video/mp4; codecs="av01.0.08M.08"'
+const HD_CACHED_KEY = "tsiskari.heroFilm"
 /** The film is encoded at 24fps with every frame a keyframe, so any frame seeks instantly. */
 const FPS = 24
 const STILLS = [`${ASSETS}/still-curtain.jpg`, `${ASSETS}/still-hall.jpg`, `${ASSETS}/still-gavel.jpg`, `${ASSETS}/still-dawn.jpg`]
@@ -95,6 +106,7 @@ export function ScrollHero({
   const lotRef = useRef<HTMLButtonElement>(null)
   const bidRef = useRef<HTMLElement>(null)
   const flashRef = useRef<HTMLDivElement>(null)
+  const [soundOn, setSoundOn] = useState(isSoundOn)
 
   // The lot chip's numbers live in a ref so the scroll loop can read the
   // latest values without re-running the effect.
@@ -108,7 +120,7 @@ export function ScrollHero({
   useEffect(() => {
     const root = rootRef.current
     const stage = stageRef.current
-    const video = videoRef.current
+    let video = videoRef.current
     if (!root || !stage || !video) return
     let unmounted = false
     let scrubOn = false
@@ -138,7 +150,7 @@ export function ScrollHero({
     const requestSeek = (time: number) => {
       if (!video.duration || !Number.isFinite(video.duration)) return
       const target = clamp(time, 0, video.duration - 0.04)
-      if (seekBusy) {
+      if (seekBusy || swapping) {
         pendingTime = target
         return
       }
@@ -171,8 +183,16 @@ export function ScrollHero({
     let lastBidAt = 0
     let cueHidden = false
     let lastFlash = ""
+    let lastRoom = -1
+    let lastP = 0
 
     const updateCaptions = (p: number, now: number) => {
+      // Room tone: present in the hall, fading as the film dives into the dawn.
+      const room = heroOnScreen ? Math.round((1 - smoothstep(p, DIVE - 0.04, 0.96)) * 20) / 20 : 0
+      if (room !== lastRoom) {
+        lastRoom = room
+        setRoomLevel(room)
+      }
       for (const band of bands) {
         const { a, b } = band
         const f = Math.min(0.02, (b - a) / 3)
@@ -243,6 +263,7 @@ export function ScrollHero({
           lot.style.setProperty("--k", String(lotK))
           const on = lotK > 0.5
           if (on !== lastLotOn) {
+            if (on && p > lastP) playChime()
             lastLotOn = on
             lot.classList.toggle("is-on", on)
             lot.tabIndex = on ? 0 : -1
@@ -250,6 +271,7 @@ export function ScrollHero({
         }
         const struck = p >= STRIKE
         if (struck !== lastStruck) {
+          if (struck && p > lastP) playGavel()
           lastStruck = struck
           lot.classList.toggle("is-struck", struck)
         }
@@ -287,6 +309,7 @@ export function ScrollHero({
         }
       }
       updateCaptions(shown, now)
+      lastP = shown
       if (settled && loadK >= 1) {
         rafId = null
         lastTick = 0
@@ -306,6 +329,10 @@ export function ScrollHero({
 
     const io = new IntersectionObserver(([entry]) => {
       heroOnScreen = entry.isIntersecting
+      if (!heroOnScreen) {
+        lastRoom = 0
+        setRoomLevel(0)
+      }
       if (heroOnScreen) kick()
     })
     io.observe(root)
@@ -326,11 +353,34 @@ export function ScrollHero({
       if (frac >= 1) root.classList.add("ring-done")
     }
 
-    const loadHeroBlob = async () => {
+    // Best HD copy for this machine: AV1 at 1920 (sharper, and 12 MB instead
+    // of 19) only where the GPU decodes AV1 (powerEfficient = hardware), since
+    // scrubbing is many quick seeks; everyone else gets the H.264 1600 copy.
+    const pickHD = async (): Promise<Film> => {
+      try {
+        if (video.canPlayType(AV1_TYPE) !== "probably" || !navigator.mediaCapabilities) return FILMS.hd
+        const info = await navigator.mediaCapabilities.decodingInfo({
+          type: "file",
+          video: { contentType: AV1_TYPE, width: 1920, height: 1080, bitrate: 6_000_000, framerate: 24 },
+        })
+        return info.supported && info.smooth && info.powerEfficient ? FILMS.av1 : FILMS.hd
+      } catch {
+        return FILMS.hd
+      }
+    }
+    const remembered = () => {
+      try {
+        return localStorage.getItem(HD_CACHED_KEY)
+      } catch {
+        return null
+      }
+    }
+
+    const download = async (film: Film, onProgress?: (frac: number) => void) => {
       let watchdog = window.setTimeout(() => abort.abort(), 20000)
-      const res = await fetch(VIDEO_URL, { priority: "low", signal: abort.signal } as RequestInit)
+      const res = await fetch(film.url, { priority: onProgress ? "high" : "low", signal: abort.signal } as RequestInit)
       if (!res.ok || !res.body) throw new Error(`hero video ${res.status}`)
-      const total = Number(res.headers.get("Content-Length")) || VIDEO_BYTES
+      const total = Number(res.headers.get("Content-Length")) || film.bytes
       const reader = res.body.getReader()
       const chunks: BlobPart[] = []
       let got = 0
@@ -343,18 +393,81 @@ export function ScrollHero({
         chunks.push(value)
         got += value.length
         const now = performance.now()
-        if (total && now - lastRing > 100) {
+        if (onProgress && total && now - lastRing > 100) {
           lastRing = now
-          setRing(Math.min(0.98, got / total))
+          onProgress(Math.min(0.98, got / total))
         }
       }
       window.clearTimeout(watchdog)
       // A real film is megabytes; a tiny body is an error page or a Git LFS
-      // pointer that was deployed instead of the video. Fall back to the stills.
+      // pointer that was deployed instead of the video.
       if (got < 500_000) throw new Error("hero video is not a video")
+      return URL.createObjectURL(new Blob(chunks, { type: "video/mp4" }))
+    }
+
+    const once = (el: HTMLElement, type: string) =>
+      new Promise<void>((resolve, reject) => {
+        el.addEventListener(type, () => resolve(), { once: true })
+        el.addEventListener("error", () => reject(new Error(`video ${type} failed`)), { once: true })
+      })
+
+    // HD arrives: freeze the current frame on a canvas, swap the source, seek
+    // the new copy to the same frame, then lift the canvas. No visible jump.
+    let swapping = false
+    const swapTo = async (url: string) => {
+      const cover = document.createElement("canvas")
+      cover.className = "sh-video sh-swap"
+      cover.width = video.videoWidth
+      cover.height = video.videoHeight
+      cover.getContext("2d")?.drawImage(video, 0, 0)
+      video.after(cover)
+      swapping = true
+      seekBusy = false
+      const old = blobUrl
+      let ok = false
+      try {
+        video.src = url
+        video.load()
+        await once(video, "loadeddata")
+        const at = lastFrame >= 0 ? lastFrame / FPS : shown * video.duration
+        video.currentTime = clamp(at, 0, video.duration - 0.04)
+        await once(video, "seeked")
+        ok = true
+      } catch {
+        // HD didn't take: go back to the light copy that was already working.
+        if (old) {
+          video.src = old
+          video.load()
+          await once(video, "loadeddata").catch(() => {})
+        }
+      } finally {
+        swapping = false
+        if (ok) {
+          blobUrl = url
+          if (old) URL.revokeObjectURL(old)
+        } else URL.revokeObjectURL(url)
+        cover.remove()
+        lastFrame = -1
+        kick()
+      }
+      return ok
+    }
+
+    const loadHeroBlob = async () => {
+      const hd = await pickHD()
+      let saveData = false
+      try {
+        const c = (navigator as unknown as { connection?: { saveData?: boolean; effectiveType?: string } }).connection
+        saveData = !!c && (c.saveData === true || /(^|-)2g|3g/.test(c.effectiveType ?? ""))
+      } catch {
+        /* no Network Information API */
+      }
+      // Seen this HD copy before? It is in the browser cache, so go straight to it.
+      const first = remembered() === hd.url ? hd : FILMS.light
+      const url = await download(first, setRing)
       setRing(1)
-      blobUrl = URL.createObjectURL(new Blob(chunks, { type: "video/mp4" }))
-      video.src = blobUrl
+      blobUrl = url
+      video.src = url
       video.load()
       video.addEventListener(
         "canplay",
@@ -367,6 +480,21 @@ export function ScrollHero({
         },
         { once: true },
       )
+      if (first === hd || saveData) return
+      // Let the light copy settle, then fetch HD quietly. Any failure here
+      // just leaves the light copy playing.
+      try {
+        await new Promise((r) => window.setTimeout(r, 1200))
+        const hdUrl = await download(hd)
+        if (unmounted) {
+          URL.revokeObjectURL(hdUrl)
+          return
+        }
+        if (!videoReady) await once(video, "canplay")
+        if (await swapTo(hdUrl)) localStorage.setItem(HD_CACHED_KEY, hd.url)
+      } catch {
+        /* keep the light copy */
+      }
     }
 
     const initHeroOnce = () => {
@@ -438,6 +566,7 @@ export function ScrollHero({
 
     return () => {
       unmounted = true
+      setRoomLevel(0)
       queries.forEach((q) => q.removeEventListener("change", applyMode))
       disableScrub()
       io.disconnect()
@@ -452,7 +581,11 @@ export function ScrollHero({
   return (
     <section ref={rootRef} className="sh" aria-label={t("catalog.stage.eyebrow")}>
       <div ref={stageRef} className="sh-stage" data-still="0">
-        <div className="sh-static" style={{ backgroundImage: `url('${STILLS[3]}')` }} aria-hidden />
+        <div
+          className="sh-static"
+          style={{ "--still-wide": `url('${STILLS[3]}')`, "--still-tall": `url('${ASSETS}/still-dawn-tall.webp')` } as CSSProperties}
+          aria-hidden
+        />
         {STILLS.map((src, i) => (
           <div key={src} className={`sh-still sh-still-${i}`} data-still-src={src} aria-hidden />
         ))}
@@ -545,6 +678,22 @@ export function ScrollHero({
             </span>
           </button>
         )}
+
+        <button
+          type="button"
+          className="sh-sound"
+          aria-pressed={soundOn}
+          aria-label={soundOn ? t("catalog.stage.soundOff") : t("catalog.stage.soundOn")}
+          title={soundOn ? t("catalog.stage.soundOff") : t("catalog.stage.soundOn")}
+          onClick={() => {
+            const next = !soundOn
+            setSoundOn(next)
+            void setSound(next).then(() => window.dispatchEvent(new Event("scroll")))
+          }}
+        >
+          {soundOn ? <Volume2 className="size-4" aria-hidden /> : <VolumeX className="size-4" aria-hidden />}
+          <span>{soundOn ? t("catalog.stage.soundOnLabel") : t("catalog.stage.soundOffLabel")}</span>
+        </button>
 
         <div ref={cueRef} className="sh-cue" aria-hidden>
           <svg className="sh-ring" viewBox="0 0 48 48">

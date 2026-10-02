@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { CreditCard, Gavel, MessageCircle, Package, Palette, ShieldCheck } from "lucide-react"
 import { Button } from "../../components/ui"
 import { useI18n } from "../../lib/i18n"
+import { PageBackdrop } from "../../components/layout/PageBackdrop"
 
 // NOTE: policy wording (payment window, shipping, fees) describes the intended
 // process. Review it against how you actually run payments/shipping before launch.
@@ -36,8 +37,9 @@ export default function AboutPage() {
 
   return (
     <main className="min-h-screen bg-bg pb-24">
-      <section className="border-b border-white/[.06] bg-gradient-to-b from-amber/[.06] to-transparent">
-        <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:py-20">
+      <section className="relative isolate border-b border-white/[.06]">
+        <PageBackdrop src="/img/banner-about.webp" position="50% 35%" />
+        <div className="mx-auto max-w-4xl px-4 pb-16 pt-20 sm:px-6 lg:pb-24 lg:pt-28">
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-amber">{t("info.about.eyebrow")}</p>
           <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-text sm:text-5xl">
             {t("info.about.title")}

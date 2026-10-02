@@ -8,6 +8,7 @@ import {
   LivePill,
   VerifiedBadge,
 } from "../../components/artwork/badges"
+import { PageBackdrop } from "../../components/layout/PageBackdrop"
 
 export default function ArtistsDirectoryPage({
   onArtist,
@@ -30,7 +31,8 @@ export default function ArtistsDirectoryPage({
     [artists, query],
   )
   return (
-    <main className="min-h-screen bg-bg px-6 py-10 lg:px-10">
+    <main className="relative isolate min-h-screen bg-bg px-6 pb-10 pt-16 lg:px-10">
+      <PageBackdrop src="/img/banner-artists.webp" position="70% 40%" />
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>

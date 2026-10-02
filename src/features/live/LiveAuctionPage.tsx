@@ -6,6 +6,7 @@ import { useI18n } from "../../lib/i18n"
 import type { Artwork } from "../../types"
 import { useLiveRooms } from "./api"
 import { EventBanner } from "../events/EventBanner"
+import { PageBackdrop } from "../../components/layout/PageBackdrop"
 
 /**
  * /live — the lobby. Every live auction has its own room (own chat, own bids),
@@ -27,8 +28,9 @@ export default function LiveLobbyPage({
 
   return (
     <main className="min-h-screen bg-bg pb-24">
-      <section className="border-b border-white/[.06] bg-gradient-to-b from-red-500/[.06] to-transparent">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-10">
+      <section className="relative isolate border-b border-white/[.06]">
+        <PageBackdrop src="/img/banner-live.webp" position="50% 45%" />
+        <div className="mx-auto max-w-7xl px-4 pb-14 pt-20 sm:px-6 lg:px-10 lg:pt-24">
           <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-red-400">
             <Radio className="size-4" /> {t("live.lobby.eyebrow")}
           </p>
