@@ -24,6 +24,7 @@ const serviceHeaders = () =>
 export const T = {
   en: {
     outbid: ["You’ve been outbid on {title}", "Someone bid {amount}₾. Bid {next}₾ to take the lead again."],
+    ending_soon: ["{title} closes soon", "Current bid {amount}₾ — you’re not leading. Bid {next}₾ or set a maximum before it closes."],
     won: ["You won {title}!", "Pay {total}₾ within 24 hours to secure it. Payment details are on your order page."],
     second_chance: ["Second chance: {title} can be yours", "The winner didn’t pay. It’s yours for {total}₾ if you pay within 24 hours."],
     sold: ["Sold: {title}", "Winning bid {price}₾. Please don’t ship until we confirm the buyer’s payment."],
@@ -42,6 +43,7 @@ export const T = {
   },
   ka: {
     outbid: ["„{title}“ — ფსონი გადაგისწრეს", "ვიღაცამ {amount}₾ დადო. დადე {next}₾ და ისევ წინ იქნები."],
+    ending_soon: ["„{title}“ მალე სრულდება", "მიმდინარე ფსონი {amount}₾ — შენ არ ლიდერობ. დადე {next}₾ ან დააყენე მაქსიმუმი სანამ დასრულდება."],
     won: ["მოიგე „{title}“!", "გადაიხადე {total}₾ 24 საათში. გადახდის დეტალები შეკვეთის გვერდზეა."],
     second_chance: ["მეორე შანსი: „{title}“ შეიძლება შენი იყოს", "გამარჯვებულმა არ გადაიხადა. ნამუშევარი შენია {total}₾-ად, თუ 24 საათში გადაიხდი."],
     sold: ["გაიყიდა: „{title}“", "მოგებული ფსონი: {price}₾. არ გააგზავნო, სანამ გადახდას არ დავადასტურებთ."],

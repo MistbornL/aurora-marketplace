@@ -1,6 +1,6 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useRef, useState } from "react"
 import { errorMessage, notify } from "../../lib/notify"
+import { celebrateSold } from "../../lib/celebrate"
 import { tr } from "../../lib/i18n"
 import type { Artwork, BidEntry } from "../../types"
 import { AuthDialog } from "../auth/AuthDialog"
@@ -35,7 +35,6 @@ export function useBidding({
 }) {
   const { user, readiness } = useAuth()
   const { refresh } = useCatalog()
-  const navigate = useNavigate()
   const [submitting, setSubmitting] = useState(false)
   const [justPlaced, setJustPlaced] = useState(false)
   const [authOpen, setAuthOpen] = useState(false)
@@ -67,6 +66,22 @@ export function useBidding({
               ? "outbid"
               : "open"
 
+  // Watching a lot close with you in front: the hammer falls on you.
+  const wasOpen = useRef(false)
+  useEffect(() => {
+    if (isLive) wasOpen.current = true
+    else if (wasOpen.current && art.status === "ended" && youLead && art.reserveMet !== false) {
+      wasOpen.current = false
+      celebrateSold({
+        key: `${art.id}:won`,
+        title: art.title,
+        amount: art.currentBid,
+        image: art.image,
+        href: "/dashboard",
+      })
+    }
+  }, [isLive, art.status, youLead, art.reserveMet, art.id, art.title, art.currentBid, art.image])
+
   /** Buy-now is offered until the first bid, before and during the auction. */
   const canBuyNow =
     art.buyNowPrice != null && art.bids === 0 && (upcoming || isLive) && art.sellerId !== user?.id
@@ -82,6 +97,14 @@ export function useBidding({
       setTimeout(() => setJustPlaced(false), 4000)
       window.dispatchEvent(new Event(BIDS_UPDATED_EVENT))
       const won = art.buyNowPrice != null && amount === art.buyNowPrice
+      if (won)
+        celebrateSold({
+          key: `${art.id}:won`,
+          title: art.title,
+          amount,
+          image: art.image,
+          href: "/dashboard",
+        })
       notify(
         won ? tr("artwork.toast.won") : tr("artwork.toast.confirmed"),
         won
@@ -105,7 +128,13 @@ export function useBidding({
       window.dispatchEvent(new Event(BIDS_UPDATED_EVENT))
       notify(tr("artwork.toast.bought"), tr("artwork.toast.boughtText", { title: art.title }))
       void refresh({ silent: true })
-      if (result.orderId) navigate(`/orders/${result.orderId}`)
+      celebrateSold({
+        key: `${art.id}:won`,
+        title: art.title,
+        amount: art.buyNowPrice ?? art.currentBid,
+        image: art.image,
+        href: result.orderId ? `/orders/${result.orderId}` : "/dashboard",
+      })
     } catch (error) {
       notify(tr("artwork.toast.buyFailed"), errorMessage(error), "error")
     } finally {

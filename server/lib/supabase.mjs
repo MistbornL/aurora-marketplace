@@ -276,6 +276,28 @@ export async function placeSupabaseBid(id, amount, user) {
   return { artwork, bid: latest }
 }
 
+/** Set (or, with max = null, clear) the caller's auto-bid ceiling. */
+export async function setSupabaseAutoBid(id, max, user) {
+  await rest("rpc/set_auto_bid", {
+    token: user.token,
+    method: "POST",
+    body: { p_auction_id: id, p_max: max },
+  })
+  invalidateCatalog()
+  const artwork = await getSupabaseArtwork(id, user.token)
+  const [latest] = await supabaseHistory(id, user.token)
+  return { artwork, bid: latest ?? null, max }
+}
+
+/** The caller's current ceiling on an auction (RLS: own rows only). */
+export async function getSupabaseAutoBid(id, user) {
+  const rows = await rest(
+    `auto_bids?auction_id=eq.${id}&bidder_id=eq.${user.id}&select=max_amount`,
+    { token: user.token },
+  )
+  return { max: rows[0] ? Number(rows[0].max_amount) : null }
+}
+
 export async function supabaseHistory(id, token) {
   const rows = await rest("rpc/auction_bid_history", {
     token,

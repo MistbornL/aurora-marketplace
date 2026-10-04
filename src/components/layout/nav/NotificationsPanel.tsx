@@ -96,7 +96,7 @@ export function NotificationsPanel({
                 <span className="mt-0.5 block text-xs leading-5 text-text-muted">
                   {item.detailKey ? t(item.detailKey, item.vars) : item.detail}
                 </span>
-                <span className="mt-1 block text-[10px] uppercase tracking-wide text-text-muted/70">
+                <span className="mt-1 block text-[10px] uppercase tracking-wide text-text-muted">
                   {timeAgo(new Date(item.at).toISOString())}
                 </span>
               </span>

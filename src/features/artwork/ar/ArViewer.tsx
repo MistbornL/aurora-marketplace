@@ -8,6 +8,7 @@ import { QrCode } from "../../../components/ui/QrCode"
 import { formatSize, type SizeCm } from "../../../lib/artwork-size"
 import { useI18n } from "../../../lib/i18n"
 import { buildArtworkGlb, cacheArModel, cachedArModelUrl } from "./framed-model"
+import { RoomScale } from "./RoomScale"
 import type { ModelViewerElement } from "./model-viewer"
 
 /** Phones and tablets (iPadOS reports itself as a Mac, so check for touch too). */
@@ -178,6 +179,18 @@ export default function ArViewer({
             </div>
           )}
         </div>
+
+        <div className="rounded-2xl border border-white/[.08] bg-white/[.03] p-3">
+          <p className="text-[13px] font-semibold text-text">{t("artwork.ar.scaleTitle")}</p>
+          <p className="mb-2 text-xs text-text-muted">{t("artwork.ar.scaleText")}</p>
+          <RoomScale image={image} size={size} title={title} />
+        </div>
+        {handheld && canAR !== false && (
+          <p className="flex items-start gap-2 text-[13px] leading-5 text-text-secondary">
+            <Smartphone className="mt-0.5 size-4 shrink-0 text-amber" />
+            {t("artwork.ar.tip")}
+          </p>
+        )}
 
         {!handheld && (
           <div className="flex items-center gap-4 rounded-2xl border border-white/[.08] bg-white/[.03] p-3">

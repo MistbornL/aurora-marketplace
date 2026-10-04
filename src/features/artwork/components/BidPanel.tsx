@@ -16,6 +16,7 @@ import { Button } from "../../../components/ui"
 import { formatLeft } from "../../../lib/clock"
 import { useI18n } from "../../../lib/i18n"
 import type { Artwork, BidEntry } from "../../../types"
+import { AutoBid } from "./AutoBid"
 import { BidHistoryList } from "./BidHistoryList"
 import { ReserveDecision } from "./ReserveDecision"
 
@@ -325,6 +326,13 @@ export function BidPanel({
             </Button>
           )}
         </div>
+      )}
+
+      {(canBid || state === "leading") && !liveFormat && (
+        <>
+          <AutoBid art={art} onArtworkChange={onArtworkChange} />
+          <p className="mt-3 text-center text-[11px] text-text-muted">{t("artwork.snipe")}</p>
+        </>
       )}
 
       {state === "signed-out" && (

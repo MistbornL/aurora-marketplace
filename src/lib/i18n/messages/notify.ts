@@ -3,6 +3,8 @@
 export const en = {
   "notify.outbid.title": "You’ve been outbid",
   "notify.outbid.detail": "{title}: someone bid {amount}₾. Bid {next}₾ to lead again.",
+  "notify.ending_soon.title": "“{title}” closes soon",
+  "notify.ending_soon.detail": "Current bid {amount}₾ and you’re not leading. Bid {next}₾ or set a maximum.",
   "notify.won.title": "You won “{title}”!",
   "notify.won.detail": "Pay {total}₾ within 24 hours to secure it.",
   "notify.second_chance.title": "Second chance: “{title}”",
@@ -51,6 +53,8 @@ export const en = {
 export const ka: Record<keyof typeof en, string> = {
   "notify.outbid.title": "ფსონი გადაგისწრეს",
   "notify.outbid.detail": "„{title}“: ვიღაცამ {amount}₾ დადო. დადე {next}₾ და ისევ წინ იქნები.",
+  "notify.ending_soon.title": "„{title}“ მალე სრულდება",
+  "notify.ending_soon.detail": "მიმდინარე ფსონია {amount}₾ და შენ არ ლიდერობ. დადე {next}₾ ან დააყენე მაქსიმუმი.",
   "notify.won.title": "მოიგე „{title}“!",
   "notify.won.detail": "გადაიხადე {total}₾ 24 საათში, რომ ნამუშევარი შენ დარჩეს.",
   "notify.second_chance.title": "მეორე შანსი: „{title}“",

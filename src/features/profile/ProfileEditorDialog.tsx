@@ -36,7 +36,7 @@ export function ProfileEditorDialog({ form, open, onOpenChange, onSubmit, isArti
   const imageFields = isArtist ? (["avatar", "cover"] as const) : (["avatar"] as const)
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="max-h-[calc(100dvh-2rem)] gap-3 overflow-y-auto overscroll-contain sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>{t("profile.editor.title")}</DialogTitle>
           <DialogDescription>
@@ -46,8 +46,8 @@ export function ProfileEditorDialog({ form, open, onOpenChange, onSubmit, isArti
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            <div className="grid gap-4 sm:grid-cols-2">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3.5">
+            <div className="grid gap-3 sm:grid-cols-2">
               {imageFields.map((name) => (
                 <FormField
                   key={name}
@@ -72,7 +72,7 @@ export function ProfileEditorDialog({ form, open, onOpenChange, onSubmit, isArti
                 />
               ))}
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-3 sm:grid-cols-2">
               {profileTextFields.map((item) => (
                 <FormField
                   key={item.name}
@@ -93,7 +93,7 @@ export function ProfileEditorDialog({ form, open, onOpenChange, onSubmit, isArti
               <p className="mt-0.5 text-xs text-text-muted">
                 {t("profile.editor.privateText")}
               </p>
-              <div className="mt-3 grid gap-4 sm:grid-cols-3">
+              <div className="mt-3 grid gap-3 sm:grid-cols-3">
                 {(
                   [
                     { name: "first_name", label: "profile.field.firstName", type: "text" },
@@ -125,12 +125,12 @@ export function ProfileEditorDialog({ form, open, onOpenChange, onSubmit, isArti
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{isArtist ? t("profile.editor.artistBio") : t("profile.editor.aboutYou")}</FormLabel>
-                  <FormControl><Textarea rows={5} {...field} /></FormControl>
+                  <FormControl><Textarea rows={3} className="min-h-20" {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <DialogFooter>
+            <DialogFooter className="sticky -bottom-6 z-10">
               <DialogClose render={<Button type="button" variant="ghost" />}>{t("common.cancel")}</DialogClose>
               <Button type="submit" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting ? t("common.saving") : t("profile.editor.saveChanges")}

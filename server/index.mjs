@@ -3,6 +3,7 @@
 //  - Real auctions (uuid ids) live in Supabase; bids go through the
 //    `place_bid` RPC with the caller's JWT so RLS + DB rules apply.
 import "./lib/env.mjs"
+import { artworkPage, artworksSitemap } from "./lib/seo.mjs"
 import { createServer } from "node:http"
 import { emailConfigured, startEmailWorker } from "./lib/email.mjs"
 import { pushConfigured, startPushWorker } from "./lib/push.mjs"
@@ -26,6 +27,8 @@ import {
   listSupabaseCatalog,
   settleSoon,
   placeSupabaseBid,
+  setSupabaseAutoBid,
+  getSupabaseAutoBid,
   supabaseBidsFor,
   supabaseEnabled,
   supabaseHistory,
@@ -233,6 +236,56 @@ const routes = [
     201,
   ],
 
+  // Crawlers / link previews (see vercel.json): per-artwork tags + sitemap.
+  [
+    "GET",
+    /^\/api\/seo\/artworks\/([\w-]+)$/,
+    async (request, [id]) => {
+      const art = await getArtwork(id, undefined)
+      return { __raw: { type: "text/html; charset=utf-8", body: artworkPage(art) } }
+    },
+  ],
+  [
+    "GET",
+    /^\/api\/sitemap-artworks\.xml$/,
+    async () => {
+      const live = await listSupabaseCatalog({ fresh: false }).catch(() => ({ artworks: [], artists: [] }))
+      return {
+        __raw: {
+          type: "application/xml; charset=utf-8",
+          body: artworksSitemap({
+            artworks: [...live.artworks, ...(showDemoLots ? demo.listArtworks() : [])],
+            artists: [...(showDemoLots ? demo.listArtists() : []), ...live.artists],
+          }),
+        },
+      }
+    },
+  ],
+
+  // Auto-bid: a private ceiling that bids for you in the smallest steps.
+  [
+    "GET",
+    /^\/api\/artworks\/([\w-]+)\/auto-bid$/,
+    async (request, [id]) => {
+      const user = await requireUser(request)
+      if (backendFor(id) === "demo") return { max: null }
+      return getSupabaseAutoBid(id, user)
+    },
+  ],
+  [
+    "POST",
+    /^\/api\/artworks\/([\w-]+)\/auto-bid$/,
+    async (request, [id]) => {
+      const user = await requireUser(request)
+      if (backendFor(id) === "demo") throw httpError(422, "Auto-bid isn’t available on demo lots")
+      const { max } = await readBody(request)
+      const value = max == null ? null : Number(max)
+      if (value != null && !(Number.isFinite(value) && value > 0))
+        throw httpError(422, "Enter a valid maximum")
+      return setSupabaseAutoBid(id, value, user)
+    },
+  ],
+
   // Buy it now (only before the first bid).
   [
     "POST",
@@ -305,6 +358,13 @@ const server = createServer(async (request, response) => {
     if (method !== request.method || !match) continue
     try {
       const body = await handler(request, match.slice(1), url)
+      if (body && body.__raw) {
+        response.writeHead(200, {
+          "Content-Type": body.__raw.type,
+          "Cache-Control": "public, max-age=300, stale-while-revalidate=600",
+        })
+        return response.end(body.__raw.body)
+      }
       return send(response, status, body, origin)
     } catch (error) {
       const code = error.status ?? 500

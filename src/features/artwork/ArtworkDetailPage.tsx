@@ -5,6 +5,7 @@ import { HeartButton } from "../../components/artwork/HeartButton"
 import { Button } from "../../components/ui"
 import { formatLeft, useRemaining } from "../../lib/clock"
 import { notify } from "../../lib/notify"
+import { setPageMeta } from "../../lib/seo"
 import { categoryLabel, useI18n } from "../../lib/i18n"
 import type { Artwork } from "../../types"
 import { useCatalog } from "../catalog/catalog-context"
@@ -47,6 +48,15 @@ export default function ArtworkDetailPage({
 
   const { t } = useI18n()
   const art = cached ?? fetched
+  useEffect(() => {
+    if (!art) return
+    setPageMeta({
+      title: `${art.title} — ${art.artist} · TSISKARI`,
+      description: art.description || `${art.title} by ${art.artist}. ${art.currentBid}₾ — live auction on TSISKARI.`,
+      image: art.image,
+      url: `/artworks/${art.id}`,
+    })
+  }, [art])
   if (fetched === undefined && !cached)
     return <div className="min-h-[60vh] bg-bg" />
   if (!art)

@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react"
+import { Link } from "react-router-dom"
 import {
   ArrowLeft,
+  Award,
   Check,
   Copy,
   CreditCard,
@@ -130,6 +132,14 @@ export default function OrderPage({ orderId, onBack, onArtwork }: Props) {
             </p>
           </div>
           <StatusPill status={order.status} />
+          {perspective !== "admin" && ["paid", "shipped", "delivered", "completed"].includes(order.status) && (
+            <Link
+              to={`/orders/${order.id}/certificate`}
+              className="inline-flex h-9 items-center gap-1.5 rounded-full border border-white/10 px-4 text-xs font-medium text-text-secondary transition-colors hover:border-amber/50 hover:text-amber"
+            >
+              <Award className="size-3.5" /> {t("orders.cert.cta")}
+            </Link>
+          )}
         </div>
 
         <Timeline order={order} />

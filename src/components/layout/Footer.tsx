@@ -68,7 +68,7 @@ export function Footer() {
           </nav>
         ))}
       </div>
-      <div className="border-t border-white/[.04] px-4 py-5 text-center text-xs text-text-muted/70">
+      <div className="border-t border-white/[.04] px-4 py-5 text-center text-xs text-text-muted">
         {t("layout.footer.copyright", { year: new Date().getFullYear() })}
       </div>
     </footer>

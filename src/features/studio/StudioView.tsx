@@ -209,6 +209,7 @@ export function StudioView({
               ) : orders.length ? (
                 <>
                   <SalesSummary orders={orders} />
+                  <PayoutHistory orders={orders} />
                   <div className="mb-6 overflow-hidden rounded-2xl border border-border bg-surface">
                     {orders.map((order) => (
                       <OrderRow
@@ -438,5 +439,45 @@ function AuctionTile({ auction }: { auction: ManagedAuction }) {
         </p>
       </div>
     </Card>
+  )
+}
+
+/** Every sale's payout in one list: paid out, on its way, or waiting for delivery. */
+function PayoutHistory({ orders }: { orders: Order[] }) {
+  const { t, lang } = useI18n()
+  const rows = orders.filter((o) => ["paid", "shipped", "delivered", "completed"].includes(o.status))
+  const paidOut = rows.filter((o) => o.paidOutAt).reduce((sum, o) => sum + o.sellerPayout, 0)
+  const fmt = (iso: string) =>
+    new Date(iso).toLocaleDateString(lang === "ka" ? "ka-GE" : "en-GB", { day: "numeric", month: "short", year: "numeric" })
+  return (
+    <section aria-label={t("orders.payouts.title")} className="mb-6 rounded-2xl border border-border bg-surface p-4">
+      <div className="flex items-baseline justify-between gap-3">
+        <h3 className="font-display text-sm font-semibold text-text">{t("orders.payouts.title")}</h3>
+        <p className="text-xs text-text-muted">
+          {t("orders.payouts.paidOut")}: <span className="font-semibold text-emerald-300">{money(paidOut)}</span>
+        </p>
+      </div>
+      {rows.length === 0 ? (
+        <p className="mt-3 text-xs text-text-muted">{t("orders.payouts.empty")}</p>
+      ) : (
+        <ul className="mt-3 divide-y divide-white/[.06]">
+          {rows.slice(0, 8).map((o) => {
+            const sent = Boolean(o.paidOutAt)
+            const label = sent
+              ? t("orders.payouts.sent", { date: fmt(o.paidOutAt!) })
+              : o.status === "delivered"
+                ? t("orders.payouts.pending")
+                : t("orders.payouts.awaiting")
+            return (
+              <li key={o.id} className="flex items-center justify-between gap-3 py-2 text-xs">
+                <span className="min-w-0 flex-1 truncate text-text-secondary">{o.title}</span>
+                <span className={sent ? "text-emerald-300" : "text-text-muted"}>{label}</span>
+                <span className="w-20 text-right font-mono font-semibold text-text">{money(o.sellerPayout)}</span>
+              </li>
+            )
+          })}
+        </ul>
+      )}
+    </section>
   )
 }

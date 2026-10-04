@@ -13,6 +13,17 @@ export const placeBid = (id: string, amount: number) =>
     { method: "POST", body: JSON.stringify({ amount }) },
   )
 
+/** Your private auto-bid ceiling on a lot (null = none). */
+export const getAutoBid = (id: string) =>
+  apiFetch<{ max: number | null }>(`/artworks/${encodeURIComponent(id)}/auto-bid`)
+
+/** Set (or clear with null) your ceiling — it bids for you in the smallest steps. */
+export const setAutoBid = (id: string, max: number | null) =>
+  apiFetch<{ artwork: Artwork; bid: BidEntry | null; max: number | null }>(
+    `/artworks/${encodeURIComponent(id)}/auto-bid`,
+    { method: "POST", body: JSON.stringify({ max }) },
+  )
+
 /** Other parts of the app (dashboard, nav) listen for this to refetch. */
 export const BIDS_UPDATED_EVENT = "tsiskari:bids-updated"
 

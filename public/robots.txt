@@ -5,3 +5,4 @@ Disallow: /admin
 Disallow: /orders/
 
 Sitemap: https://tsiskariart.ge/sitemap.xml
+Sitemap: https://tsiskariart.ge/sitemap-artworks.xml

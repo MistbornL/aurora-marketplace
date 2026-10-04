@@ -20,6 +20,15 @@ export function soundPreferred() {
   }
 }
 
+/** True only if the visitor actively turned the hero sound off. */
+export function soundMuted() {
+  try {
+    return localStorage.getItem(KEY) === "0"
+  } catch {
+    return false
+  }
+}
+
 function ensure() {
   if (ctx) return ctx
   const AC = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
@@ -101,10 +110,11 @@ export async function setSound(on: boolean) {
 }
 
 /** Gavel on the block: a wooden click on top of a short low thump. */
-export function playGavel() {
-  if (!enabled) return
+export function playGavel(force = false) {
+  if (!enabled && !force) return
   const c = ensure()
   if (!c || !master) return
+  if (c.state === "suspended") void c.resume().catch(() => {})
   const t = c.currentTime + 0.01
   // body
   const o = c.createOscillator()

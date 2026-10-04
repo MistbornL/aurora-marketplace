@@ -8,6 +8,8 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom"
+import { RouteCurtain } from "../components/motion/RouteCurtain"
+import { SoldCelebration } from "../components/motion/SoldCelebration"
 import { Footer } from "../components/layout/Footer"
 import { Nav } from "../components/layout/Nav"
 import { PageSkeleton } from "../components/layout/PageSkeletons"
@@ -37,6 +39,7 @@ const ArtistsDirectoryPage = lazy(
   () => import("../features/artists/ArtistsDirectoryPage"),
 )
 const DashboardPage = lazy(() => import("../features/dashboard/DashboardPage"))
+const CertificatePage = lazy(() => import("../features/orders/CertificatePage"))
 const OrderPage = lazy(() => import("../features/orders/OrderPage"))
 const AdminPage = lazy(() => import("../features/admin/AdminPage"))
 
@@ -59,6 +62,8 @@ export default function App() {
     <BrowserRouter>
       <ScrollToTop />
       <AppRoutes />
+      <RouteCurtain />
+      <SoldCelebration />
       <ResetPasswordDialog />
     </BrowserRouter>
   )
@@ -86,6 +91,7 @@ function AppRoutes() {
         <Route path="/dashboard" element={<DashboardRoute />} />
         <Route path="/profile" element={<Navigate to="/dashboard" replace />} />
         <Route path="/orders/:id" element={<OrderRoute />} />
+        <Route path="/orders/:id/certificate" element={<CertificatePage />} />
         <Route path="/admin" element={<PageFrame><AdminPage /></PageFrame>} />
         <Route path="/live" element={<LiveLobbyRoute />} />
         <Route path="/live/:id" element={<LiveRoomRoute />} />
@@ -145,6 +151,7 @@ const TITLES: Array<[RegExp, MessageKey]> = [
 function usePageTitle(pathname: string) {
   const { t } = useI18n()
   useEffect(() => {
+    if (/^\/artworks\//.test(pathname)) return // the artwork page sets its own title
     const match = TITLES.find(([pattern]) => pattern.test(pathname))
     document.title = match ? `${t(match[1])} · TSISKARI` : `TSISKARI — ${t("pilot.title.home")}`
   }, [pathname, t])
