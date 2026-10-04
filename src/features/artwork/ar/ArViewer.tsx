@@ -17,6 +17,19 @@ function isHandheld() {
   return /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)
 }
 
+/**
+ * Which AR engine to try first. On Android, Google's Scene Viewer (ARCore's
+ * own app) finds walls far better than the browser's WebXR and anchors the
+ * painting so it stays put as you walk around; WebXR tends to slide the
+ * model along the wall and away from you. Scene Viewer can only open a real
+ * https URL though, so while the model is still a fresh in-page blob (first
+ * view, before the cached copy exists) WebXR is the only Android option.
+ * iPhones always use Quick Look.
+ */
+function arModes(url: string) {
+  return url.startsWith("https://") ? "scene-viewer webxr quick-look" : "webxr quick-look"
+}
+
 /** This page, opened on a phone, with the AR viewer already open. */
 function phoneLink() {
   const url = new URL(window.location.href)
@@ -125,7 +138,7 @@ export default function ArViewer({
               poster={model.poster}
               alt={title}
               ar
-              ar-modes="webxr scene-viewer quick-look"
+              ar-modes={arModes(model.url)}
               ar-placement="wall"
               ar-scale="fixed"
               camera-controls
