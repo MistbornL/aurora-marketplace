@@ -29,7 +29,7 @@ const FILMS = {
   av1: { url: `${ASSETS}/film-v3-1920-av1.mp4`, bytes: 12019273 },
   // Phones and other portrait screens: a 9:16 crop of the film (the frame pans
   // toward the auctioneer for the gavel), one file, no HD swap.
-  tall: { url: `${ASSETS}/film-v3-tall-576.mp4`, bytes: 4926230 },
+  tall: { url: `${ASSETS}/film-v4-tall-576.mp4`, bytes: 4682135 },
 }
 type Film = (typeof FILMS)[keyof typeof FILMS]
 /** Taller than wide: phones and portrait tablets. Must match max-aspect-ratio in scroll-hero.css. */
