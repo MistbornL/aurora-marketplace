@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Bell, ChevronDown, Menu, Search, X } from "lucide-react"
+import { Bell, Menu, Search, X } from "lucide-react"
 import { AuthDialog } from "../../features/auth/AuthDialog"
 import { useAuth } from "../../features/auth/auth-context"
 import { useCatalog } from "../../features/catalog/catalog-context"
@@ -102,7 +102,7 @@ export function Nav({
     <>
       <nav
         ref={navRef}
-        className={`sticky top-0 z-50 grid h-16 grid-cols-[auto_1fr_auto] items-center gap-3 border-b px-4 transition-[background-color,border-color,backdrop-filter] duration-300 sm:px-6 lg:px-10 ${
+        className={`sticky top-0 z-50 grid h-16 grid-cols-[1fr_auto_1fr] items-center gap-3 border-b px-4 transition-[background-color,border-color,backdrop-filter] duration-300 sm:px-6 lg:px-10 ${
           clear ? "border-transparent bg-transparent" : "border-white/[.06] bg-bg/85 backdrop-blur-xl"
         }`}
       >
@@ -119,9 +119,8 @@ export function Nav({
           RI
         </button>
 
-        {/* Links — centered in the middle column regardless of what the
-            logo and right-side controls weigh, so they stay put as either
-            side grows or shrinks. */}
+        {/* Links — the outer columns are equal (1fr), so the links sit on the
+            true centre of the bar however wide the logo or the controls are. */}
         <div className="hidden justify-self-center md:flex">
           <div className="flex items-center gap-1 rounded-full border border-white/[.07] bg-white/[.035] p-1">
             {NAV_LINKS.map(({ label, view }) => {
@@ -153,7 +152,7 @@ export function Nav({
 
         {/* Right side */}
         <div className="flex items-center gap-2 justify-self-end">
-          <LanguageSwitch className="hidden sm:flex" />
+          <LanguageSwitch compact className="hidden sm:flex" />
           <div className="md:hidden">
             <IconButton
               label={open === "menu" ? t("layout.nav.closeMenu") : t("layout.nav.openMenu")}
@@ -181,6 +180,7 @@ export function Nav({
             )}
           </div>
 
+          {user && (
           <div className="relative">
             <IconButton
               label={
@@ -214,6 +214,7 @@ export function Nav({
               />
             )}
           </div>
+          )}
 
           {user ? (
             <div className="relative ml-1">
@@ -222,21 +223,14 @@ export function Nav({
                 aria-haspopup="menu"
                 aria-expanded={open === "account"}
                 aria-label={t("layout.nav.accountMenu")}
-                className={`group flex items-center gap-2 rounded-full border py-1 pl-1 pr-1 transition-colors sm:pr-2.5 ${
+                title={name}
+                className={`group grid place-items-center rounded-full border p-0.5 transition-colors ${
                   open === "account"
-                    ? "border-amber/50 bg-white/[.07]"
-                    : "border-white/10 hover:border-white/20 hover:bg-white/[.05]"
+                    ? "border-amber/60"
+                    : "border-white/10 hover:border-white/25"
                 }`}
               >
-                <UserAvatar name={name} src={profile?.avatarUrl} size={30} />
-                <span className="hidden max-w-28 truncate text-[13px] font-medium text-text sm:block">
-                  {name}
-                </span>
-                <ChevronDown
-                  className={`hidden size-3.5 text-text-muted transition-transform sm:block ${
-                    open === "account" ? "rotate-180" : ""
-                  }`}
-                />
+                <UserAvatar name={name} src={profile?.avatarUrl} size={32} />
               </button>
               {open === "account" && (
                 <AccountMenu
