@@ -403,7 +403,7 @@
 .sh:not(.ring-done) .sh-chevron,
 .sh.ring-done .sh-ring { display: none; }
 
-.sh-static, .sh-loop { display: none; }
+.sh-static { display: none; }
 /* Tall screens get a taller dawn (outpainted from the film's final frame). */
 @media (orientation: portrait) {
   .sh .sh-static { background-image: var(--still-tall); background-position: center 30%; }
@@ -412,7 +412,20 @@
 /* ── Static hero: phones, portrait tablets, coarse-pointer portrait, landscape
    phones and reduced motion get a composed still instead of the scrub. These
    five queries must match GATES in ScrollHero.tsx character for character. ── */
-@media (max-width: 720px), (orientation: portrait) and (max-width: 1024px), (orientation: portrait) and (pointer: coarse), (orientation: landscape) and (pointer: coarse) and (max-height: 560px), (prefers-reduced-motion: reduce) {
+/* Portrait screens (phones, portrait tablets) scrub the 9:16 film too, with
+   the captions re-laid for a tall frame. Declared before the static-layout
+   block below so that block still wins for reduced motion. */
+@media (max-aspect-ratio: 1/1) {
+  .sh { height: 800vh; }
+  .sh-b1 .sh-line { font-size: clamp(34px, 10.5vw, 72px); }
+  .sh-b2 { top: auto; bottom: 15%; right: clamp(20px, 6vw, 96px); max-width: none; font-size: 16px; }
+  .sh-b3 { top: 13%; font-size: clamp(22px, 6vw, 34px); }
+  .sh-b4 { top: calc(13% + 44px); font-size: clamp(72px, 24vw, 150px); }
+  .sh-b5 { top: 15%; right: clamp(20px, 6vw, 96px); max-width: none; }
+  .sh-b5 h1 { font-size: clamp(38px, 11.5vw, 72px); }
+}
+
+@media (orientation: landscape) and (pointer: coarse) and (max-height: 560px), (prefers-reduced-motion: reduce) {
   .sh { height: auto; }
   .sh-stage { position: relative; height: auto; min-height: 100svh; display: flex; flex-direction: column; justify-content: flex-end; }
   .sh-video, .sh-still, .sh-cue, .sh-flash, .sh-b1, .sh-b2, .sh-b3, .sh-b4 { display: none; }
@@ -428,16 +441,6 @@
       linear-gradient(to bottom, rgba(27, 23, 29, 0.6) 0%, rgba(27, 23, 29, 0) 22%),
       linear-gradient(to top, var(--color-bg) 4%, rgba(27, 23, 29, 0.72) 42%, rgba(27, 23, 29, 0) 72%);
   }
-  .sh-loop {
-    display: block;
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center 30%;
-  }
-  @media (orientation: landscape) { .sh-loop { display: none; } }
   .sh-b5 {
     --k: 1;
     position: relative;
@@ -497,8 +500,9 @@
 .sh-sound:hover { color: var(--color-text); border-color: rgba(255, 255, 255, 0.28); }
 .sh-sound[aria-pressed="true"] { color: var(--color-amber); border-color: rgba(246, 168, 123, 0.45); }
 .sh-sound:focus-visible { outline: 2px solid var(--color-amber); outline-offset: 3px; }
-@media (max-width: 720px), (orientation: portrait) and (max-width: 1024px), (orientation: portrait) and (pointer: coarse), (orientation: landscape) and (pointer: coarse) and (max-height: 560px), (prefers-reduced-motion: reduce) {
+@media (orientation: landscape) and (pointer: coarse) and (max-height: 560px), (prefers-reduced-motion: reduce) {
   .sh-sound { display: none; }
 }
+@media (max-aspect-ratio: 1/1) { .sh-sound { display: none; } }
 /* Frozen frame shown for a moment while the HD film swaps in. */
 .sh-swap { opacity: 1 !important; transition: none; z-index: 0; }

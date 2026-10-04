@@ -61,9 +61,7 @@ export default function ArtistProfilePage({
     <main className="min-h-screen bg-bg pb-20">
       {/* Banner */}
       <div className="relative h-56 bg-surface-2 sm:h-72">
-        {artist.banner && (
-          <img src={artist.banner} alt="" className="h-full w-full object-cover" />
-        )}
+        <img src={artist.banner || "/img/artist-cover.webp"} alt="" className="h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-bg/40 via-transparent to-bg" />
         <button
           onClick={onBack}

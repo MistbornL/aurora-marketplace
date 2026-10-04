@@ -9,7 +9,7 @@
 // - Captions are "bands" of scroll progress; each writes --k (0..1 assembly)
 //   and opacity, delta-gated so converged bands cost nothing.
 // - Phones, portrait tablets, landscape phones and reduced motion get a
-//   composed still instead (same five queries in CSS and JS, decided live).
+//   composed still instead (same two queries in CSS and JS, decided live).
 import { useEffect, useRef, useState, type CSSProperties } from "react"
 import { ArrowRight, Palette, Volume2, VolumeX } from "lucide-react"
 import { isSoundOn, playChime, playGavel, setRoomLevel, setSound } from "./hero-sound"
@@ -27,8 +27,13 @@ const FILMS = {
   light: { url: `${ASSETS}/film-v3-960.mp4`, bytes: 4556579 },
   hd: { url: `${ASSETS}/film-v3-1600.mp4`, bytes: 18673666 },
   av1: { url: `${ASSETS}/film-v3-1920-av1.mp4`, bytes: 12019273 },
+  // Phones and other portrait screens: a 9:16 crop of the film (the frame pans
+  // toward the auctioneer for the gavel), one file, no HD swap.
+  tall: { url: `${ASSETS}/film-v3-tall-576.mp4`, bytes: 4926230 },
 }
 type Film = (typeof FILMS)[keyof typeof FILMS]
+/** Taller than wide: phones and portrait tablets. Must match max-aspect-ratio in scroll-hero.css. */
+const PORTRAIT = "(max-aspect-ratio: 1/1)"
 const AV1_TYPE = 'video/mp4; codecs="av01.0.08M.08"'
 const HD_CACHED_KEY = "tsiskari.heroFilm"
 /** The film is encoded at 24fps with every frame a keyframe, so any frame seeks instantly. */
@@ -37,9 +42,6 @@ const STILLS = [`${ASSETS}/still-curtain.jpg`, `${ASSETS}/still-hall.jpg`, `${AS
 
 /** Must match the @media list in scroll-hero.css character for character. */
 const GATES = [
-  "(max-width: 720px)",
-  "(orientation: portrait) and (max-width: 1024px)",
-  "(orientation: portrait) and (pointer: coarse)",
   "(orientation: landscape) and (pointer: coarse) and (max-height: 560px)",
   "(prefers-reduced-motion: reduce)",
 ]
@@ -79,37 +81,6 @@ function Words({ text, spread = 0.5, className }: { text: string; spread?: numbe
         ))}
       </span>
     </>
-  )
-}
-
-// Phones get the dawn as a gentle 4 s loop (about 200 KB) instead of a still. It
-// is only fetched when the phone layout is active and motion is allowed.
-const LOOP_QUERY =
-  "(prefers-reduced-motion: no-preference) and ((max-width: 720px) or ((orientation: portrait) and (max-width: 1024px)) or ((orientation: portrait) and (pointer: coarse)))"
-
-function PhoneLoop() {
-  const [src, setSrc] = useState<string | undefined>()
-  useEffect(() => {
-    const mq = window.matchMedia(LOOP_QUERY)
-    const sync = () => setSrc(mq.matches ? `${ASSETS}/still-dawn-loop.mp4` : undefined)
-    sync()
-    mq.addEventListener("change", sync)
-    return () => mq.removeEventListener("change", sync)
-  }, [])
-  if (!src) return null
-  return (
-    <video
-      className="sh-loop"
-      src={src}
-      poster={`${ASSETS}/still-dawn-tall.webp`}
-      autoPlay
-      muted
-      loop
-      playsInline
-      preload="auto"
-      aria-hidden
-      tabIndex={-1}
-    />
   )
 }
 
@@ -485,7 +456,8 @@ export function ScrollHero({
     }
 
     const loadHeroBlob = async () => {
-      const hd = await pickHD()
+      const portrait = window.matchMedia(PORTRAIT).matches
+      const hd = portrait ? FILMS.tall : await pickHD()
       let saveData = false
       try {
         const c = (navigator as unknown as { connection?: { saveData?: boolean; effectiveType?: string } }).connection
@@ -494,7 +466,7 @@ export function ScrollHero({
         /* no Network Information API */
       }
       // Seen this HD copy before? It is in the browser cache, so go straight to it.
-      const first = remembered() === hd.url ? hd : FILMS.light
+      const first = portrait || remembered() === hd.url ? hd : FILMS.light
       const url = await download(first, setRing)
       setRing(1)
       blobUrl = url
@@ -550,7 +522,7 @@ export function ScrollHero({
       window.setTimeout(startBlob, 4000)
     }
 
-    // ── scrub on/off, decided live from the five gates ────────────
+    // ── scrub on/off, decided live from the gates ────────────
     const enableScrub = () => {
       if (scrubOn) return
       scrubOn = true
@@ -617,7 +589,6 @@ export function ScrollHero({
           style={{ "--still-wide": `url('${STILLS[3]}')`, "--still-tall": `url('${ASSETS}/still-dawn-tall.webp')` } as CSSProperties}
           aria-hidden
         />
-        <PhoneLoop />
         {STILLS.map((src, i) => (
           <div key={src} className={`sh-still sh-still-${i}`} data-still-src={src} aria-hidden />
         ))}

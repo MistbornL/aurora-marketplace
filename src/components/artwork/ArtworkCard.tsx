@@ -45,7 +45,7 @@ export function ArtworkCard({
     >
       <div className="relative overflow-hidden bg-surface-2">
         <img
-          src={art.image}
+          src={art.image || "/img/art-placeholder.webp"}
           alt={art.title}
           loading="lazy"
           decoding="async"

@@ -92,6 +92,8 @@ function ArtworkDetailView({
   const [reminderSet, setReminderSet] = useState(false)
   const panelRef = useRef<HTMLDivElement>(null)
   const historyRef = useRef<HTMLDivElement>(null)
+  const photos = [art.image, ...art.thumbs.slice(1)].filter(Boolean)
+  const galleryImages = photos.length ? photos : ["/img/art-placeholder.webp"]
   const status = bidding.upcoming
     ? "upcoming"
     : art.status === "awaiting_seller"
@@ -152,7 +154,7 @@ function ArtworkDetailView({
           {/* Gallery */}
           <ArtworkGallery
             title={art.title}
-            images={[art.image, ...art.thumbs.slice(1)].filter(Boolean)}
+            images={galleryImages}
             status={status}
           />
 

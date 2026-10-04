@@ -73,13 +73,13 @@ export function renderEmail(row) {
   const body = fill(bodyT, row.data)
   const link = row.link ? `${appUrl}${row.link}` : appUrl
   const cta = row.locale === "en" ? "Open TSISKARI" : "გახსენი TSISKARI"
-  const html = `<!doctype html><html><body style="margin:0;background:#0d0d10;font-family:Georgia,serif;color:#f2efe8">
+  const html = `<!doctype html><html><body style="margin:0;background:#141016;font-family:Georgia,serif;color:#f2efe8">
 <table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px"><tr><td align="center">
-<table width="100%" style="max-width:520px;background:#181820;border-radius:16px;padding:28px">
-<tr><td style="font-size:20px;font-weight:bold;letter-spacing:-0.5px">AUR<span style="color:#e8b84b">O</span>RA</td></tr>
-<tr><td style="padding-top:20px;font-size:20px;line-height:1.3">${escapeHtml(subject)}</td></tr>
-<tr><td style="padding-top:10px;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#c9c5bc">${escapeHtml(body)}</td></tr>
-<tr><td style="padding-top:22px"><a href="${link}" style="display:inline-block;background:#e8b84b;color:#0d0d10;text-decoration:none;font-family:Arial,sans-serif;font-weight:bold;font-size:14px;padding:12px 20px;border-radius:999px">${cta}</a></td></tr>
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#1b171d;border-radius:16px;overflow:hidden">
+<tr><td background="${appUrl}/img/email-banner.jpg" bgcolor="#1b171d" style="background:#1b171d url('${appUrl}/img/email-banner.jpg') right center / cover no-repeat;padding:34px 28px 54px;font-size:22px;font-weight:bold;letter-spacing:1.5px;color:#f2efe8">TSISK<span style="color:#f6a87b">A</span>RI</td></tr>
+<tr><td style="padding:26px 28px 0;font-size:22px;line-height:1.3">${escapeHtml(subject)}</td></tr>
+<tr><td style="padding:10px 28px 0;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#c9c5bc">${escapeHtml(body)}</td></tr>
+<tr><td style="padding:22px 28px 30px"><a href="${link}" style="display:inline-block;background:#f6a87b;color:#1b171d;text-decoration:none;font-family:Arial,sans-serif;font-weight:bold;font-size:14px;padding:12px 22px;border-radius:999px">${cta}</a></td></tr>
 </table></td></tr></table></body></html>`
   return { subject, text: `${subject}\n\n${body}\n\n${link}`, html }
 }
