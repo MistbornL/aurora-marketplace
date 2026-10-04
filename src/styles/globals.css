@@ -418,3 +418,175 @@ body {
     display: none;
   }
 }
+
+/* Toasts: close button sits inside the top-right corner, in the dusk palette. */
+.toaster [data-sonner-toast] [data-close-button] {
+  inset: 10px 10px auto auto;
+  transform: none;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(244, 236, 225, 0.7);
+  opacity: 1;
+}
+.toaster [data-sonner-toast] [data-close-button]:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #f6a87b;
+}
+.toaster [data-sonner-toast][data-styled="true"] {
+  padding-right: 40px;
+}
+
+/* ── Tabs: a rounded segmented control instead of underlined text ── */
+[data-slot="tabs-list"][data-variant="pill"] {
+  height: auto;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+[data-slot="tabs-list"][data-variant="pill"]::-webkit-scrollbar {
+  display: none;
+}
+[data-slot="tabs-list"][data-variant="pill"] [data-slot="tabs-trigger"] {
+  flex: none;
+  height: auto;
+  border: 0;
+  border-radius: 9999px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(244, 236, 225, 0.7);
+  background: transparent;
+  outline: none;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+[data-slot="tabs-list"][data-variant="pill"] [data-slot="tabs-trigger"]::after {
+  display: none;
+}
+[data-slot="tabs-list"][data-variant="pill"] [data-slot="tabs-trigger"]:hover {
+  color: #f4ece1;
+  background: rgba(255, 255, 255, 0.07);
+}
+[data-slot="tabs-list"][data-variant="pill"] [data-slot="tabs-trigger"][data-active] {
+  color: #1b171d;
+  background: #f6a87b;
+  box-shadow: 0 2px 14px -2px rgba(246, 168, 123, 0.55);
+}
+[data-slot="tabs-list"][data-variant="pill"] [data-slot="tabs-trigger"]:focus-visible {
+  box-shadow: 0 0 0 2px #1b171d, 0 0 0 4px rgba(246, 168, 123, 0.6);
+}
+
+/* ── Selects: soft pill with our own chevron (the list itself stays native) ── */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: rgba(255, 255, 255, 0.04);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f6a87b' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  padding-right: 34px;
+  color: #f4ece1;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+select:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+  background-color: rgba(255, 255, 255, 0.07);
+}
+select:focus-visible {
+  outline: none;
+  border-color: rgba(246, 168, 123, 0.7);
+  box-shadow: 0 0 0 3px rgba(246, 168, 123, 0.18);
+}
+select option {
+  background: #1b171d;
+  color: #f4ece1;
+}
+
+/* ── Brand loader: a sun rising over the horizon (TSISKARI = dawn) ── */
+.brand-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 220px;
+  width: 100%;
+  color: #f4ece1;
+}
+.brand-loader--full {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  min-height: 0;
+  background: radial-gradient(120% 80% at 50% 100%, #2a2030 0%, #1b171d 60%, #14101a 100%);
+}
+.brand-loader__mark {
+  width: 132px;
+}
+.brand-loader__mark svg {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+.brand-loader__sun {
+  animation: bl-rise 2.4s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+}
+.brand-loader__glow {
+  opacity: 0.18;
+  filter: blur(14px);
+  animation: bl-glow 2.4s ease-in-out infinite;
+}
+.brand-loader__word {
+  margin-top: 6px;
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+}
+.brand-loader__label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: rgba(244, 236, 225, 0.56);
+}
+@keyframes bl-rise {
+  0% {
+    transform: translateY(26px);
+  }
+  55%,
+  75% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(26px);
+  }
+}
+@keyframes bl-glow {
+  0%,
+  100% {
+    opacity: 0.06;
+  }
+  60% {
+    opacity: 0.28;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand-loader__sun {
+    animation: none;
+  }
+  .brand-loader__glow {
+    animation: none;
+    opacity: 0.18;
+  }
+}

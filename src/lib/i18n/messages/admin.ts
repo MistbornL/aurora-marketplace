@@ -18,7 +18,7 @@ export const en = {
   "admin.lookFor": "look for “{description}”",
 
   "admin.empty.payments": "No payments waiting. Buyers’ transfers show up here when they tap “{button}”.",
-  "admin.empty.payouts": "No payouts due. Orders land here once the buyer confirms delivery.",
+  "admin.empty.payouts": "No payouts due. Orders land here once the buyer confirms the handover.",
   "admin.empty.all": "No orders yet. They’re created automatically when an auction with bids ends.",
 
   "admin.settings.loadFailed": "Couldn’t load settings",
@@ -32,8 +32,8 @@ export const en = {
   "admin.settings.buyerPremiumHint": "Added on top of the winning bid",
   "admin.settings.paymentWindow": "Payment window (hours)",
   "admin.settings.paymentWindowHint": "Time a winner has to pay",
-  "admin.settings.autoRelease": "Auto-confirm delivery (days)",
-  "admin.settings.autoReleaseHint": "After shipping, if the buyer is silent",
+  "admin.settings.autoRelease": "Auto-confirm handover (days)",
+  "admin.settings.autoReleaseHint": "After the meeting is arranged, if the buyer is silent",
   "admin.settings.strikes": "Strikes before bidding is blocked",
   "admin.settings.strikesHint": "Missed payments allowed",
   "admin.settings.liveBid": "Live timer (seconds)",
@@ -69,7 +69,7 @@ export const ka: Record<keyof typeof en, string> = {
   "admin.lookFor": "მოძებნე „{description}“",
 
   "admin.empty.payments": "მომლოდინე გადახდები არ არის. მყიდველების გადარიცხვები აქ გამოჩნდება, როცა დააჭერენ ღილაკს „{button}“.",
-  "admin.empty.payouts": "გასაცემი ანაზღაურებები არ არის. შეკვეთა აქ მოხვდება, როცა მყიდველი მიწოდებას დაადასტურებს.",
+  "admin.empty.payouts": "გასაცემი ანაზღაურებები არ არის. შეკვეთა აქ მოხვდება, როცა მყიდველი გადაცემას დაადასტურებს.",
   "admin.empty.all": "შეკვეთები ჯერ არ არის. ისინი ავტომატურად იქმნება, როცა ფსონებიანი აუქციონი სრულდება.",
 
   "admin.settings.loadFailed": "პარამეტრები ვერ ჩაიტვირთა",
@@ -83,8 +83,8 @@ export const ka: Record<keyof typeof en, string> = {
   "admin.settings.buyerPremiumHint": "ემატება გამარჯვებულ ფსონს",
   "admin.settings.paymentWindow": "გადახდის ვადა (საათი)",
   "admin.settings.paymentWindowHint": "რამდენი დრო აქვს გამარჯვებულს გადასახდელად",
-  "admin.settings.autoRelease": "მიწოდების ავტოდადასტურება (დღე)",
-  "admin.settings.autoReleaseHint": "გაგზავნის შემდეგ, თუ მყიდველი არ გამოეხმაურა",
+  "admin.settings.autoRelease": "გადაცემის ავტოდადასტურება (დღე)",
+  "admin.settings.autoReleaseHint": "შეხვედრის შეთანხმების შემდეგ, თუ მყიდველი არ გამოეხმაურა",
   "admin.settings.strikes": "გაფრთხილებები ფსონების დაბლოკვამდე",
   "admin.settings.strikesHint": "დასაშვები გაცდენილი გადახდები",
   "admin.settings.liveBid": "ლაივ ტაიმერი (წამი)",

@@ -14,7 +14,7 @@ export const en = {
   "info.buying.winText":
     "When the timer ends, the highest bid wins. Ties are impossible — the first bid at a price wins.",
   "info.buying.collectTitle": "Collect",
-  "info.buying.collectText": "Pay TSISKARI, and the artist ships your work (see below).",
+  "info.buying.collectText": "Pay TSISKARI, and you meet the artist to receive your work (see below).",
 
   "info.win.eyebrow": "Important",
   "info.win.title": "What happens after you win",
@@ -23,12 +23,12 @@ export const en = {
   "info.win.payTitle": "Pay TSISKARI within 24 hours",
   "info.win.payText":
     "Your order page shows the total (winning bid + 5% buyer’s premium) and a 24-hour countdown. You pay TSISKARI, never the artist directly, so your money is protected. If you don’t pay in time the work may go to the next bidder and your account gets a strike; two missed payments suspend bidding.",
-  "info.win.shipTitle": "The artist ships",
+  "info.win.shipTitle": "Meet the artist",
   "info.win.shipText":
-    "Once your payment is confirmed we share contact details and the artist ships the work or arranges pickup.",
-  "info.win.confirmTitle": "Confirm delivery",
+    "Once your payment is confirmed we share contact details and you message or call the artist to agree where and when to meet.",
+  "info.win.confirmTitle": "Confirm the handover",
   "info.win.confirmText":
-    "Tap “I received the artwork” when it arrives as described. That’s when we release the money to the artist (or automatically 7 days after shipping). If something is wrong, contact us before confirming.",
+    "Tap “I received the artwork” when you’ve received it as described. That’s when we release the money to the artist (or automatically 7 days after the meeting is arranged). If something is wrong, contact us before confirming.",
 
   "info.selling.eyebrow": "For artists",
   "info.selling.title": "How selling works",
@@ -40,7 +40,7 @@ export const en = {
     "Add a location and short bio to your profile, then publish. Collectors can bid immediately.",
   "info.selling.paidTitle": "Get paid",
   "info.selling.paidText":
-    "The winner pays TSISKARI. You ship once it’s paid, and we send you the winning bid minus a 10% commission after delivery (or 7 days after shipping).",
+    "The winner pays TSISKARI. Once it’s paid, you arrange a meeting with the buyer to hand over the work, and we send you the winning bid minus a 10% commission after the handover (or 7 days after the meeting is arranged).",
   "info.selling.openStudio": "Open your studio",
 
   "info.faq.eyebrow": "FAQ",
@@ -93,9 +93,9 @@ export const en = {
   "info.terms.selling.title": "3. Selling",
   "info.terms.selling.body":
     "Artists may only list original work they have the right to sell, with accurate descriptions and photos. Once an auction has bids, its prices can’t be changed and it can’t be deleted.",
-  "info.terms.payment.title": "4. Payment and delivery",
+  "info.terms.payment.title": "4. Payment and handover",
   "info.terms.payment.body":
-    "Winners pay TSISKARI the winning bid plus a 5% buyer’s premium within 24 hours of the auction closing. If payment doesn’t arrive in time, the order is cancelled, the account receives a strike and the work may be offered to the next highest bidder; two strikes suspend bidding. TSISKARI holds the payment until the buyer confirms delivery (or 7 days after shipping), then pays the artist the winning bid minus a 10% commission. Fees may change; the fees shown on an order are the ones that apply to it.",
+    "Winners pay TSISKARI the winning bid plus a 5% buyer’s premium within 24 hours of the auction closing. If payment doesn’t arrive in time, the order is cancelled, the account receives a strike and the work may be offered to the next highest bidder; two strikes suspend bidding. TSISKARI holds the payment until the buyer confirms the handover (or 7 days after the meeting is arranged), then pays the artist the winning bid minus a 10% commission. Fees may change; the fees shown on an order are the ones that apply to it.",
   "info.terms.privacy.title": "5. Privacy",
   "info.terms.privacy.body":
     "Your username and public profile are visible to everyone. You choose whether your real name is shown. Your phone number is private and only used to connect winners with artists.",
@@ -131,12 +131,12 @@ export const ka: Record<keyof typeof en, string> = {
   "info.win.payTitle": "გადაუხადე TSISKARI-ს 24 საათში",
   "info.win.payText":
     "შეკვეთის გვერდზე ნახავ ჯამურ თანხას (გამარჯვებული ფსონი + 5% მყიდველის საკომისიო) და 24-საათიან ათვლას. თანხას TSISKARI-ს უხდი და არა პირდაპირ მხატვარს, ასე რომ, შენი ფული დაცულია. თუ დროულად არ გადაიხდი, ნამუშევარი შეიძლება შემდეგ მონაწილეს გადაეცეს, შენს ანგარიშს კი გაფრთხილება დაემატება. ორი გადაუხდელი შეკვეთის შემდეგ ფსონების დადება შეგეზღუდება.",
-  "info.win.shipTitle": "მხატვარი აგზავნის",
+  "info.win.shipTitle": "შეხვდი მხატვარს",
   "info.win.shipText":
-    "გადახდის დადასტურების შემდეგ საკონტაქტო ინფორმაციას გაგიზიარებთ და მხატვარი ნამუშევარს გამოგიგზავნის ან ადგილზე გადმოცემაზე შეგითანხმდება.",
-  "info.win.confirmTitle": "დაადასტურე მიღება",
+    "გადახდის დადასტურების შემდეგ საკონტაქტო ინფორმაციას გაგიზიარებთ და მისწერე ან დაურეკე მხატვარს და შეთანხმდით, სად და როდის შეხვდებით.",
+  "info.win.confirmTitle": "დაადასტურე გადაცემა",
   "info.win.confirmText":
-    "როცა ნამუშევარი აღწერის შესაბამისად ჩამოვა, დააჭირე „ნამუშევარი მივიღე“. სწორედ მაშინ ჩავურიცხავთ თანხას მხატვარს (ან ავტომატურად, გაგზავნიდან 7 დღეში). თუ რამე რიგზე არ არის, დადასტურებამდე დაგვიკავშირდი.",
+    "როცა ნამუშევარი აღწერის შესაბამისად ჩამოვა, დააჭირე „ნამუშევარი მივიღე“. სწორედ მაშინ ჩავურიცხავთ თანხას მხატვარს (ან ავტომატურად, შეხვედრის შეთანხმებიდან 7 დღეში). თუ რამე რიგზე არ არის, დადასტურებამდე დაგვიკავშირდი.",
 
   "info.selling.eyebrow": "მხატვრებისთვის",
   "info.selling.title": "როგორ ხდება გაყიდვა",
@@ -148,7 +148,7 @@ export const ka: Record<keyof typeof en, string> = {
     "პროფილში მიუთითე მდებარეობა და მოკლე ბიოგრაფია, შემდეგ გამოაქვეყნე. კოლექციონერები ფსონს მაშინვე დადებენ.",
   "info.selling.paidTitle": "მიიღე ანაზღაურება",
   "info.selling.paidText":
-    "გამარჯვებული TSISKARI-ს უხდის. გადახდის შემდეგ ნამუშევარს აგზავნი, ჩვენ კი მიწოდების შემდეგ (ან გაგზავნიდან 7 დღეში) გადაგირიცხავთ გამარჯვებულ ფსონს 10%-იანი საკომისიოს გამოკლებით.",
+    "გამარჯვებული TSISKARI-ს უხდის. გადახდის შემდეგ მყიდველს შეხვდები და ნამუშევარს გადასცემ, ჩვენ კი გადაცემის შემდეგ (ან შეხვედრის შეთანხმებიდან 7 დღეში) გადაგირიცხავთ გამარჯვებულ ფსონს 10%-იანი საკომისიოს გამოკლებით.",
   "info.selling.openStudio": "გახსენი შენი სტუდია",
 
   "info.faq.eyebrow": "ხშირი კითხვები",
@@ -201,9 +201,9 @@ export const ka: Record<keyof typeof en, string> = {
   "info.terms.selling.title": "3. გაყიდვა",
   "info.terms.selling.body":
     "მხატვარს შეუძლია განათავსოს მხოლოდ ორიგინალი ნამუშევარი, რომლის გაყიდვის უფლებაც აქვს, ზუსტი აღწერითა და ფოტოებით. როგორც კი აუქციონზე ფსონი გაჩნდება, მისი ფასების შეცვლა და წაშლა აღარ შეიძლება.",
-  "info.terms.payment.title": "4. გადახდა და მიწოდება",
+  "info.terms.payment.title": "4. გადახდა და გადაცემა",
   "info.terms.payment.body":
-    "გამარჯვებული აუქციონის დასრულებიდან 24 საათში TSISKARI-ს უხდის გამარჯვებულ ფსონს და 5%-იან მყიდველის საკომისიოს. თუ გადახდა დროულად არ შემოვა, შეკვეთა უქმდება, ანგარიშს გაფრთხილება ემატება და ნამუშევარი შეიძლება შემდეგ უმაღლეს ფსონს შესთავაზონ; ორი გაფრთხილების შემდეგ ფსონების დადება ჩერდება. TSISKARI თანხას ინახავს, სანამ მყიდველი მიღებას დაადასტურებს (ან გაგზავნიდან 7 დღე გავა), შემდეგ კი მხატვარს უხდის გამარჯვებულ ფსონს 10%-იანი საკომისიოს გამოკლებით. საკომისიო შეიძლება შეიცვალოს; შეკვეთაზე მოქმედებს ის საკომისიო, რომელიც მასზეა მითითებული.",
+    "გამარჯვებული აუქციონის დასრულებიდან 24 საათში TSISKARI-ს უხდის გამარჯვებულ ფსონს და 5%-იან მყიდველის საკომისიოს. თუ გადახდა დროულად არ შემოვა, შეკვეთა უქმდება, ანგარიშს გაფრთხილება ემატება და ნამუშევარი შეიძლება შემდეგ უმაღლეს ფსონს შესთავაზონ; ორი გაფრთხილების შემდეგ ფსონების დადება ჩერდება. TSISKARI თანხას ინახავს, სანამ მყიდველი მიღებას დაადასტურებს (ან შეხვედრის შეთანხმებიდან 7 დღე გავა), შემდეგ კი მხატვარს უხდის გამარჯვებულ ფსონს 10%-იანი საკომისიოს გამოკლებით. საკომისიო შეიძლება შეიცვალოს; შეკვეთაზე მოქმედებს ის საკომისიო, რომელიც მასზეა მითითებული.",
   "info.terms.privacy.title": "5. კონფიდენციალურობა",
   "info.terms.privacy.body":
     "მომხმარებლის სახელი და საჯარო პროფილი ყველასთვის ხილულია. გამოჩნდება თუ არა შენი ნამდვილი სახელი, შენ წყვეტ. ტელეფონის ნომერი კონფიდენციალურია და მხოლოდ გამარჯვებულისა და მხატვრის დასაკავშირებლად გამოიყენება.",

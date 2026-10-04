@@ -36,7 +36,7 @@ export const en = {
   "dashboard.collector.empty.bidsAction": "Find something to bid on",
   "dashboard.collector.empty.saved": "Tap the heart on any artwork to watch it here.",
   "dashboard.collector.empty.savedAction": "Explore artworks",
-  "dashboard.collector.empty.won": "Auctions you win will appear here with payment and shipping status.",
+  "dashboard.collector.empty.won": "Auctions you win will appear here with payment and handover status.",
 
   "dashboard.collector.artist.title": "Are you an artist?",
   "dashboard.collector.artist.text":
@@ -90,7 +90,7 @@ export const ka: Record<keyof typeof en, string> = {
   "dashboard.collector.empty.bidsAction": "იპოვე ნამუშევარი ფსონისთვის",
   "dashboard.collector.empty.saved": "დააჭირე გულს ნებისმიერ ნამუშევარზე და აქ გამოჩნდება.",
   "dashboard.collector.empty.savedAction": "ნამუშევრების ნახვა",
-  "dashboard.collector.empty.won": "მოგებული აუქციონები აქ გამოჩნდება გადახდისა და მიწოდების სტატუსით.",
+  "dashboard.collector.empty.won": "მოგებული აუქციონები აქ გამოჩნდება გადახდისა და გადაცემის სტატუსით.",
 
   "dashboard.collector.artist.title": "მხატვარი ხარ?",
   "dashboard.collector.artist.text":

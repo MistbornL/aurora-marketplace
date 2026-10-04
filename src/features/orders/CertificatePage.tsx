@@ -4,6 +4,7 @@ import QRCode from "qrcode"
 import { Printer } from "lucide-react"
 import { useAuth } from "../auth/auth-context"
 import { getArtwork } from "../artwork/api"
+import { BrandLoader } from "../../components/ui/brand-loader"
 import { useI18n } from "../../lib/i18n"
 import type { Artwork } from "../../types"
 import { getOrder, money, type Order } from "./api"
@@ -49,7 +50,7 @@ export default function CertificatePage() {
   }, [id])
 
   const allowed = order && user && [order.buyerId, order.sellerId].includes(user.id) && PAID.includes(order.status)
-  if (order === undefined) return <div className="min-h-screen bg-bg" />
+  if (order === undefined) return <BrandLoader fullscreen />
   if (!order || !allowed)
     return (
       <div className="grid min-h-screen place-items-center bg-bg px-4 text-center text-sm text-text-secondary">

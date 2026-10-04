@@ -108,20 +108,17 @@ export default function AdminPage() {
         <Stat label={t("admin.stat.volume")} value={money(groups.gmv)} />
       </div>
 
-      <Tabs className="border-b border-border">
-        <TabsList className="h-auto gap-6 rounded-none bg-transparent p-0">
+      <Tabs>
+        <TabsList variant="pill">
           {tabs.map((item) => (
             <TabsTrigger
               key={item.key}
               active={tab === item.key}
               onClick={() => setTab(item.key)}
-              className={`rounded-none border-b-2 px-0 pb-3 text-[13px] ${
-                tab === item.key ? "border-amber" : "border-transparent"
-              }`}
             >
               {t(item.label)}
               {item.count ? (
-                <span className="ml-1.5 rounded-full bg-amber px-1.5 text-[10px] font-bold text-bg">{item.count}</span>
+                <span className={`ml-1.5 rounded-full px-1.5 text-[10px] font-bold ${tab === item.key ? "bg-bg text-amber" : "bg-amber text-bg"}`}>{item.count}</span>
               ) : null}
             </TabsTrigger>
           ))}

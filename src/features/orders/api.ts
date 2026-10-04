@@ -400,3 +400,82 @@ export async function getPayoutAccount(orderId: string) {
   }>
   return rows[0] ?? null
 }
+
+// ── Buyer ↔ seller chat ──────────────────────────────────────────────────────
+// Open while the order is paid / shipped / delivered; read-only afterwards.
+export const CHAT_OPEN_STATUSES: OrderStatus[] = ["paid", "shipped", "delivered"]
+
+export type OrderMessage = {
+  id: number
+  senderId: string
+  body: string
+  createdAt: string
+}
+
+const toMessage = (row: Record<string, unknown>): OrderMessage => ({
+  id: Number(row.id),
+  senderId: String(row.sender_id),
+  body: String(row.body),
+  createdAt: String(row.created_at),
+})
+
+export async function listOrderMessages(orderId: string) {
+  const rows = await run(
+    requireSupabase()
+      .from("order_messages")
+      .select("id, sender_id, body, created_at")
+      .eq("order_id", orderId)
+      .order("created_at", { ascending: true })
+      .limit(300),
+  )
+  return (rows as unknown as Record<string, unknown>[]).map(toMessage)
+}
+
+export async function sendOrderMessage(orderId: string, body: string) {
+  const row = await rpc("post_order_message", { p_order_id: orderId, p_body: body })
+  return toMessage(row as unknown as Record<string, unknown>)
+}
+
+/** Messages for one order: loaded once, then pushed by Realtime (+ a slow poll as a safety net). */
+export function useOrderMessages(orderId: string, active: boolean) {
+  const [messages, setMessages] = useState<OrderMessage[]>([])
+  const [loaded, setLoaded] = useState(false)
+
+  const merge = useCallback((incoming: OrderMessage[]) => {
+    setMessages((current) => {
+      const byId = new Map(current.map((m) => [m.id, m]))
+      for (const m of incoming) byId.set(m.id, m)
+      return [...byId.values()].sort((a, b) => a.createdAt.localeCompare(b.createdAt) || a.id - b.id)
+    })
+  }, [])
+
+  useEffect(() => {
+    let cancelled = false
+    const load = () =>
+      listOrderMessages(orderId)
+        .then((rows) => !cancelled && (merge(rows), setLoaded(true)))
+        .catch(() => !cancelled && setLoaded(true))
+    void load()
+    if (!active) return () => void (cancelled = true)
+
+    const client = requireSupabase()
+    const channel = client
+      .channel(`order-chat:${orderId}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "order_messages", filter: `order_id=eq.${orderId}` },
+        (payload) => merge([toMessage(payload.new as Record<string, unknown>)]),
+      )
+      .subscribe()
+    const timer = setInterval(() => {
+      if (document.visibilityState === "visible") void load()
+    }, 15_000)
+    return () => {
+      cancelled = true
+      clearInterval(timer)
+      void client.removeChannel(channel)
+    }
+  }, [orderId, active, merge])
+
+  return { messages, loaded, merge }
+}

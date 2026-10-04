@@ -27,10 +27,34 @@
     <meta name="twitter:description" content="Bid live on original paintings, drawings and photography by independent Georgian artists." />
     <meta name="twitter:image" content="https://tsiskariart.ge/og-image.jpg" />
     <title><!-- figma:title --></title>
+    <style>
+      #boot{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:radial-gradient(120% 80% at 50% 100%,#2a2030 0%,#1b171d 60%,#14101a 100%);color:#f4ece1;transition:opacity .45s ease,visibility .45s}
+      #boot.done{opacity:0;visibility:hidden;pointer-events:none}
+      #boot svg{width:132px;display:block;overflow:visible}
+      #boot .sun{animation:bl-rise 2.4s cubic-bezier(.45,0,.2,1) infinite}
+      #boot .glow{opacity:.18;filter:blur(14px);animation:bl-glow 2.4s ease-in-out infinite}
+      #boot b{margin-top:6px;font:700 15px Georgia,serif;letter-spacing:.42em;text-indent:.42em}
+      @keyframes bl-rise{0%{transform:translateY(26px)}55%,75%{transform:translateY(0)}100%{transform:translateY(26px)}}
+      @keyframes bl-glow{0%,100%{opacity:.06}60%{opacity:.28}}
+      @media (prefers-reduced-motion:reduce){#boot .sun,#boot .glow{animation:none}}
+    </style>
     <!-- figma:head-end -->
   </head>
   <body>
     <!-- figma:body-start -->
+    <div id="boot" role="status" aria-label="Loading">
+      <svg viewBox="0 0 120 64" aria-hidden="true">
+        <defs>
+          <linearGradient id="s1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd2b0"/><stop offset="1" stop-color="#f6a87b"/></linearGradient>
+          <linearGradient id="s2" x1="0" x2="1"><stop offset="0" stop-color="#f6a87b" stop-opacity="0"/><stop offset=".5" stop-color="#f6a87b"/><stop offset="1" stop-color="#f6a87b" stop-opacity="0"/></linearGradient>
+          <clipPath id="s3"><rect x="0" y="0" width="120" height="44"/></clipPath>
+        </defs>
+        <circle class="glow" cx="60" cy="44" r="34" fill="#f6a87b"/>
+        <g clip-path="url(#s3)"><circle class="sun" cx="60" cy="44" r="22" fill="url(#s1)"/></g>
+        <rect x="6" y="44" width="108" height="2" rx="1" fill="url(#s2)"/>
+      </svg>
+      <b>TSISKARI</b>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <!-- figma:body-end -->

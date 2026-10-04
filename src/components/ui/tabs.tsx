@@ -29,6 +29,8 @@ const tabsListVariants = cva(
       variant: {
         default: "bg-muted",
         line: "gap-1 bg-transparent",
+        // Rounded segmented control; its look lives in globals.css (.tabs-pill).
+        pill: "",
       },
     },
     defaultVariants: {

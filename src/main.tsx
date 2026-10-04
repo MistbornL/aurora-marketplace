@@ -14,3 +14,21 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     </AppProviders>
   </React.StrictMode>,
 )
+
+// Lift the first-paint splash once the app has rendered and fonts are ready
+// (shown for at least a moment so it never just flashes).
+const boot = document.getElementById("boot")
+if (boot) {
+  const started = performance.now()
+  const ready = Promise.race([
+    document.fonts?.ready ?? Promise.resolve(),
+    new Promise((resolve) => setTimeout(resolve, 2500)),
+  ])
+  void ready.then(() => {
+    const wait = Math.max(0, 900 - (performance.now() - started))
+    setTimeout(() => {
+      boot.classList.add("done")
+      setTimeout(() => boot.remove(), 600)
+    }, wait)
+  })
+}

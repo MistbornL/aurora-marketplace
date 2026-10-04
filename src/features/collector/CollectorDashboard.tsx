@@ -151,16 +151,13 @@ export function CollectorDashboard({ profile, avatar, onEditProfile }: Props) {
         </div>
 
         {/* Tabs */}
-        <Tabs className="border-b border-border">
-          <TabsList className="h-auto gap-6 rounded-none bg-transparent p-0">
+        <Tabs>
+          <TabsList variant="pill">
             {tabs.map((item) => (
               <TabsTrigger
                 key={item.key}
                 active={tab === item.key}
                 onClick={() => setTab(item.key)}
-                className={`rounded-none border-b-2 px-0 pb-3 text-[13px] ${
-                  tab === item.key ? "border-amber" : "border-transparent"
-                }`}
               >
                 {t(item.label)}
               </TabsTrigger>

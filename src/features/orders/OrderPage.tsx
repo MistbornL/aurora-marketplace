@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react"
-import { Link } from "react-router-dom"
 import {
   ArrowLeft,
   Award,
@@ -11,14 +10,17 @@ import {
   Package,
   Phone,
   ShieldCheck,
-  Truck,
+  Handshake,
+  MessageCircle,
 } from "lucide-react"
 import { Button, Card, Input, Textarea } from "../../components/ui"
+import { Spinner } from "../../components/ui/brand-loader"
 import { RowsSkeleton } from "../../components/layout/PageSkeletons"
 import { errorMessage, notify } from "../../lib/notify"
 import { useI18n, type MessageKey } from "../../lib/i18n"
 import { useAuth } from "../auth/auth-context"
 import { AdminOrderActions } from "./AdminOrderActions"
+import { OrderChat } from "./OrderChat"
 import {
   confirmDelivered,
   getOrder,
@@ -34,7 +36,7 @@ import {
   type PlatformSettings,
 } from "./api"
 import { PayCountdown, StatusPill } from "./components"
-import { DeliveryCard, PayoutAccount, ReportProblem, useShipping } from "./OrderExtras"
+import { PayoutAccount, ReportProblem } from "./OrderExtras"
 
 type Props = { orderId: string; onBack: () => void; onArtwork: (id: string) => void }
 
@@ -46,7 +48,6 @@ export default function OrderPage({ orderId, onBack, onArtwork }: Props) {
   const [settings, setSettings] = useState<PlatformSettings | null>(null)
   const [contacts, setContacts] = useState<OrderContact[]>([])
   const [error, setError] = useState<string | null>(null)
-  const { shipping, reload: reloadShipping } = useShipping(orderId)
 
   const load = useCallback(async () => {
     try {
@@ -133,12 +134,7 @@ export default function OrderPage({ orderId, onBack, onArtwork }: Props) {
           </div>
           <StatusPill status={order.status} />
           {perspective !== "admin" && ["paid", "shipped", "delivered", "completed"].includes(order.status) && (
-            <Link
-              to={`/orders/${order.id}/certificate`}
-              className="inline-flex h-9 items-center gap-1.5 rounded-full border border-white/10 px-4 text-xs font-medium text-text-secondary transition-colors hover:border-amber/50 hover:text-amber"
-            >
-              <Award className="size-3.5" /> {t("orders.cert.cta")}
-            </Link>
+            <CertificateButton orderId={order.id} />
           )}
         </div>
 
@@ -147,10 +143,7 @@ export default function OrderPage({ orderId, onBack, onArtwork }: Props) {
         <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_340px]">
           <div className="flex flex-col gap-6">
             {perspective === "buyer" && (
-              <BuyerPanel order={order} settings={settings} onChange={load} deliveryReady={Boolean(shipping)} />
-            )}
-            {perspective === "buyer" && (
-              <DeliveryCard order={order} perspective="buyer" shipping={shipping} onSaved={reloadShipping} />
+              <BuyerPanel order={order} settings={settings} onChange={load} />
             )}
             {perspective === "seller" && (
               <SellerPanel order={order} settings={settings} onChange={load} />
@@ -166,8 +159,11 @@ export default function OrderPage({ orderId, onBack, onArtwork }: Props) {
                 {["delivered", "completed"].includes(order.status) && <PayoutAccount order={order} />}
               </Section>
             )}
-            {perspective !== "buyer" && (
-              <DeliveryCard order={order} perspective={perspective} shipping={shipping} onSaved={reloadShipping} />
+            {perspective !== "admin" && ["paid", "shipped", "delivered"].includes(order.status) && (
+              <HandoverCard order={order} perspective={perspective} contacts={contacts} />
+            )}
+            {["paid", "shipped", "delivered", "completed"].includes(order.status) && (
+              <OrderChat order={order} userId={user.id} perspective={perspective} />
             )}
             {contacts.length > 0 && <Contacts contacts={contacts} />}
             {perspective !== "admin" && <ReportProblem order={order} />}
@@ -197,13 +193,10 @@ function BuyerPanel({
   order,
   settings,
   onChange,
-  deliveryReady,
 }: {
   order: Order
   settings: PlatformSettings | null
   onChange: () => Promise<void>
-  /** Payment waits until the buyer has said how the work should reach them. */
-  deliveryReady: boolean
 }) {
   const { t } = useI18n()
   const [note, setNote] = useState("")
@@ -262,9 +255,6 @@ function BuyerPanel({
             </p>
           </div>
 
-          {!deliveryReady && (
-            <p className="mt-5 rounded-xl bg-amber/10 px-3 py-2 text-xs text-amber">{t("pilot.delivery.needed")}</p>
-          )}
           <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Input
               value={note}
@@ -276,7 +266,7 @@ function BuyerPanel({
             />
             <Button
               className="h-11 px-5 font-semibold"
-              disabled={Boolean(busy) || !bankReady || !deliveryReady}
+              disabled={Boolean(busy) || !bankReady}
               onClick={() =>
                 void act(
                   "submit",
@@ -299,7 +289,7 @@ function BuyerPanel({
               <Button
                 size="sm"
                 variant="outline"
-                disabled={Boolean(busy) || !deliveryReady}
+                disabled={Boolean(busy)}
                 onClick={() =>
                   void act(
                     "card",
@@ -339,7 +329,7 @@ function BuyerPanel({
         <Section title={t("orders.onItsWay.title")}>
           {order.shippingNote && (
             <p className="mb-3 rounded-xl bg-white/[.04] p-3 text-sm text-text">
-              <Truck className="mr-2 inline size-4 text-amber" />
+              <Handshake className="mr-2 inline size-4 text-amber" />
               {order.shippingNote}
             </p>
           )}
@@ -459,7 +449,7 @@ function SellerPanel({
               }
             }}
           >
-            <Truck className="size-4" />
+            <Handshake className="size-4" />
             {busy ? t("common.saving") : t("orders.seller.markShipped")}
           </Button>
         </Section>
@@ -618,6 +608,87 @@ function Breakdown({ order, perspective }: { order: Order; perspective: "buyer" 
         ))}
       </dl>
     </Card>
+  )
+}
+
+/** Opens the certificate in a new tab; the button spins until the page's code is ready. */
+function CertificateButton({ orderId }: { orderId: string }) {
+  const { t } = useI18n()
+  const [loading, setLoading] = useState(false)
+  async function open() {
+    if (loading) return
+    setLoading(true)
+    // Open the tab straight away (inside the click, so popup blockers allow it),
+    // then point it at the certificate once its code has been fetched.
+    const tab = window.open("", "_blank")
+    try {
+      await import("./CertificatePage")
+      const url = `/orders/${orderId}/certificate`
+      if (tab) tab.location.href = url
+      else window.open(url, "_blank")
+    } catch {
+      tab?.close()
+      notify(t("common.somethingWrong"), "", "error")
+    } finally {
+      setTimeout(() => setLoading(false), 600)
+    }
+  }
+  return (
+    <button
+      onClick={() => void open()}
+      disabled={loading}
+      aria-busy={loading}
+      className="inline-flex h-9 items-center gap-1.5 rounded-full border border-white/10 px-4 text-xs font-medium text-text-secondary transition-colors hover:border-amber/50 hover:text-amber disabled:cursor-wait disabled:opacity-80"
+    >
+      {loading ? <Spinner className="size-3.5" /> : <Award className="size-3.5" />} {t("orders.cert.cta")}
+    </button>
+  )
+}
+
+function HandoverCard({
+  order,
+  perspective,
+  contacts,
+}: {
+  order: Order
+  perspective: "buyer" | "seller" | "admin"
+  contacts: OrderContact[]
+}) {
+  const { t } = useI18n()
+  const other = contacts.find((c) => c.role === (perspective === "buyer" ? "seller" : "buyer"))
+  const name = (perspective === "buyer" ? order.sellerName : order.buyerName) || other?.name || ""
+  const done = order.status === "delivered"
+  return (
+    <Section title={t("orders.handover.title")}>
+      <p className="text-sm leading-6 text-text-secondary">
+        {done
+          ? t("orders.handover.done")
+          : perspective === "buyer"
+            ? t("orders.handover.buyerIntro", { name })
+            : t("orders.handover.sellerIntro", { name })}
+      </p>
+      {!done && (
+        <div className="mt-4 flex flex-wrap gap-3">
+          <Button
+            className="h-11 font-semibold"
+            onClick={() =>
+              document.getElementById("order-chat")?.scrollIntoView({ behavior: "smooth", block: "center" })
+            }
+          >
+            <MessageCircle className="size-4" /> {t("orders.handover.message", { name })}
+          </Button>
+          {other?.phone && (
+            <a
+              href={`tel:${other.phone}`}
+              className="inline-flex h-11 items-center gap-2 rounded-full border border-border px-5 text-sm font-semibold text-text hover:border-amber/50"
+            >
+              <Phone className="size-4" /> {t("orders.handover.call", { name })}
+            </a>
+          )}
+        </div>
+      )}
+      {!done && <p className="mt-4 rounded-xl bg-white/[.04] p-3 text-xs leading-5 text-text-muted">{t("orders.handover.tip")}</p>}
+    </Section>
   )
 }
 
