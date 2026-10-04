@@ -250,7 +250,8 @@ export function DiscoverSection({
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center gap-3 rounded-3xl border border-dashed border-white/10 py-20 text-center">
+        <div className="relative isolate flex flex-col items-center gap-3 overflow-hidden rounded-3xl border border-dashed border-white/10 py-20 text-center">
+          <img src="/img/empty.webp" alt="" loading="lazy" className="absolute inset-0 -z-10 size-full object-cover opacity-25" />
           <SearchX className="size-6 text-text-muted" />
           <p className="font-display text-lg text-text-secondary">{t("catalog.discover.empty")}</p>
           <button onClick={reset} className="text-sm text-amber hover:text-amber/80">

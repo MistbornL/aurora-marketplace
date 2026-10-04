@@ -348,8 +348,14 @@ function Empty({
   onAction?: () => void
 }) {
   return (
-    <div className="rounded-2xl border border-dashed border-border px-6 py-14 text-center">
-      <p className="text-sm text-text-muted">{text}</p>
+    <div className="relative isolate overflow-hidden rounded-2xl border border-dashed border-border px-6 py-14 text-center">
+      <img
+        src="/img/empty.webp"
+        alt=""
+        loading="lazy"
+        className="absolute inset-0 -z-10 size-full object-cover opacity-25"
+      />
+      <p className="text-sm text-text-secondary">{text}</p>
       {action && (
         <Button variant="outline" className="mt-4" onClick={onAction}>
           {action}

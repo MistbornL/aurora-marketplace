@@ -1,6 +1,11 @@
 // Shared words used across the app. Feature namespaces hold everything else.
 export const en = {
   "common.tryAgainShort": "Try again",
+  "common.notFound.eyebrow": "404",
+  "common.notFound.title": "This lot has left the stage.",
+  "common.notFound.text": "The page you’re looking for doesn’t exist or has moved on.",
+  "common.notFound.home": "Back to the auction",
+  "common.notFound.browse": "Browse artworks",
   "common.pleaseTryAgain": "Please try again.",
   "common.somethingWrong": "Something went wrong",
   "common.cancel": "Cancel",
@@ -40,6 +45,11 @@ export const en = {
 
 export const ka: Record<keyof typeof en, string> = {
   "common.tryAgainShort": "სცადე ხელახლა",
+  "common.notFound.eyebrow": "404",
+  "common.notFound.title": "ეს ლოტი სცენიდან წავიდა.",
+  "common.notFound.text": "გვერდი, რომელსაც ეძებ, არ არსებობს ან გადატანილია.",
+  "common.notFound.home": "აუქციონზე დაბრუნება",
+  "common.notFound.browse": "ნამუშევრების ნახვა",
   "common.pleaseTryAgain": "გთხოვ, სცადე ხელახლა.",
   "common.somethingWrong": "რაღაც შეცდომა მოხდა",
   "common.cancel": "გაუქმება",

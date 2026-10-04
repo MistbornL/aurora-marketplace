@@ -26,6 +26,7 @@ const ArtworkDetailPage = lazy(
 const LiveLobbyPage = lazy(() => import("../features/live/LiveAuctionPage"))
 const LiveRoomPage = lazy(() => import("../features/live/LiveRoomPage"))
 const AboutPage = lazy(() => import("../features/info/AboutPage"))
+const NotFoundPage = lazy(() => import("../features/info/NotFoundPage"))
 const TermsPage = lazy(() => import("../features/info/TermsPage"))
 const PrivacyPage = lazy(() => import("../features/info/PrivacyPage"))
 const EventPage = lazy(() => import("../features/events/EventPage"))
@@ -92,7 +93,7 @@ function AppRoutes() {
         <Route path="/terms" element={<PageFrame><TermsPage /></PageFrame>} />
         <Route path="/privacy" element={<PageFrame><PrivacyPage /></PageFrame>} />
         <Route path="/events/:id" element={<EventRoute />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<PageFrame><NotFoundPage /></PageFrame>} />
       </Routes>
     </Suspense>
   )

@@ -82,6 +82,37 @@ function Words({ text, spread = 0.5, className }: { text: string; spread?: numbe
   )
 }
 
+// Phones get the dawn as a gentle 4 s loop (about 200 KB) instead of a still. It
+// is only fetched when the phone layout is active and motion is allowed.
+const LOOP_QUERY =
+  "(prefers-reduced-motion: no-preference) and ((max-width: 720px) or ((orientation: portrait) and (max-width: 1024px)) or ((orientation: portrait) and (pointer: coarse)))"
+
+function PhoneLoop() {
+  const [src, setSrc] = useState<string | undefined>()
+  useEffect(() => {
+    const mq = window.matchMedia(LOOP_QUERY)
+    const sync = () => setSrc(mq.matches ? `${ASSETS}/still-dawn-loop.mp4` : undefined)
+    sync()
+    mq.addEventListener("change", sync)
+    return () => mq.removeEventListener("change", sync)
+  }, [])
+  if (!src) return null
+  return (
+    <video
+      className="sh-loop"
+      src={src}
+      poster={`${ASSETS}/still-dawn-tall.webp`}
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="auto"
+      aria-hidden
+      tabIndex={-1}
+    />
+  )
+}
+
 export function ScrollHero({
   liveCount,
   lead,
@@ -586,6 +617,7 @@ export function ScrollHero({
           style={{ "--still-wide": `url('${STILLS[3]}')`, "--still-tall": `url('${ASSETS}/still-dawn-tall.webp')` } as CSSProperties}
           aria-hidden
         />
+        <PhoneLoop />
         {STILLS.map((src, i) => (
           <div key={src} className={`sh-still sh-still-${i}`} data-still-src={src} aria-hidden />
         ))}
