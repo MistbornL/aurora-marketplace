@@ -28,12 +28,16 @@
     <meta name="twitter:image" content="https://tsiskariart.ge/og-image.jpg" />
     <title><!-- figma:title --></title>
     <style>
+      @font-face{font-family:"DM Ilia";src:url("/fonts/dm-ilia-v1.woff2") format("woff2");font-display:swap;unicode-range:U+10D0-10FA,U+10FD-10FF}
+      #boot.ka p{font-family:"DM Ilia",Georgia,serif;font-style:normal;font-size:19px;line-height:1.55}
       #boot{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:radial-gradient(120% 80% at 50% 100%,#2a2030 0%,#1b171d 60%,#14101a 100%);color:#f4ece1;transition:opacity .45s ease,visibility .45s}
       #boot.done{opacity:0;visibility:hidden;pointer-events:none}
       #boot svg{width:132px;display:block;overflow:visible}
       #boot .sun{animation:bl-rise 2.4s cubic-bezier(.45,0,.2,1) infinite}
       #boot .glow{opacity:.18;filter:blur(14px);animation:bl-glow 2.4s ease-in-out infinite}
       #boot b{margin-top:6px;font:700 15px Georgia,serif;letter-spacing:.42em;text-indent:.42em}
+      #boot p{margin:22px 0 0;max-width:300px;padding:0 24px;text-align:center;font:italic 13px/1.6 Georgia,serif;color:rgba(244,236,225,.7)}
+      #boot p small{display:block;margin-top:4px;font-style:normal;font-size:11px;opacity:.7}
       @keyframes bl-rise{0%{transform:translateY(26px)}55%,75%{transform:translateY(0)}100%{transform:translateY(26px)}}
       @keyframes bl-glow{0%,100%{opacity:.06}60%{opacity:.28}}
       @media (prefers-reduced-motion:reduce){#boot .sun,#boot .glow{animation:none}}
@@ -54,8 +58,25 @@
         <rect x="6" y="44" width="108" height="2" rx="1" fill="url(#s2)"/>
       </svg>
       <b>TSISKARI</b>
+      <p id="boot-q"></p>
     </div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var q = [
+          ["Color is a power which directly influences the soul.", "ფერი ძალაა, რომელიც უშუალოდ მოქმედებს სულზე.", "Wassily Kandinsky"],
+          ["Creativity takes courage.", "შემოქმედებას გაბედულება სჭირდება.", "Henri Matisse"],
+          ["Every artist was first an amateur.", "ყველა მხატვარი თავიდან მოყვარული იყო.", "Ralph Waldo Emerson"],
+          ["Art washes away from the soul the dust of everyday life.", "ხელოვნება სულიდან ყოველდღიურობის მტვერს ჩამორეცხავს.", "Pablo Picasso"],
+          ["I saw the angel in the marble and carved until I set him free.", "მარმარილოში ანგელოზი დავინახე და ვკვეთდი, სანამ არ გავათავისუფლე.", "Michelangelo"]
+        ];
+        var pick = q[Math.floor(Math.random() * q.length)], ka = false;
+        try { ka = localStorage.getItem("tsiskari.lang") === "ka"; } catch (e) {}
+        var el = document.getElementById("boot-q");
+        if (ka) document.getElementById("boot").className = "ka";
+        if (el) { el.textContent = "\u201C" + (ka ? pick[1] : pick[0]) + "\u201D"; var s = document.createElement("small"); s.textContent = "\u2014 " + pick[2]; el.appendChild(s); }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
     <!-- figma:body-end -->
   </body>

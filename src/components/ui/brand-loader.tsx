@@ -1,4 +1,5 @@
 import { useI18n } from "../../lib/i18n"
+import { ArtQuote } from "../ArtQuote"
 
 /** A small ring spinner for buttons and inline waits. Inherits the text colour. */
 export function Spinner({ className = "size-4" }: { className?: string }) {
@@ -18,11 +19,14 @@ export function Spinner({ className = "size-4" }: { className?: string }) {
 export function BrandLoader({
   label,
   fullscreen = false,
+  quote = fullscreen,
   className = "",
 }: {
   label?: string
   /** Covers the viewport instead of filling its parent. */
   fullscreen?: boolean
+  /** A line about art under the wordmark (default: on for fullscreen). */
+  quote?: boolean
   className?: string
 }) {
   const { t } = useI18n()
@@ -58,6 +62,7 @@ export function BrandLoader({
       </div>
       <p className="brand-loader__word">TSISKARI</p>
       <p className="brand-loader__label">{text}</p>
+      {quote && <ArtQuote className="mt-6 max-w-xs px-6 text-center text-[13px] text-text-secondary" />}
     </div>
   )
 }

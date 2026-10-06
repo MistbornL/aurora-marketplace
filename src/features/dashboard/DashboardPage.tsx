@@ -137,10 +137,28 @@ export default function DashboardPage() {
     }
   }
 
+  /** One-tap photo change from the studio header (no need to open the editor). */
+  async function quickImage(kind: "avatar" | "cover", file: File) {
+    try {
+      const saved = await saveProfile(
+        activeUser,
+        activeProfile,
+        kind === "avatar" ? file : undefined,
+        kind === "cover" ? file : undefined,
+      )
+      setProfile({ ...saved, display_name: activeProfile.display_name })
+      void refreshProfile()
+      notify(t("dashboard.profileSavedTitle"), t("dashboard.profileSavedDetail"))
+    } catch (error) {
+      notify(t("dashboard.profileSaveFailed"), errorMessage(error), "error")
+    }
+  }
+
   return (
     <>
       {isArtist ? (
         <ArtistStudio
+          onQuickImage={quickImage}
           userId={activeUser.id}
           profile={profile}
           avatar={avatarPreview ?? profile.avatar_url}

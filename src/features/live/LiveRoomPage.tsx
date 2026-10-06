@@ -1,3 +1,4 @@
+import { ArtQuote } from "../../components/ArtQuote"
 import { useEffect, useMemo, useRef } from "react"
 import { ChevronLeft } from "lucide-react"
 import { Button } from "../../components/ui"
@@ -150,6 +151,12 @@ function Room({
                   )}
                 </span>
               </div>
+              {bidding.upcoming && (
+                <ArtQuote
+                  rotateMs={14_000}
+                  className="mt-4 rounded-2xl border border-white/[.06] bg-white/[.03] px-5 py-4 text-sm text-text-secondary"
+                />
+              )}
               <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
                 <div>
                   <h1 className="font-display text-2xl font-bold text-text sm:text-3xl">{art.title}</h1>

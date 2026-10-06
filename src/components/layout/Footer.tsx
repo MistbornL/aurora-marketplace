@@ -70,6 +70,7 @@ export function Footer() {
       </div>
       <div className="border-t border-white/[.04] px-4 py-5 text-center text-xs text-text-muted">
         {t("layout.footer.copyright", { year: new Date().getFullYear() })}
+        <span className="mt-1 block opacity-80">{t("layout.footer.fonts")}</span>
       </div>
     </footer>
   )

@@ -5,6 +5,8 @@ import { ReadinessCard } from "../profile/ReadinessCard"
 import { PayoutCard } from "./PayoutCard"
 import { RowsSkeleton } from "../../components/layout/PageSkeletons"
 import type { ManagedAuction, StudioTab } from "./types"
+import { useRef, useState } from "react"
+import { Camera } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { money, useOrders, type Order } from "../orders/api"
 import { OrderRow } from "../orders/components"
@@ -30,6 +32,7 @@ type Props = {
   tab: StudioTab
   onTabChange: (tab: StudioTab) => void
   onEditProfile: () => void
+  onQuickImage: (kind: "avatar" | "cover", file: File) => Promise<void>
   onCreateAuction: () => void
   onEditAuction: (auction: ManagedAuction) => void
   onDeleteAuction: (auction: ManagedAuction) => void
@@ -47,11 +50,25 @@ export function StudioView({
   tab,
   onTabChange,
   onEditProfile,
+  onQuickImage,
   onCreateAuction,
   onEditAuction,
   onDeleteAuction,
 }: Props) {
   const { t } = useI18n()
+  const coverInput = useRef<HTMLInputElement>(null)
+  const avatarInput = useRef<HTMLInputElement>(null)
+  const [busy, setBusy] = useState<"avatar" | "cover" | null>(null)
+  async function pick(kind: "avatar" | "cover", files: FileList | null) {
+    const file = files?.[0]
+    if (!file) return
+    setBusy(kind)
+    try {
+      await onQuickImage(kind, file)
+    } finally {
+      setBusy(null)
+    }
+  }
   const initials = profile.username.slice(0, 2).toUpperCase() || "U"
   const live = auctions.filter((item) => item.isLive)
   const navigate = useNavigate()
@@ -68,22 +85,43 @@ export function StudioView({
 
   return (
     <main className="min-h-screen bg-bg pb-20">
-      <div className="relative h-60 overflow-hidden bg-surface-2">
-        {cover && (
-          <img src={cover} alt="" className="h-full w-full object-cover" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/20 to-transparent" />
+      <div className="group relative h-56 overflow-hidden bg-surface-2 sm:h-72">
+        <img src={cover || "/img/artist-cover.webp"} alt="" className="h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-bg/40 via-transparent to-bg" />
+        <input ref={coverInput} type="file" accept="image/*" hidden onChange={(e) => { void pick("cover", e.target.files); e.target.value = "" }} />
+        <button
+          type="button"
+          onClick={() => coverInput.current?.click()}
+          disabled={busy === "cover"}
+          className="absolute right-4 top-4 flex items-center gap-2 rounded-full bg-black/55 px-3.5 py-2 text-[13px] text-text backdrop-blur transition hover:bg-black/75 disabled:opacity-60 sm:right-6 lg:right-10"
+        >
+          <Camera className="size-4" />
+          {busy === "cover" ? t("studio.photo.saving") : t("studio.photo.changeCover")}
+        </button>
       </div>
 
       <div className="relative mx-auto max-w-5xl px-6 lg:px-10">
-        <div className="-mt-14 mb-6 flex flex-wrap items-end justify-between gap-4">
+        <div className="-mt-16 mb-6 flex flex-wrap items-end justify-between gap-4">
           <div className="flex items-end gap-4">
-            <div className="grid size-24 shrink-0 place-items-center overflow-hidden rounded-full border-[3px] border-bg bg-surface-2 font-display text-2xl font-bold text-amber">
-              {avatar ? (
-                <img src={avatar} alt="" className="h-full w-full object-cover" />
-              ) : (
-                initials
-              )}
+            <div className="relative shrink-0">
+              <div className="grid size-28 place-items-center overflow-hidden rounded-full border-4 border-bg bg-surface-2 font-display text-2xl font-bold text-amber ring-2 ring-amber/40">
+                {avatar ? (
+                  <img src={avatar} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  initials
+                )}
+              </div>
+              <input ref={avatarInput} type="file" accept="image/*" hidden onChange={(e) => { void pick("avatar", e.target.files); e.target.value = "" }} />
+              <button
+                type="button"
+                onClick={() => avatarInput.current?.click()}
+                disabled={busy === "avatar"}
+                aria-label={t("studio.photo.changeAvatar")}
+                title={t("studio.photo.changeAvatar")}
+                className="absolute bottom-0 right-0 grid size-9 place-items-center rounded-full border-2 border-bg bg-amber text-bg transition hover:brightness-110 disabled:opacity-60"
+              >
+                <Camera className="size-4" />
+              </button>
             </div>
             <div>
               <h1 className="font-display text-2xl font-bold text-text">

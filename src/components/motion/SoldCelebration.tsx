@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { Gavel, X } from "lucide-react"
 import { onSold, type SoldMoment } from "../../lib/celebrate"
 import { useI18n } from "../../lib/i18n"
+import { ArtQuote } from "../ArtQuote"
 import { playGavel, soundMuted } from "../../features/catalog/hero/hero-sound"
 
 const COLOURS = ["#f6a87b", "#ffd9c2", "#e88fa0", "#c9a6f0", "#fff1e6"]
@@ -138,6 +139,7 @@ export function SoldCelebration() {
         <p className="mt-2 text-sm leading-relaxed text-text-secondary">
           {t("common.sold.text", { title: moment.title, amount: moment.amount })}
         </p>
+        <ArtQuote className="mx-auto mt-4 max-w-xs text-[13px] text-text-muted" />
         <div className="mt-5 grid gap-2">
           {moment.href && (
             <button

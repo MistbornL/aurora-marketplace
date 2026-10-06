@@ -24,12 +24,14 @@ export function ArtistStudio({
   avatar,
   cover,
   onEditProfile,
+  onQuickImage,
 }: {
   userId: string
   profile: Profile
   avatar?: string | null
   cover?: string | null
   onEditProfile: () => void
+  onQuickImage: (kind: "avatar" | "cover", file: File) => Promise<void>
 }) {
   const { refresh: refreshCatalog } = useCatalog()
   const { readiness } = useAuth()
@@ -117,6 +119,7 @@ export function ArtistStudio({
         tab={tab}
         onTabChange={setTab}
         onEditProfile={onEditProfile}
+        onQuickImage={onQuickImage}
         onCreateAuction={() => setEditing(null)}
         onEditAuction={setEditing}
         onDeleteAuction={setDeleteTarget}
