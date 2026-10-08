@@ -4,15 +4,12 @@ import {
   BadgeCheck,
   Check,
   Gavel,
-  Search,
-  Trophy,
 } from "lucide-react"
 import { EndingSoonPill, LivePill } from "../../components/artwork/badges"
-import { CountUp } from "../../components/motion/CountUp"
 import { Reveal } from "../../components/motion/Reveal"
 import { Button } from "../../components/ui"
 import { formatLeft, useCountdown } from "../../lib/clock"
-import { useI18n, type MessageKey } from "../../lib/i18n"
+import { useI18n } from "../../lib/i18n"
 import { useTilt } from "../../lib/motion"
 import type { Artwork } from "../../types"
 import { AuthDialog } from "../auth/AuthDialog"
@@ -21,6 +18,7 @@ import { useCatalog } from "./catalog-context"
 import { EventBanner } from "../events/EventBanner"
 import { DiscoverSection } from "./DiscoverSection"
 import { ScrollHero } from "./hero/ScrollHero"
+import { GalleryWall } from "./GalleryWall"
 
 export default function LandingPage({
   onArtwork,
@@ -138,7 +136,7 @@ export default function LandingPage({
                     <button
                       tabIndex={copy === 1 ? -1 : undefined}
                       onClick={() => onArtist(artist.id)}
-                      className="whitespace-nowrap font-display text-lg italic text-text-muted transition-colors hover:text-text"
+                      className="artist-plaque font-display text-xl italic text-text-muted transition-colors hover:text-text"
                     >
                       {artist.name}
                     </button>
@@ -150,61 +148,8 @@ export default function LandingPage({
         </section>
       )}
 
-      {/* ── Stats (count up once in view) ─────────────────────────────── */}
-      <section className="px-4 py-16 sm:px-6 lg:px-10 lg:py-24">
-        <Reveal className="mx-auto grid max-w-7xl grid-cols-3 gap-px overflow-hidden rounded-3xl border border-white/[.08] bg-white/[.08]">
-          {([
-            { value: stats.live.length, label: "catalog.hero.statLive" },
-            { value: stats.artists, label: "catalog.hero.statArtists" },
-            { value: stats.bids, label: "catalog.hero.statBids" },
-          ] satisfies Array<{ value: number; label: MessageKey }>).map((item) => (
-            <div key={item.label} className="bg-surface px-3 py-8 text-center sm:py-11">
-              <CountUp
-                value={item.value}
-                format={(n) => n.toLocaleString(locale)}
-                className="block font-display text-4xl font-bold text-amber tabular-nums sm:text-5xl"
-              />
-              <p className="mt-2 text-xs text-text-muted sm:text-[13px]">{t(item.label)}</p>
-            </div>
-          ))}
-        </Reveal>
-      </section>
-
-      {/* ── How it works ──────────────────────────────────────────────── */}
-      <section className="border-y border-white/[.06] bg-white/[.015]">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 md:grid-cols-3 lg:px-10">
-          {[
-            {
-              icon: <Search />,
-              title: t("catalog.how.discoverTitle"),
-              text: t("catalog.how.discoverText"),
-            },
-            {
-              icon: <Gavel />,
-              title: t("catalog.how.bidTitle"),
-              text: t("catalog.how.bidText"),
-            },
-            {
-              icon: <Trophy />,
-              title: t("catalog.how.winTitle"),
-              text: t("catalog.how.winText"),
-            },
-          ].map((step, index) => (
-            <Reveal key={step.title} delay={index * 80} className="flex gap-4">
-              <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-amber/10 text-amber [&_svg]:size-5">
-                {step.icon}
-              </span>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-text-muted">
-                  {t("catalog.how.step", { n: index + 1 })}
-                </p>
-                <p className="mt-1 font-display text-lg font-semibold text-text">{step.title}</p>
-                <p className="mt-1.5 text-sm leading-6 text-text-secondary">{step.text}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
+      {/* ── Gallery wall: how it works + live numbers ────────────────── */}
+      <GalleryWall live={stats.live.length} artists={stats.artists} bids={stats.bids} />
 
       {/* ── Catalogue ─────────────────────────────────────────────────── */}
       <section className="px-4 pb-16 pt-14 sm:px-6 lg:px-10">

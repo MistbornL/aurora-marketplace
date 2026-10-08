@@ -296,6 +296,59 @@ body {
 @media (hover: hover) and (pointer: fine) { .marquee:hover .marquee-track { animation-play-state: paused; } }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
+
+/* ── Gallery wall (landing: how it works + numbers) ───────────────────── */
+.gallery-wall {
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(246,168,123,.10), transparent 70%),
+    linear-gradient(180deg, #211a26 0%, #1b1620 100%);
+}
+.gallery-wall::after { /* skirting board: the wall meets the floor */
+  content: ""; position: absolute; inset-inline: 0; bottom: 0; height: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.35));
+}
+.gw-piece { position: relative; display: flex; flex-direction: column; align-items: center; transition: transform 500ms var(--ease-out); }
+.gw-light { /* picture light: a soft cone from above */
+  position: absolute; top: -70px; left: 50%; width: 130%; height: 70%; transform: translateX(-50%);
+  background: radial-gradient(ellipse 50% 100% at 50% 0%, rgba(255,226,190,.20), transparent 75%);
+  clip-path: polygon(46% 0, 54% 0, 100% 100%, 0 100%);
+  pointer-events: none; opacity: .8; transition: opacity 400ms ease;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 92%); mask-image: linear-gradient(180deg, #000 0%, transparent 92%);
+}
+.gw-piece:hover .gw-light { opacity: 1; }
+.gw-frame {
+  position: relative; width: 100%; max-width: 270px; padding: 10px; border-radius: 4px;
+  background: linear-gradient(135deg, #5b3b4b 0%, #2b1b2a 38%, #6a4556 62%, #2a1a28 100%);
+  box-shadow: 0 30px 50px -22px rgba(0,0,0,.75), 0 0 0 1px rgba(246,168,123,.22), inset 0 0 0 1px rgba(255,255,255,.07);
+  transition: transform 420ms var(--ease-out), box-shadow 420ms ease;
+}
+.gw-piece:hover .gw-frame { transform: translateY(-6px) rotate(-.6deg); box-shadow: 0 40px 60px -22px rgba(0,0,0,.8), 0 0 0 1px rgba(246,168,123,.4), inset 0 0 0 1px rgba(255,255,255,.1); }
+.gw-mat { padding: 14px; background: #efe6d8; box-shadow: inset 0 2px 6px rgba(0,0,0,.35); }
+.gw-canvas { aspect-ratio: 4 / 5; overflow: hidden; box-shadow: 0 0 0 1px rgba(0,0,0,.35); }
+.gw-dot { /* the red "sold" dot galleries stick beside a work */
+  position: absolute; right: -9px; bottom: 26px; width: 18px; height: 18px; border-radius: 999px;
+  background: radial-gradient(circle at 35% 30%, #ff7b7b, #d62b2b 70%); box-shadow: 0 2px 6px rgba(0,0,0,.5);
+}
+.gw-label { /* the museum label */
+  margin-top: 26px; width: 100%; max-width: 270px; padding: 14px 16px 16px;
+  background: rgba(239,230,216,.05); border: 1px solid rgba(255,255,255,.07); border-left: 2px solid var(--color-amber);
+}
+.gw-no { font-size: 11px; letter-spacing: .22em; color: var(--color-amber); margin-bottom: 4px; font-variant-numeric: tabular-nums; }
+.gw-plaque {
+  border: 1px solid rgba(246,168,123,.28); border-radius: 6px;
+  background: linear-gradient(180deg, rgba(246,168,123,.07), rgba(246,168,123,.02));
+  box-shadow: inset 0 0 0 4px rgba(27,22,32,.9), inset 0 0 0 5px rgba(246,168,123,.12);
+}
+.gw-ring { transform-origin: 100px 112px; animation: gw-ripple 4.2s ease-out infinite; }
+@keyframes gw-ripple { 0% { transform: scale(.82); } 50% { transform: scale(1.04); } 100% { transform: scale(.82); } }
+.gw-ping { transform-origin: 100px 112px; animation: ping-ring 1.8s ease-out infinite; }
+.gw-spin { animation: gw-rotate 80s linear infinite; }
+@keyframes gw-rotate { to { transform: translate(100px,118px) rotate(360deg); } }
+
+/* Artist names as gallery placards in the strip. */
+.artist-plaque { display: inline-flex; align-items: center; gap: 12px; white-space: nowrap; }
+.artist-plaque::before { content: ""; width: 5px; height: 5px; rotate: 45deg; background: var(--color-amber); opacity: .55; }
+
 /* Buttons feel pressed. */
 .press { transition: transform 160ms var(--ease-out), translate 160ms var(--ease-out); }
 .press:active { transform: scale(0.97); }
@@ -304,7 +357,7 @@ body {
   .reveal { transform: none; transition: opacity 300ms ease; }
   .hero-enter { transform: none; animation-duration: 300ms; }
   .line-mask > span, .shimmer-text { transform: none; animation: none; }
-  .aurora > span, .marquee-track { animation: none; }
+  .aurora > span, .marquee-track, .gw-ring, .gw-ping, .gw-spin { animation: none; }
   .ping-dot::after { display: none; }
   .spotlight { display: none; }
 }
