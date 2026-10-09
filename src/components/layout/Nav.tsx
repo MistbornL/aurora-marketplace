@@ -42,6 +42,8 @@ export function Nav({
   const { t } = useI18n()
   const { user, role, profile, signOut } = useAuth()
   const { artworks } = useCatalog()
+  // The red dot means a real live-format room is open, not just any timed auction.
+  const liveRoomOpen = artworks.some((art) => art.format === "live" && art.isLive && art.timeLeftSecs > 0)
   const savedIds = useSavedIds()
   const notifications = useNotifications()
   const navRef = useRef<HTMLElement>(null)
@@ -137,7 +139,7 @@ export function Nav({
                   }`}
                 >
                   {t(label)}
-                  {view === "live" && (
+                  {view === "live" && liveRoomOpen && (
                     <span
                       className={`absolute right-2 top-2 size-1.5 animate-pulse rounded-full ${
                         active ? "bg-bg" : "bg-red-500"
@@ -286,7 +288,7 @@ export function Nav({
                   }`}
                 >
                   {t(label)}
-                  {view === "live" && <span className="size-2 animate-pulse rounded-full bg-red-500" />}
+                  {view === "live" && liveRoomOpen && <span className="size-2 animate-pulse rounded-full bg-red-500" />}
                 </button>
               ))}
             </nav>

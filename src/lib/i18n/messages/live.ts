@@ -8,6 +8,10 @@ export const en = {
     "Each auction has its own room with live chat and real-time bids. Jump between rooms anytime — your bids and watchlist follow you.",
   "live.lobby.empty": "Check back soon, or browse upcoming and recent auctions.",
   "live.lobby.browse": "Browse auctions",
+  "live.lobby.emptyRooms": "No live room is open right now. Live auctions run at set times — see what’s starting soon, or bid in a timed auction below.",
+  "live.lobby.timedTitle": "Timed auctions",
+  "live.lobby.timedText": "These end at a set date and time, no host and no waiting room: bid any time before the clock runs out.",
+  "live.lobby.timedAll": "All timed auctions",
   "live.lobby.startingSoon": "Starting soon",
   "live.lobby.startingSoonText":
     "Live auctions open at a set time. Every bid resets a 30-second timer — when the room goes quiet, the artwork is sold. Rooms open early so you can chat before the first bid.",
@@ -69,6 +73,10 @@ export const ka: Record<keyof typeof en, string> = {
     "ყველა აუქციონს თავისი ოთახი აქვს ლაივ ჩატით და ფსონებით რეალურ დროში. გადადი ოთახებს შორის როცა გინდა — შენი ფსონები და რჩეულები თან გახლავს.",
   "live.lobby.empty": "შემოიარე მოგვიანებით ან დაათვალიერე მომავალი და ბოლო აუქციონები.",
   "live.lobby.browse": "აუქციონების ნახვა",
+  "live.lobby.emptyRooms": "ახლა ლაივ ოთახი ღია არ არის. ლაივ აუქციონები დანიშნულ დროს იმართება — ნახე რა იწყება მალე ან დადე ფსონი ქვემოთ მოცემულ დროით აუქციონებზე.",
+  "live.lobby.timedTitle": "დროითი აუქციონები",
+  "live.lobby.timedText": "ესენი დანიშნულ თარიღსა და დროს სრულდება, წამყვანისა და მოლოდინის ოთახის გარეშე: ფსონი შეგიძლია დადო ტაიმერის ამოწურვამდე ნებისმიერ დროს.",
+  "live.lobby.timedAll": "ყველა დროითი აუქციონი",
   "live.lobby.startingSoon": "მალე იწყება",
   "live.lobby.startingSoonText":
     "ლაივ აუქციონები დანიშნულ დროს იწყება. ყოველი ფსონი 30-წამიან ტაიმერს თავიდან იწყებს — როცა ოთახში სიჩუმეა, ნამუშევარი იყიდება. ოთახები ადრე იხსნება, რომ პირველ ფსონამდე ჩატში ისაუბრო.",

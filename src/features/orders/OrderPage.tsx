@@ -28,8 +28,11 @@ import {
   getSettings,
   markShipped,
   money,
+  CARD_PAYMENTS,
   PAYMENTS_TEST_MODE,
   simulateCardPayment,
+  startCardPayment,
+  syncCardPayment,
   submitPayment,
   type Order,
   type OrderContact,
@@ -60,6 +63,32 @@ export default function OrderPage({ orderId, onBack, onArtwork }: Props) {
       setError(errorMessage(err))
     }
   }, [orderId])
+
+  // Coming back from the bank's card page (?pay=success|fail): check the real status.
+  useEffect(() => {
+    if (!user || typeof window === "undefined") return
+    const params = new URLSearchParams(window.location.search)
+    const result = params.get("pay")
+    if (result !== "success" && result !== "fail") return
+    window.history.replaceState(null, "", window.location.pathname)
+    if (result === "fail") {
+      notify(t("orders.card.failed"), t("orders.card.failedDetail"), "error")
+      return
+    }
+    void (async () => {
+      try {
+        const sync = await syncCardPayment(orderId)
+        notify(
+          sync.status === "paid" ? t("orders.card.success") : t("orders.card.pendingTitle"),
+          sync.status === "paid" ? t("orders.card.successDetail") : t("orders.card.pending"),
+        )
+      } catch (err) {
+        notify(t("common.somethingWrong"), errorMessage(err), "error")
+      }
+      await load()
+    })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, orderId])
 
   useEffect(() => {
     if (!user) return
@@ -198,7 +227,7 @@ function BuyerPanel({
   settings: PlatformSettings | null
   onChange: () => Promise<void>
 }) {
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
   const [note, setNote] = useState("")
   const [busy, setBusy] = useState<string | null>(null)
 
@@ -232,6 +261,34 @@ function BuyerPanel({
             {t("orders.pay.bodyBefore")} <strong className="text-text">{money(order.totalDue)}</strong>
             {t("orders.pay.bodyAfter", { hours: settings?.paymentWindowHours ?? 24 })}
           </p>
+
+          {CARD_PAYMENTS && (
+            <div className="mt-5 rounded-2xl border border-amber/40 bg-amber/[.06] p-4">
+              <p className="flex items-center gap-2 text-sm font-semibold text-text">
+                <CreditCard className="size-4 text-amber" /> {t("orders.card.title")}
+              </p>
+              <p className="mt-2 text-xs leading-5 text-text-secondary">{t("orders.card.body")}</p>
+              <Button
+                className="mt-4 h-11 w-full px-5 font-semibold sm:w-auto"
+                disabled={Boolean(busy)}
+                onClick={async () => {
+                  setBusy("cardpay")
+                  try {
+                    const { url } = await startCardPayment(order.id, locale)
+                    window.location.href = url
+                  } catch (error) {
+                    notify(t("common.somethingWrong"), errorMessage(error), "error")
+                    setBusy(null)
+                  }
+                }}
+              >
+                {busy === "cardpay"
+                  ? t("orders.card.opening")
+                  : t("orders.card.button", { amount: money(order.totalDue) })}
+              </Button>
+              <p className="mt-4 text-center text-xs text-text-muted sm:text-left">{t("orders.card.orTransfer")}</p>
+            </div>
+          )}
 
           <div className="mt-5 rounded-2xl border border-border bg-bg/60 p-4">
             <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-text">

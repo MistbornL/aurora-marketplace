@@ -12,6 +12,7 @@ export const en = {
   "pilot.title.about": "About",
   "pilot.title.terms": "Terms",
   "pilot.title.privacy": "Privacy",
+  "pilot.title.refunds": "Refunds",
   "pilot.footer.privacy": "Privacy",
 
   "pilot.delivery.title": "Delivery",
@@ -118,7 +119,7 @@ export const en = {
   "pilot.privacy.rights.title": "Your rights",
   "pilot.privacy.rights.body": "You can see and edit your details in your dashboard at any time. You can ask us for a copy of your data, to correct it, or to delete your account — write to us and we’ll respond within 30 days.",
   "pilot.privacy.contact.title": "Contact",
-  "pilot.privacy.contact.body": "Questions about your data? Contact the TSISKARI team through the email on our About page.",
+  "pilot.privacy.contact.body": "Questions about your data? Write to {email}.",
 } as const
 
 export const ka: Record<keyof typeof en, string> = {
@@ -133,6 +134,7 @@ export const ka: Record<keyof typeof en, string> = {
   "pilot.title.about": "ჩვენ შესახებ",
   "pilot.title.terms": "წესები",
   "pilot.title.privacy": "კონფიდენციალურობა",
+  "pilot.title.refunds": "თანხის დაბრუნება",
   "pilot.footer.privacy": "კონფიდენციალურობა",
 
   "pilot.delivery.title": "მიწოდება",
@@ -239,5 +241,5 @@ export const ka: Record<keyof typeof en, string> = {
   "pilot.privacy.rights.title": "შენი უფლებები",
   "pilot.privacy.rights.body": "შენს მონაცემებს პანელში ნებისმიერ დროს ნახავ და შეცვლი. შეგიძლია მოითხოვო მონაცემების ასლი, შესწორება ან ანგარიშის წაშლა — მოგვწერე და 30 დღეში გიპასუხებთ.",
   "pilot.privacy.contact.title": "კონტაქტი",
-  "pilot.privacy.contact.body": "კითხვები გაქვს მონაცემებზე? დაუკავშირდი TSISKARI-ს გუნდს ელფოსტით, რომელიც „ჩვენ შესახებ“ გვერდზეა მითითებული.",
+  "pilot.privacy.contact.body": "კითხვები გაქვს მონაცემებზე? მოგვწერე: {email}.",
 }

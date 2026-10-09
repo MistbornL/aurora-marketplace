@@ -105,6 +105,26 @@ export const en = {
   "info.terms.changes.title": "7. Changes",
   "info.terms.changes.body":
     "We may update these terms. We’ll tell you about important changes before they take effect.",
+  "info.refund.eyebrow": "Legal",
+  "info.refund.title": "Payment, delivery and refunds",
+  "info.refund.updated": "In plain language. Last updated October 2026.",
+  "info.refund.pay.title": "1. How you pay",
+  "info.refund.pay.body":
+    "When you win, your order page shows the total: the winning bid plus a 5% buyer’s premium, in Georgian lari (₾). You pay TSISKARI by bank card within 24 hours; we never ask for card details on our own pages, the payment is made on the bank’s secure page. Nothing is charged for bidding, only for a won auction.",
+  "info.refund.delivery.title": "2. Delivery and handover",
+  "info.refund.delivery.body":
+    "After payment, TSISKARI connects you with the artist to arrange handover (meeting or delivery). Your money stays with TSISKARI until you confirm you received the work, or 7 days after the handover is arranged. Shipping costs, if any, are agreed with the artist before handover.",
+  "info.refund.notAsDescribed.title": "3. Damaged or not as described",
+  "info.refund.notAsDescribed.body":
+    "Every work is one of a kind. If it arrives damaged, is not the work shown in the listing, or differs materially from the description, tell us before you confirm the handover and within 48 hours of receiving it, with photos. We hold the payout while we look into it, and if you are right you get a full refund of the amount you paid.",
+  "info.refund.unpaid.title": "4. Cancelled and unpaid orders",
+  "info.refund.unpaid.body":
+    "If an order is cancelled before you paid, nothing is charged. If we or the artist cancel an order after you paid (for example the work can no longer be handed over), you get a full refund.",
+  "info.refund.how.title": "5. How refunds are paid",
+  "info.refund.how.body":
+    "Refunds go back to the same bank card you paid with. We start the refund within 3 working days of approving it; how soon the money shows up depends on your bank, usually within 5 to 14 working days.",
+  "info.refund.contact.title": "6. Contact",
+  "info.refund.contact.body": "Questions or a problem with an order? Write to {email} and include your order number.",
 } as const
 
 export const ka: Record<keyof typeof en, string> = {
@@ -213,4 +233,24 @@ export const ka: Record<keyof typeof en, string> = {
   "info.terms.changes.title": "7. ცვლილებები",
   "info.terms.changes.body":
     "ამ წესებს შეიძლება განვაახლოთ. მნიშვნელოვანი ცვლილებების შესახებ ძალაში შესვლამდე გაცნობებთ.",
+  "info.refund.eyebrow": "იურიდიული ინფორმაცია",
+  "info.refund.title": "გადახდა, მიწოდება და თანხის დაბრუნება",
+  "info.refund.updated": "მარტივი ენით. ბოლო განახლება: ოქტომბერი, 2026.",
+  "info.refund.pay.title": "1. როგორ იხდი",
+  "info.refund.pay.body":
+    "აუქციონში გამარჯვებისას შეკვეთის გვერდზე ნახავ ჯამურ თანხას: გამარჯვებული ფსონი და 5%-იანი მყიდველის საკომისიო, ლარში (₾). თანხას TSISKARI-ს უხდი ბანკის ბარათით 24 საათში. ბარათის მონაცემებს ჩვენს გვერდებზე არ გთხოვთ; გადახდა ბანკის დაცულ გვერდზე ხდება. ფსონის დადებისთვის არაფერი გიჯდება, იხდი მხოლოდ მოგებულ აუქციონზე.",
+  "info.refund.delivery.title": "2. მიწოდება და გადაცემა",
+  "info.refund.delivery.body":
+    "გადახდის შემდეგ TSISKARI დაგაკავშირებს მხატვართან, რათა შეთანხმდეთ გადაცემაზე (შეხვედრა ან მიწოდება). შენი თანხა TSISKARI-სთან რჩება, სანამ ნამუშევრის მიღებას დაადასტურებ, ან გადაცემის შეთანხმებიდან 7 დღემდე. მიწოდების ხარჯი, ასეთის არსებობისას, მხატვართან გადაცემამდე შეგეთანხმება.",
+  "info.refund.notAsDescribed.title": "3. დაზიანებული ან აღწერას არ შეესაბამება",
+  "info.refund.notAsDescribed.body":
+    "ყოველი ნამუშევარი უნიკალურია. თუ დაზიანებული მოვიდა, განცხადებაში ნაჩვენები ნამუშევარი არ არის ან აღწერისგან არსებითად განსხვავდება, გვამცნე გადაცემის დადასტურებამდე და მიღებიდან 48 საათში, ფოტოებით. გამოძიების დროს მხატვრის თანხას ვაჩერებთ, ხოლო თუ მართალი ხარ, გადახდილ თანხას სრულად დაგიბრუნებთ.",
+  "info.refund.unpaid.title": "4. გაუქმებული და გადაუხდელი შეკვეთები",
+  "info.refund.unpaid.body":
+    "თუ შეკვეთა გადახდამდე გაუქმდა, არაფერი ჩამოგეჭრება. თუ შეკვეთას გადახდის შემდეგ ჩვენ ან მხატვარი გავაუქმებთ (მაგალითად, ნამუშევრის გადაცემა აღარ შეიძლება), თანხას სრულად დაგიბრუნებთ.",
+  "info.refund.how.title": "5. როგორ ბრუნდება თანხა",
+  "info.refund.how.body":
+    "თანხა ბრუნდება იმავე ბარათზე, რომლითაც გადაიხადე. თანხის დაბრუნებას დადასტურებიდან 3 სამუშაო დღეში ვიწყებთ; თანხა ბარათზე ბანკის მიხედვით აისახება, ჩვეულებრივ 5-დან 14 სამუშაო დღეში.",
+  "info.refund.contact.title": "6. კონტაქტი",
+  "info.refund.contact.body": "კითხვა ან პრობლემა გაქვს შეკვეთასთან დაკავშირებით? მოგვწერე: {email} და მიუთითე შეკვეთის ნომერი.",
 }

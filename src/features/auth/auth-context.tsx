@@ -55,6 +55,8 @@ type AuthState = {
   signIn: (email: string, password: string) => Promise<void>
   /** Resolves `needsConfirmation: true` when Supabase requires email confirmation. */
   signUp: (input: SignUpInput) => Promise<{ needsConfirmation: boolean }>
+  /** Redirects to Google. `role` is remembered so a new artist account is upgraded on return. */
+  signInWithGoogle: (role?: SignUpRole) => Promise<void>
   signOut: () => Promise<void>
   sendPasswordReset: (email: string) => Promise<void>
   resendConfirmation: (email: string) => Promise<void>
@@ -62,6 +64,7 @@ type AuthState = {
   becomeArtist: () => Promise<void>
 }
 const AuthContext = createContext<AuthState | null>(null)
+const PENDING_ROLE_KEY = "tsiskari.pendingRole"
 const notConfigured = () => {
   throw new Error(tr("auth.error.notConfigured"))
 }
@@ -133,6 +136,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     void Promise.all([fetchAccount(user), getReadiness()]).then(
       ([next, ready]) => {
         if (cancelled) return
+        // Came back from "Continue with Google" on the artist sign-up: upgrade once.
+        let pending = false
+        try {
+          pending = localStorage.getItem(PENDING_ROLE_KEY) === "artist"
+          if (pending) localStorage.removeItem(PENDING_ROLE_KEY)
+        } catch {
+          /* ignore */
+        }
+        if (pending && next.role === "collector") {
+          void supabase?.rpc("become_artist").then(({ error }) => {
+            if (!error) setRole("artist")
+          })
+        }
         setRole(next.role)
         setProfile(next.profile)
         setReadiness(ready)
@@ -153,6 +169,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
+    })
+    unwrap(error)
+  }, [])
+
+  const signInWithGoogle = useCallback(async (pickedRole: SignUpRole = "collector") => {
+    if (!supabase) return notConfigured()
+    try {
+      if (pickedRole === "artist") localStorage.setItem(PENDING_ROLE_KEY, "artist")
+      else localStorage.removeItem(PENDING_ROLE_KEY)
+    } catch {
+      /* storage can be blocked; the account just starts as a collector */
+    }
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin + window.location.pathname },
     })
     unwrap(error)
   }, [])
@@ -238,6 +269,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       configured: Boolean(supabase),
       signIn,
       signUp,
+      signInWithGoogle,
       signOut,
       sendPasswordReset,
       resendConfirmation,
@@ -254,6 +286,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loading,
       signIn,
       signUp,
+      signInWithGoogle,
       signOut,
       sendPasswordReset,
       resendConfirmation,

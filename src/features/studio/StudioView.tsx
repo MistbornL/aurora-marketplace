@@ -3,6 +3,7 @@ import { Button, Card, Tabs, TabsList, TabsTrigger } from "../../components/ui"
 import type { Profile } from "../profile/api"
 import { ReadinessCard } from "../profile/ReadinessCard"
 import { PayoutCard } from "./PayoutCard"
+import { ArtistCard } from "./ArtistCard"
 import { RowsSkeleton } from "../../components/layout/PageSkeletons"
 import type { ManagedAuction, StudioTab } from "./types"
 import { useRef, useState } from "react"
@@ -145,6 +146,19 @@ export function StudioView({
 
         <ReadinessCard purpose="sell" onFix={onEditProfile} />
         <PayoutCard userId={userId} />
+        <ArtistCard
+          data={{
+            id: userId,
+            name: profile.display_name || profile.username || t("studio.yourName"),
+            location: profile.location,
+            avatar,
+            images: auctions.filter((item) => item.image).slice(0, 3).map((item) => item.image),
+            categories: [...new Set(auctions.map((item) => item.category).filter(Boolean))].slice(0, 3),
+            works: auctions.length,
+            bids: auctions.reduce((sum, item) => sum + item.bidCount, 0),
+            bestBid: Math.max(0, ...auctions.map((item) => (item.bidCount > 0 ? item.currentBid : 0))),
+          }}
+        />
 
         {toDecide.map((item) => (
           <div

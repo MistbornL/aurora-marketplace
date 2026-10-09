@@ -78,6 +78,8 @@ export const en = {
   "auth.reset.description": "Use at least 8 characters.",
   "auth.reset.newPassword": "New password",
   "auth.reset.save": "Save password",
+  "auth.or": "or",
+  "auth.google": "Continue with Google",
 } as const
 
 export const ka: Record<keyof typeof en, string> = {
@@ -152,4 +154,6 @@ export const ka: Record<keyof typeof en, string> = {
   "auth.reset.description": "გამოიყენე მინიმუმ 8 სიმბოლო.",
   "auth.reset.newPassword": "ახალი პაროლი",
   "auth.reset.save": "პაროლის შენახვა",
+  "auth.or": "ან",
+  "auth.google": "გაგრძელება Google-ით",
 }

@@ -190,6 +190,17 @@ export const en = {
   "orders.contacts.title": "Contact details",
   "orders.contacts.buyer": "Buyer",
   "orders.contacts.artist": "Artist",
+  "orders.card.title": "Pay by card",
+  "orders.card.body": "You’ll pay on Bank of Georgia’s secure page. We never see or store your card details. The order is confirmed automatically.",
+  "orders.card.button": "Pay {amount} by card",
+  "orders.card.opening": "Opening the bank…",
+  "orders.card.orTransfer": "Or pay by bank transfer below.",
+  "orders.card.success": "Payment received",
+  "orders.card.successDetail": "Thank you! Your order is confirmed.",
+  "orders.card.pendingTitle": "Confirming your payment",
+  "orders.card.pending": "The bank is still confirming. This page updates by itself, no need to pay again.",
+  "orders.card.failed": "Payment didn’t go through",
+  "orders.card.failedDetail": "Nothing was charged. You can try again or pay by bank transfer.",
 } as const
 
 export const ka: Record<keyof typeof en, string> = {
@@ -371,4 +382,15 @@ export const ka: Record<keyof typeof en, string> = {
   "orders.contacts.title": "საკონტაქტო ინფორმაცია",
   "orders.contacts.buyer": "მყიდველი",
   "orders.contacts.artist": "მხატვარი",
+  "orders.card.title": "ბარათით გადახდა",
+  "orders.card.body": "გადახდა საქართველოს ბანკის დაცულ გვერდზე ხდება. ბარათის მონაცემებს ჩვენ არ ვხედავთ და არ ვინახავთ. შეკვეთა ავტომატურად დადასტურდება.",
+  "orders.card.button": "გადაიხადე {amount} ბარათით",
+  "orders.card.opening": "ბანკის გვერდი იხსნება…",
+  "orders.card.orTransfer": "ან გადაიხადე საბანკო გადარიცხვით ქვემოთ.",
+  "orders.card.success": "გადახდა მიღებულია",
+  "orders.card.successDetail": "გმადლობთ! შეკვეთა დადასტურებულია.",
+  "orders.card.pendingTitle": "გადახდას ვადასტურებთ",
+  "orders.card.pending": "ბანკი ჯერ ადასტურებს. გვერდი თავისით განახლდება, თავიდან გადახდა არ გჭირდება.",
+  "orders.card.failed": "გადახდა ვერ შესრულდა",
+  "orders.card.failedDetail": "თანხა არ ჩამოგჭრია. შეგიძლია თავიდან სცადო ან საბანკო გადარიცხვით გადაიხადო.",
 }

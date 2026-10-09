@@ -14,6 +14,14 @@ import {
   paymentsTestMode,
   simulateProviderPayment,
 } from "./lib/payments.mjs"
+import {
+  bogConfigured,
+  handleBogCallback,
+  refundCardPayment,
+  startBogReconciler,
+  startCardPayment,
+  syncCardPayment,
+} from "./lib/bog.mjs"
 import { arModelSizeKey, storeArModel } from "./lib/ar-models.mjs"
 import {
   authenticate,
@@ -127,7 +135,7 @@ const routes = [
     () => ({
       status: "ok",
       supabase: supabaseEnabled,
-      payments: { configured: paymentsConfigured, testMode: paymentsTestMode },
+      payments: { configured: paymentsConfigured, testMode: paymentsTestMode, card: bogConfigured },
       email: emailConfigured,
       push: pushConfigured,
       demoLots: showDemoLots,
@@ -140,6 +148,46 @@ const routes = [
     /^\/api\/payments\/webhook$/,
     async (request) =>
       handleWebhook(await readRaw(request), request.headers["x-tsiskari-signature"]),
+  ],
+
+  // Bank of Georgia → us. RSA-signed; see lib/bog.mjs.
+  [
+    "POST",
+    /^\/api\/payments\/bog\/callback$/,
+    async (request) => handleBogCallback(await readRaw(request), request.headers["callback-signature"]),
+  ],
+
+  // Buyer: open BOG's hosted card page / check the result after coming back.
+  [
+    "POST",
+    /^\/api\/orders\/([\w-]+)\/card-pay$/,
+    async (request, [id]) => {
+      const user = await requireUser(request)
+      if (!isUuid(id)) throw httpError(404, "Order not found")
+      const body = await readBody(request)
+      return startCardPayment(id, user, body.locale)
+    },
+  ],
+  [
+    "POST",
+    /^\/api\/orders\/([\w-]+)\/card-sync$/,
+    async (request, [id]) => {
+      const user = await requireUser(request)
+      if (!isUuid(id)) throw httpError(404, "Order not found")
+      return syncCardPayment(id, user)
+    },
+  ],
+  // Admin: refund a card payment (optional JSON { amount } for a partial refund).
+  [
+    "POST",
+    /^\/api\/admin\/orders\/([\w-]+)\/card-refund$/,
+    async (request, [id]) => {
+      const user = await requireUser(request)
+      if (user.role !== "admin") throw httpError(403, "Admins only")
+      if (!isUuid(id)) throw httpError(404, "Order not found")
+      const body = await readBody(request)
+      return refundCardPayment(id, body.amount)
+    },
   ],
 
   // Test mode only: behave like a provider for the buyer's own order.
@@ -382,6 +430,7 @@ const server = createServer(async (request, response) => {
 
 startEmailWorker()
 startPushWorker()
+startBogReconciler()
 
 server.listen(port, () =>
   console.log(

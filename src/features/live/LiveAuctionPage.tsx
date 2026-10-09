@@ -23,8 +23,10 @@ export default function LiveLobbyPage({
 }) {
   const { t } = useI18n()
   const all = useLiveRooms()
-  const rooms = all.filter((art) => art.status !== "upcoming")
+  // Live-format rooms (host-led, 30-second quiet timer) are the lobby; timed auctions sit below.
+  const rooms = all.filter((art) => art.status !== "upcoming" && art.format === "live")
   const upcoming = all.filter((art) => art.status === "upcoming")
+  const timed = all.filter((art) => art.status !== "upcoming" && art.format !== "live").slice(0, 3)
 
   return (
     <main className="min-h-screen bg-bg pb-24">
@@ -53,7 +55,11 @@ export default function LiveLobbyPage({
               <RoomCard key={art.id} art={art} featured={index === 0} onJoin={() => onJoin(art.id)} />
             ))}
           </div>
-        ) : upcoming.length ? null : (
+        ) : upcoming.length ? null : timed.length ? (
+          <p className="rounded-3xl border border-dashed border-white/10 px-6 py-10 text-center text-text-secondary">
+            {t("live.lobby.emptyRooms")}
+          </p>
+        ) : (
           <div className="flex flex-col items-center gap-4 rounded-3xl border border-dashed border-white/10 py-20 text-center">
             <p className="text-text-secondary">{t("live.lobby.empty")}</p>
             <Button onClick={onDiscover} className="h-11 rounded-full px-6">
@@ -73,6 +79,21 @@ export default function LiveLobbyPage({
                 <RoomCard key={art.id} art={art} featured={false} onJoin={() => onJoin(art.id)} />
               ))}
             </div>
+          </section>
+        )}
+
+        {timed.length > 0 && (
+          <section className="mt-16 border-t border-white/[.06] pt-12">
+            <h2 className="font-display text-2xl font-semibold text-text">{t("live.lobby.timedTitle")}</h2>
+            <p className="mt-1 max-w-2xl text-sm text-text-muted">{t("live.lobby.timedText")}</p>
+            <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {timed.map((art) => (
+                <RoomCard key={art.id} art={art} featured={false} onJoin={() => onJoin(art.id)} />
+              ))}
+            </div>
+            <Button variant="outline" onClick={onDiscover} className="mt-6 h-11 rounded-full px-6">
+              {t("live.lobby.timedAll")} <ArrowRight className="size-4" />
+            </Button>
           </section>
         )}
       </div>

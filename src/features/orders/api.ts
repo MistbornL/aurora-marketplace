@@ -72,6 +72,8 @@ export type OrderContact = {
 }
 
 export const PAYMENTS_TEST_MODE = import.meta.env.VITE_PAYMENTS_TEST_MODE === "true"
+/** Show "Pay by card" (Bank of Georgia). Turn on once the API has BOG_* credentials. */
+export const CARD_PAYMENTS = import.meta.env.VITE_CARD_PAYMENTS === "true"
 
 /** Statuses where the order still needs someone to act. */
 export const OPEN_STATUSES: OrderStatus[] = [
@@ -217,6 +219,14 @@ export async function saveSettings(settings: PlatformSettings) {
 /** Test mode: the API server signs a fake provider webhook for this order. */
 export const simulateCardPayment = (id: string) =>
   apiFetch<unknown>(`/orders/${encodeURIComponent(id)}/test-pay`, { method: "POST" })
+
+/** Card payment (Bank of Georgia): returns the bank's hosted page to send the buyer to. */
+export const startCardPayment = (id: string, locale: string) =>
+  apiFetch<{ url: string }>(`/orders/${encodeURIComponent(id)}/card-pay`, { method: "POST", body: JSON.stringify({ locale }) })
+
+/** After coming back from the bank: ask the server to check the real payment status. */
+export const syncCardPayment = (id: string) =>
+  apiFetch<{ status: string; state: string }>(`/orders/${encodeURIComponent(id)}/card-sync`, { method: "POST" })
 
 /** Settles ended auctions now (normally pg_cron does it every minute). */
 export const settleNow = () => rpc("settle_auctions", {}).catch(() => 0)

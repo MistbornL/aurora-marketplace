@@ -19,6 +19,7 @@ import { EventBanner } from "../events/EventBanner"
 import { DiscoverSection } from "./DiscoverSection"
 import { ScrollHero } from "./hero/ScrollHero"
 import { GalleryWall } from "./GalleryWall"
+import { TrustBand } from "./TrustBand"
 
 export default function LandingPage({
   onArtwork,
@@ -87,6 +88,8 @@ export default function LandingPage({
         onSell={sell}
         onLot={onArtwork}
       />
+
+      <TrustBand />
 
       {/* ── On the block now: the live lot closing soonest ────────────── */}
       {lead && (

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import { useI18n, type MessageKey } from "../../lib/i18n"
+import { BUSINESS_LINE, CONTACT_EMAIL } from "../../lib/site"
 
 // Labels are message keys; they're translated at render time.
 const COLUMNS: Array<{ title: MessageKey | "TSISKARI"; links: Array<{ label: MessageKey; to: string }> }> = [
@@ -26,6 +27,7 @@ const COLUMNS: Array<{ title: MessageKey | "TSISKARI"; links: Array<{ label: Mes
       { label: "layout.footer.afterYouWin", to: "/about#after-you-win" },
       { label: "layout.footer.terms", to: "/terms" },
       { label: "pilot.footer.privacy", to: "/privacy" },
+      { label: "layout.footer.refunds", to: "/refunds" },
     ],
   },
 ]
@@ -70,6 +72,13 @@ export function Footer() {
       </div>
       <div className="border-t border-white/[.04] px-4 py-5 text-center text-xs text-text-muted">
         {t("layout.footer.copyright", { year: new Date().getFullYear() })}
+        <span className="mt-1 block">
+          {t("layout.footer.contact")}:{" "}
+          <a href={`mailto:${CONTACT_EMAIL}`} className="text-text-secondary underline-offset-2 hover:text-text hover:underline">
+            {CONTACT_EMAIL}
+          </a>
+          {BUSINESS_LINE && <span className="block opacity-80">{BUSINESS_LINE}</span>}
+        </span>
         <span className="mt-1 block opacity-80">{t("layout.footer.fonts")}</span>
       </div>
     </footer>

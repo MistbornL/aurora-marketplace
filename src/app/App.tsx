@@ -31,6 +31,7 @@ const AboutPage = lazy(() => import("../features/info/AboutPage"))
 const NotFoundPage = lazy(() => import("../features/info/NotFoundPage"))
 const TermsPage = lazy(() => import("../features/info/TermsPage"))
 const PrivacyPage = lazy(() => import("../features/info/PrivacyPage"))
+const RefundPage = lazy(() => import("../features/info/RefundPage"))
 const EventPage = lazy(() => import("../features/events/EventPage"))
 const ArtistProfilePage = lazy(
   () => import("../features/artists/ArtistProfilePage"),
@@ -98,6 +99,7 @@ function AppRoutes() {
         <Route path="/about" element={<PageFrame><AboutPage /></PageFrame>} />
         <Route path="/terms" element={<PageFrame><TermsPage /></PageFrame>} />
         <Route path="/privacy" element={<PageFrame><PrivacyPage /></PageFrame>} />
+        <Route path="/refunds" element={<PageFrame><RefundPage /></PageFrame>} />
         <Route path="/events/:id" element={<EventRoute />} />
         <Route path="*" element={<PageFrame><NotFoundPage /></PageFrame>} />
       </Routes>
@@ -145,6 +147,7 @@ const TITLES: Array<[RegExp, MessageKey]> = [
   [/^\/about/, "pilot.title.about"],
   [/^\/terms/, "pilot.title.terms"],
   [/^\/privacy/, "pilot.title.privacy"],
+  [/^\/refunds/, "pilot.title.refunds"],
 ]
 
 /** "Discover · TSISKARI" — follows the route and the language. */
